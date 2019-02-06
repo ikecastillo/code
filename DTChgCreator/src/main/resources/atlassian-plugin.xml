@@ -1,0 +1,47 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+        <param name="configure.url">/plugins/servlet/ldapDetails/config/servlet</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="DTChgCreator"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="DTChgCreator-resources" name="DTChgCreator Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="DTChgCreator.css" location="/css/DTChgCreator.css"/>
+        <resource type="download" name="DTChgCreator.js" location="/js/DTChgCreator.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>DTChgCreator</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.remote.dtchgcreator.MyPluginComponentImpl" public="true">
+        <interface>com.dt.remote.dtchgcreator.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/> 
+    
+    
+    <rest key="chgcreator" name="rest" i18n-name-key="rest" path="/dealertrack/change" version="1.0">
+        <description key="rest.description">change ticket creator rest Modules</description>
+    </rest>
+    
+    <servlet key="ldap-config-servlet" class="com.dt.remote.dtchgcreator.ui.LdapConfigServlet"> 
+			<url-pattern>/ldapDetails/config/servlet</url-pattern>
+	</servlet>
+    
+    
+</atlassian-plugin>

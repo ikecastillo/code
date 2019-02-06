@@ -1,0 +1,183 @@
+<html>
+   <head>
+      <meta name="decorator" content="atl.admin" />
+      <meta name="projectKey" content="$projectKey"/>
+      <meta name="admin.active.tab" content="assignee-mapping-link"/>
+      <meta name="admin.active.section" content="atl.jira.proj.config"/>      
+      <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+      $webResourceManager.requireResource("com.dt.jira.assigneemap.plugins.assignee-map-plugin:assignee-map-plugin-resources")
+      $webResourceManager.requireResource("com.atlassian.auiplugin:aui-select2")
+      <style type='text/css'>
+         #main_container { 
+         width: 75%; 
+         border: 0px; 
+         } 
+         .basic_row { 
+         clear: both; 
+         position: relative; 
+         border: 0px;
+         } 
+         .two_col { 
+         float: left; 
+         width: 50%; 
+         } 
+         .four_col { 
+         float: left; 
+         width: 25%;
+         } 
+         .clear_float { 
+         font-size: 0px; 
+         line-height: 0px; 
+         clear: both; 
+         }
+         
+         .error{
+			color: red;
+		 }
+         
+      </style>
+      
+     
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+        .aui-page-panel-content > form {
+            min-height: 300px;
+        }
+    </style>
+    </head>
+   <body>
+   <div class="header">
+        <h3 class="formtitle">$i18n.getText("assignee-mapping.label")</h3>       
+    </div></br></br>
+      <div id="page">            
+                  <form class="aui" id="assigneemap">
+                     <input type="hidden" id="projectKey" name="projectKey" value="$projectKey">
+                     <input type="hidden" id="baseURL" value="$baseURL"/> 
+					 					 
+                     <div id="main_container">                     
+                        <div class="basic_row">                        
+                           <div class="two_col">
+                           	 <label for="Solution Group">Solution Group</label>
+                              <select id="solutionGroup" name="solutionGroup">                                                             
+                                    <option value="None">---select---</option>                                    
+                                    #foreach ($option in $solutionGroup)                                    
+	                                     #if ($selectedSolution && ($selectedSolution  == $option.optionId))
+	                   							<option value="$option.optionId" selected="selected">$option.value</option>
+	              						 #else
+	                  							<option value="$option.optionId">$option.value</option>
+	            						 #end
+                                     #end 
+                                </select>                                                             
+                           </div>
+                           <div class="two_col"> 
+                           <label for="Impacted">Impacted</label>
+                              <select id="impactedGroup" name="impactedGroup">                                                             
+                                    <option value="None">---select---</option>
+                                    #foreach($impact in $impacted)                                    
+	                                     #if ($selectedImpact && ($selectedImpact  == $impact.optionId))
+	                							<option value="$impact.optionId" selected="selected">$impact.value</option>
+	             						 #else
+	                							<option value="$impact.optionId">$impact.value</option>
+	              						 #end  
+                                    #end                                
+                              </select> 
+                           </div>                           							
+                        </div>
+                        </br></br>
+                       
+                        <div class="basic_row">
+                           <div class="two_col">
+                              <h3><label for="Status">Status</label></h3>
+                           </div>
+                           <div class="two_col">
+                              <h3><label for="Users">Users</label></h3>
+                           </div>
+                        </div>
+                      
+                       <div class="basic_row"></div>
+                        </br>
+						
+                        <div class="basic_row">
+                           <div class="two_col"><input type="hidden" id="pndappr_sme" name="pndappr_sme" value="10800" /><label for="Pending Approval - SME">Pending Approval - SME</label></div>
+                           <div class="two_col"><div id="pndapprerror_10800" class="error"></div>	
+										<div class="ajax_autocomplete" id="pndappr_10800_container">
+										        <input class="text long-field customuserpickerfield" id="pndappr_10800" name="pndappr_10800" style="" type="text" value="" autocomplete="off">
+												<div class="ajax_results" id="pndappr_10800_results"></div>
+														
+										</div>
+                           </div>
+                           </br></br>						   
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_sec" name="pndappr_sec" value="10801" /><label for="Pending Approval - SECURITY">Pending Approval - SECURITY</label></div>
+                              <div class="two_col"><div id="pndapprerror_10801" class="error"></div>
+                                 <div class="ajax_autocomplete" id="pndappr_10801_container">
+												<input class="text long-field customuserpickerfield" id="pndappr_10801" name="pndappr_10801" style="" type="text" value="" autocomplete="off">
+												<div class="ajax_results" id="pndappr_10801_results"></div>
+												
+								</div>
+                              </div>
+                           </div>
+                           </br></br>
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_cab" name="pndappr_cab" value="10802"/><label for="Pending Approval - CAB">Pending Approval - CAB</label></div>
+                              <div class="two_col"><div id="pndapprerror_10802" class="error"></div>
+                                 <div class="ajax_autocomplete" id="pndappr_10802_container">
+											    <input class="text long-field customuserpickerfield" id="pndappr_10802" name="pndappr_10802" style="" type="text" value="" autocomplete="off">
+												<div class="ajax_results" id="pndappr_10802_results"></div>
+												
+								</div>
+                              </div>
+                           </div>
+                           </br></br>
+						   
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_sch" name="pndappr_sch" value="10803"/><label for="Scheduled">Scheduled</label></div>
+                              <div class="two_col"><div id="pndapprerror_10803" class="error"></div>
+                                 <div class="ajax_autocomplete" id="pndappr_10803_container">
+												<input class="text long-field customuserpickerfield" id="pndappr_10803" name="pndappr_10803" style="" type="text" value="" autocomplete="off">
+												<div class="ajax_results" id="pndappr_10803_results"></div>
+												
+								</div>
+                              </div>
+                           </div>
+                           </br></br>
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_ecab1" name="pndappr_ecab1" value="10804" /><label id="lbl_pndappr_ecab1" for="Pending Approval - ECAB1">Pending Approval - ECAB1</label></div>
+                              <div class="two_col"><div id="pndapprerror_10804" class="error"></div>
+                                 <div class="ajax_autocomplete" id="pndappr_10804_container">
+												<input class="text long-field customuserpickerfield" id="pndappr_10804" name="pndappr_10804" style="" type="text" value="" autocomplete="off">
+												<div class="ajax_results" id="pndappr_10804_results"></div>
+								</div>
+                              </div>
+                           </div>
+                           </br></br>
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_ecab2" name="pndappr_ecab2" value="10805" /><label id="lbl_pndappr_ecab2" for="Pending Approval - ECAB2">Pending Approval - ECAB2</label></div>
+                              <div class="two_col"><div id="pndapprerror_10805" class="error"></div>
+                                 <div class="ajax_autocomplete" id="pndappr_10805_container">
+												<input class="text long-field customuserpickerfield" id="pndappr_10805" name="pndappr_10805" style="" type="text" value="" autocomplete="off">
+												<div class="ajax_results" id="pndappr_10805_results"></div>		
+											
+								</div>
+                              </div>
+                              
+                           </div> 
+									<div id="errorifsameuserexist" class="error"></div>						   
+                        </div>
+                       
+                        <div class="buttons-container form-footer">
+                           <div class="buttons">
+                              <input type="submit" name="save" id="btn_Save" value="$i18n.getText("assignee-mapping.save.label")"  class="button spaced" />
+							  <input type="submit" name="exportcsv" id="btn_csv" value="$i18n.getText("assignee-mapping.csvexport.label")"  class="button spaced"/>
+                           </div>
+                        </div>
+                       
+                  </form>
+     
+      </div>
+      
+           
+   </body>
+</html>

@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>$i18n.getText("ldap.service.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+   $webResourceManager.requireResource("com.dt.jira.plugin.automatedailycabsummary.automate-daily-cab-summary:automate-daily-cab-summary-resources")
+  
+  <script type="text/javascript">
+   
+   
+   
+   
+   
+   
+</script>
+  </head>
+  <body>
+   <div class="header">
+        <h3 class="formtitle">Email Configuration Settings</h3>
+    </div>
+    <form id="reqAppr" class="aui">
+    <input type="hidden" id="baseURL" value="$baseURL"/> 
+     <div class="field-group">
+        <label for="userName">UserName</label>
+        <input type="text" id="userName" name="userName" class="text" >
+      </div>
+      <div class="field-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="text" >
+        </div>
+      <div class="field-group">
+        <label for="feilds">Mail schedule time</label>
+        <input type="text" id="feilds" name="feilds" class="text">
+      </div>
+      
+      <div class="field-group">
+        <input type="submit" value="Save" class="button" id="emailConfigSave">
+		<input type="button" value="Cancel" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+      </div>
+    </form>
+	
+ 		
+	</body>
+</html>

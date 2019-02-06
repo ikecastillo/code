@@ -1,0 +1,83 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+        <param name="configure.url">/plugins/servlet/email/configuration</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="automate-daily-cab-summary"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="automate-daily-cab-summary-resources" name="automate-daily-cab-summary Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="automate-daily-cab-summary.css" location="/css/automate-daily-cab-summary.css"/>
+        <resource type="download" name="automate-daily-cab-summary.js" location="/js/automate-daily-cab-summary.js"/>
+        <resource type="download" name="images/" location="/images"/>
+		<resource type="download" name="templates/" location="/templates"/>
+
+        <context>automate-daily-cab-summary</context>
+    </web-resource>
+    <component-import key="mailservice" interface="com.atlassian.jira.mail.MailService" />
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.automatedailycabsummary.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.automatedailycabsummary.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+     <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
+    
+    
+    
+   <!-- written this for testing just commented-->
+    <rest name="automatedailycabsummary" i18n-name-key="automate-daily-cab-summary" key="automatedailycabsummary" path="/cabsummary" version="1.0">
+    <description key="automate-daily-cab-summary-desc">Dealertrack Automate Daily Cab Summary REST Modules</description>
+  </rest> 
+    
+    
+    
+    
+    
+    <ao key="ao-module">
+    <description>The module configuring the Active Objects used by this plugin</description>
+        <entity>com.dt.jira.plugin.ao.Template</entity>
+        <entity>com.dt.jira.plugin.ao.Section</entity>
+	</ao>
+	
+	
+	
+	<component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+    <description>Component to access Active Objects functionality from the plugin</description>
+  	</component-import>
+  <component key="tx-processor" name="Transactional Annotation Processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+    <decription>Processes @Transactional annotations.</decription>
+  </component>
+  
+  <component key="templateService" name="templateService" class="com.dt.jira.plugin.service.TemplateServiceImpl" />
+    
+  <component-import key="chgEmailScheduler">
+		<description>Change Email Scheduler</description>
+		<interface>com.atlassian.sal.api.scheduling.PluginScheduler</interface>
+	</component-import>
+	 <component key="chgEmailComponent" class="com.dt.jira.plugin.scheduler.ChgJobImpl"
+             system="true" public="true">
+        <description>The plugin component that schedules the job.</description>
+        <interface>com.atlassian.sal.api.lifecycle.LifecycleAware</interface>
+        <interface>com.dt.jira.plugin.scheduler.ChgJobMonitor</interface>
+    </component>    
+    
+    
+    
+     <servlet key="email-configure" class="com.dt.jira.plugin.ui.EmailConfigServlet"> <url-pattern>/email/configuration</url-pattern></servlet>
+    
+    
+    
+</atlassian-plugin>

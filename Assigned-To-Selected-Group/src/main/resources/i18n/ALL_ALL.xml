@@ -1,0 +1,172 @@
+<messagebundle>
+    <msg name="gadget.title">Test JIRA Tutorial Gadget</msg>
+    <msg name="gadget.description">A sample gadget to install into JIRA.</msg>	
+	<msg name="gadget.common.invalid.period">Invalid period ''{0}'' specified</msg>
+<msg name="gadget.common.cumulative.description">Progressively add totals (1.. 2.. 3), or show individual values (1.. 1.. 1).</msg>
+<msg name="gadget.common.advanced.search">Advanced Search</msg>
+<msg name="gadget.common.issuesresolved">Issues Resolved</msg>
+<msg name="gadget.common.oauth.approve.button">Login & approve</msg>
+<msg name="gadget.common.categories.all">All Categories</msg>
+<msg name="gadget.common.days.description">Days (including today) to show in the graph.</msg>
+<msg name="gadget.common.cumulative.label">Cumulative Totals:</msg>
+<msg name="gadget.common.required.query">No project or filter specified.</msg>
+<msg name="gadget.common.projects.description">The projects to display information for.</msg>
+<msg name="gadget.common.columns.to.display.label">Columns to display</msg>
+<msg name="gadget.common.stattype.label">Statistic Type:</msg>
+<msg name="gadget.common.period.daily">Daily</msg>
+<msg name="gadget.common.container.oauth.required">Authentication required to use this gadget</msg>
+<msg name="gadget.common.projects.and.categories.description">
+Projects or categories to use as the basis for the graph.
+</msg>
+<msg name="gadget.common.quick.find">Quick Find</msg>
+<msg name="gadget.common.period.hourly">Hourly</msg>
+<msg name="gadget.common.invalid.stat.type">Invalid Statistics Type ({0})</msg>
+<msg name="gadget.common.invalid.jql">Invalid JQL.</msg>
+<msg name="gadget.common.manage.filters">Manage Filters</msg>
+<msg name="gadget.common.invalid.project">Invalid project</msg>
+<msg name="gadget.common.invalid.filter.id">Invalid filter</msg>
+<msg name="gadget.common.filter.description">Saved filter to use for the query.</msg>
+<msg name="gadget.common.period.yearly">Yearly</msg>
+<msg name="gadget.common.period.name.label">Period:</msg>
+<msg name="gadget.common.show.column.headers.description">Helps to distinguish between similar fields</msg>
+<msg name="gadget.common.invalid.filter">Invalid project or filter</msg>
+<msg name="gadget.common.show.column.headers.label">Show column headers</msg>
+<msg name="gadget.common.oauth.approve.message">
+If you are a registered user, there may be more information available to you. You will need to log in and approve this gadget''s access to your account. (<a class='ag-show-requests' href="#">Show Restricted URLs</a>)
+</msg>
+<msg name="gadget.common.error.500">
+An internal server error occurred when requesting resource <a href="{0}" target="_parent">{1}</a>.
+</msg>
+<msg name="gadget.common.negative.days">Days must be greater or equal to zero.</msg>
+<msg name="gadget.common.days.overlimit">Days must not exceed {0}</msg>
+<msg name="gadget.common.show.column.headers.true.label">Yes</msg>
+<msg name="gadget.common.filter.label">Saved Filter:</msg>
+<msg name="gadget.common.num.description">Number of results to display (maximum of 50).</msg>
+<msg name="gadget.common.default.columns">Default Columns</msg>
+<msg name="gadget.common.project.edit">Click here to select/change project.</msg>
+<msg name="gadget.common.unknown.legacy.portlet">Unknown Legacy Portlet</msg>
+<msg name="gadget.common.period.name.description">The length of periods represented on the graph.</msg>
+<msg name="gadget.common.config.unavailable">
+There are problems with the current configuration for this gadget. The errors below may have been caused by the deletion of entities required by the gadget or by changes to your permissions.
+</msg>
+<msg name="gadget.common.indexing.configure">Please {0}configure indexing{1}.</msg>
+<msg name="gadget.common.unknown.legacy.portlet.description">
+Legacy portlet with key ''{0}'' could not be loaded
+</msg>
+<msg name="gadget.common.projects.and.categories.label">Projects and Categories:</msg>
+<msg name="gadget.common.cancel">Cancel</msg>
+<msg name="gadget.common.configure">Edit</msg>
+<msg name="gadget.common.projects.label">Projects:</msg>
+<msg name="gadget.common.projects.all">All Projects</msg>
+<msg name="gadget.common.days.nan">Days must be a number</msg>
+<msg name="gadget.common.num.high">Number must be less than or equal to 50</msg>
+<msg name="gadget.common.error.save.dashboard">Error rendering save to dashboard form.</msg>
+<msg name="gadget.common.no">No</msg>
+<msg name="gadget.common.chart.period">Period: last {0}{1}{2} days (grouped {3}{4}{5})</msg>
+<msg name="gadget.common.save">Save</msg>
+<msg name="gadget.common.period.monthly">Monthly</msg>
+<msg name="gadget.common.issues">Issues</msg>
+<msg name="gadget.common.filter">Filter:</msg>
+<msg name="gadget.common.refresh.never">Never</msg>
+<msg name="gadget.common.projects.and.categories.mixed">You can not mix categories and projects.</msg>
+<msg name="gadget.common.num.overlimit">Number must not exceed {0}</msg>
+<msg name="gadget.common.num.negative">Number must be greater than 0</msg>
+<msg name="gadget.common.period.quarterly">Quarterly</msg>
+<msg name="gadget.common.add.filter">Add filter</msg>
+<msg name="gadget.common.categories">Categories</msg>
+<msg name="gadget.common.authrequired">
+Please login <strong>OR</strong> contact Administrator to <a href='http://confluence.atlassian.com/display/DOC/External+Gadgets'>configure Application Link</a>
+</msg>
+<msg name="gadget.common.required.project.or.filter">Please select a filter or project</msg>
+<msg name="gadget.common.issuesunresolved">Issues Unresolved</msg>
+<msg name="gadget.common.period.name">Period</msg>
+<msg name="gadget.common.show.column.headers.false.label">No</msg>
+<msg name="gadget.common.period.weekly">Weekly</msg>
+<msg name="gadget.common.filterid.edit">Click here to select/change filter or project.</msg>
+<msg name="gadget.common.all.projects.and.others">
+''All Projects'' can not be selected along with other projects
+</msg>
+<msg name="gadget.common.indexing">
+Indexing is currently not configured so no issue searching can be performed.
+</msg>
+<msg name="gadget.common.projects">Projects</msg>
+<msg name="gadget.common.columns.to.display.description">Default columns:</msg>
+<msg name="gadget.common.filterid.none.selected">No Filter/Project selected</msg>
+<msg name="gadget.common.refresh.description">How often you would like this gadget to update</msg>
+<msg name="gadget.common.filters">Filters</msg>
+<msg name="gadget.common.filterid.description">
+Project or saved filter to use as the basis for the graph.
+</msg>
+<msg name="gadget.common.days.overlimit.for.period">Days must not exceed {0} for {1} period</msg>
+<msg name="gadget.common.error.404">
+The resource <a href="{0}" target="parent">{1}</a>, cannot be found.
+</msg>
+<msg name="gadget.common.refresh.minutes">Every {0} Minutes</msg>
+<msg name="gadget.common.error.generation">
+Unfortunately, one or more of your preferences are now unavailable. Please update your preferences, or remove gadget by clicking delete from the title bar above.
+</msg>
+<msg name="gadget.common.all.categories.and.others">
+''All Categories'' can not be selected along with other categories
+</msg>
+<msg name="gadget.common.num.label">Number of Results:</msg>
+<msg name="gadget.common.anonymous.is.invalid">This gadget requires a logged in user.</msg>
+<msg name="gadget.common.project.none.selected">No project selected</msg>
+<msg name="gadget.common.indexing.admin">
+Please contact your administrator to get indexing configured.
+</msg>
+<msg name="gadget.common.project.description">Project to use as the basis for the graph.</msg>
+<msg name="gadget.common.days.label">Days Previously:</msg>
+<msg name="gadget.common.no.filter.id">You must specify a filter.</msg>
+<msg name="gadget.common.refresh.hours">Every {0} Hours</msg>
+<msg name="gadget.common.num.nan">
+The value must be an integer greater than 0 and less than or equal to 50
+</msg>
+<msg name="gadget.common.projects.and.categories.none.selected">No project/category selected</msg>
+<msg name="gadget.common.anonymous.filter">Anonymous Filter</msg>
+<msg name="gadget.common.project.label">Project:</msg>
+<msg name="gadget.common.invalid.projectOrFilterId">Invalid project or filter</msg>
+<msg name="gadget.common.invalid.projectOrFilterId.query.prefix">Your query can not start with ''*'' or ''?''</msg>
+<msg name="gadget.common.refresh.label">Refresh Interval:</msg>
+<msg name="gadget.common.stattype.description">
+Select which type of statistic to display for this filter.
+</msg>
+<msg name="gadget.common.filterid.label">Project or Saved Filter:</msg>
+<msg name="gadget.common.refresh.hour">Every {0} Hour</msg>
+<msg name="gadget.common.invalid.filter.validationfailed">The selected filter {0} has an error: {1}.</msg>
+<msg name="gadget.common.yes">Yes</msg>
+<msg name="gadget.common.reload">Refresh</msg>
+<msg name="gadget.common.filter.none.selected">No Filter selected</msg>
+<msg name="gadget.common.invalid.projectCategory">Invalid Project Category</msg>
+<msg name="gadget.issuetable.common.no.columns">There are no available fields for this gadget.</msg>
+<msg name="gadget.issuetable.common.cols.not.found">The following fields are invalid: {0}.</msg>
+<msg name="gadget.issuetable.common.column.picker.instructions">
+Add fields to the list above by selecting them and clicking ''Add''.
+</msg>
+<msg name="gadget.issuetable.common.no.unreleased.versions">Project {0} has no unreleased versions.</msg>
+<msg name="gadget.issuetable.common.column.picker.prompt">Select a field...</msg>
+<msg name="gadget.issuetable.common.displaying.link">{0}&ndash;{1} of {2}{3}{4}</msg>
+<msg name="gadget.issuetable.common.displaying">{0}&ndash;{1} of {2}</msg>
+<msg name="gadget.issuetable.common.fields.add">Add</msg>
+<msg name="gadget.issuetable.common.fields.to.display">Fields to display</msg>
+<msg name="gadget.issuetable.common.column.reorder.instructions">Drag-drop to reorder the fields.</msg>
+<msg name="gadget.issuetable.common.column.delete">Delete this field</msg>
+<msg name="gadget.issuetable.common.empty">No matching {0}issues{1} found.</msg>
+<msg name="gadget.assignedtome.title">Assigned to Me</msg>
+<msg name="gadget.assignedtome.description">Displays all unresolved issues assigned to me</msg>
+<msg name="gadget.assignedtome.empty">There are no issues assigned to you.</msg>
+<msg name="gadget.issuetable.common.no.columns">There are no available fields for this gadget.</msg>
+<msg name="gadget.issuetable.common.cols.not.found">The following fields are invalid: {0}.</msg>
+<msg name="gadget.issuetable.common.column.picker.instructions">
+Add fields to the list above by selecting them and clicking ''Add''.
+</msg>
+<msg name="gadget.issuetable.common.no.unreleased.versions">Project {0} has no unreleased versions.</msg>
+<msg name="gadget.issuetable.common.column.picker.prompt">Select a field...</msg>
+<msg name="gadget.issuetable.common.displaying.link">{0}&ndash;{1} of {2}{3}{4}</msg>
+<msg name="gadget.issuetable.common.displaying">{0}&ndash;{1} of {2}</msg>
+<msg name="gadget.issuetable.common.fields.add">Add</msg>
+<msg name="gadget.issuetable.common.fields.to.display">Fields to display</msg>
+<msg name="gadget.issuetable.common.column.reorder.instructions">Drag-drop to reorder the fields.</msg>
+<msg name="gadget.issuetable.common.column.delete">Delete this field</msg>
+<msg name="gadget.issuetable.common.empty">No matching {0}issues{1} found.</msg>
+
+</messagebundle>

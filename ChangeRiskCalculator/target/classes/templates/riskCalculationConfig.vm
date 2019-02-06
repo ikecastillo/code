@@ -1,0 +1,306 @@
+<html>
+<head>
+      <meta name="decorator" content="atl.admin" />
+      <meta name="projectKey" content="$projectKey"/>
+      <meta name="application-base-url" content="$applicationProperties.getBaseUrl()"> 
+      $webResourceManager.requireResource("com.dt.jira.plugin.changeRisk.calculator.ChangeRiskCalculator:ChangeRiskCalculator-resources")
+      $webResourceManager.requireResource("com.atlassian.auiplugin:aui-select2") 
+	  $webResourceManager.requireResource("com.atlassian.auiplugin:dialog2")
+	  $webResourceManager.requireResource("com.atlassian.auiplugin:ajs")
+        $webResourceManager.requireResource("jira.webresources:autocomplete")
+      <title>Desk Desk Configuration</title>
+<style>
+.aui-page-panel-content{
+	box-sizing: border-box;
+	display: table-cell;
+	padding: 20px;
+	vertical-align: top;
+}
+body{
+	color: #333;
+	font-family: Arial,sans-serif;
+	font-size: 14px;
+	line-height: 1.42857142857143;
+}
+.sd-portal-preview {
+  border-bottom: 1px solid #d3d3d3;
+  font-size: 16px;
+  text-align: right;
+  padding-bottom: 20px;
+  height: 20px;
+}
+.sd-portal-preview div.breadcrumb {
+  float: left;
+}
+.sd-portal-preview div.breadcrumb .header {
+  font-size: 20px;
+}
+form.aui {
+  margin: 20px 0 0 0;
+  position: relative;
+}
+table.aui {
+  border-collapse: collapse;
+  width: 100%;
+  vertical-align: top;
+    margin: 10px 0 0 0;
+}
+table {
+  display: table;
+  border-spacing: 2px;
+  border-color: grey;
+}
+thead {
+  display: table-header-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+table.aui>thead {
+  border-bottom: 1px solid #ccc;
+}
+tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+table.aui.aui-restfultable>thead>tr>th {
+  background-color: #fff;
+}
+table.aui>thead>tr>th
+{
+  padding: 7px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  font-weight: bold;
+   display: table-cell;
+}
+#request-types-table th .descLight {
+  font-weight: normal;
+  color: #707070;
+}
+tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+.aui-restfultable-create td {
+  border: solid #bbb;
+  border-width: 1px 0;
+}
+table.aui>tbody>tr, 
+{
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+  color: #333;
+}
+tr 
+{
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
+tr.highlight   
+{    
+   background-color: #063774;   
+   color: White;   
+}
+
+table.aui>tbody>tr:first-child>td
+{
+  border-top: 1px solid #ccc;
+}
+.aui-restfultable-allowhover tr.aui-restfultable-focused td {
+  background-color: #ebf1fd;
+}
+#request-types-table .aui-restfultable-row td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.aui-restfultable .aui-restfultable-order {
+  width: 8px;
+}
+.aui-restfultable .aui-restfultable-row .aui-restfultable-draghandle {
+  display: inline-block;
+  width: 8px;
+  height: 100%;
+  min-height: 24px;
+  margin-bottom: -6px;
+  background-image: url("/s/en_USbusnmh/64014/47/2.5.0/_/download/resources/com.atlassian.servicedesk:restful-table/experimentalimages/bg-grippy.png");
+  cursor: move;
+}
+#request-types-table .aui-restfultable-row td.request-type-icon {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#request-types-table .request-type-icon {
+  width: 65px;
+}
+
+#request-types-table .request-type-group {
+  width: 200px;
+}
+
+
+#request-types-table .aui-restfultable-editrow .aui-restfultable-hovercell {
+   box-sizing: border-box;
+  display: block;
+  margin: 0;
+  height: 1%;
+  padding: 3px 24px 2px 4px;
+  position: relative;
+}
+#request-types-table .request-type-name {
+  width: 220px;
+}
+.aui-restfultable .aui-restfultable-row input.text, .aui-restfultable .aui-restfultable-row select {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.bordertopthtd{
+border-top:1px solid #bbb;
+}
+
+.tdhover{
+    border:1px solid gray;
+    background-color: #FCFAB3;
+    }
+	
+.selected {
+border:1px solid gray;
+background: #f5f5f5;
+border-color: #cccccc;
+}
+
+.tdwrapcls{
+width: 200px;
+/* text-overflow: ellipsis; */
+overflow: hidden;
+/* white-space: nowrap; */
+word-wrap: break-word;
+}
+
+.tdurlWrapcls{
+width: 220px;
+/* text-overflow: ellipsis; */
+overflow: hidden;
+/* white-space: nowrap; */
+word-wrap: break-word;
+}
+
+a.disabled { color:gray; }
+ 
+</style>
+</head>
+
+
+
+<body>
+<div class="header" style="bold;">
+        <h3 class="formtitle" style="font-weight:bold;border-bottom:0px;">Risk Assessment Calculation Configuration</h3> 
+    </div>
+<div class="content-container">
+<form  class="aui" >
+
+
+<input type="hidden" id="projectKey" name="projectKey" value="$projectKey">
+                     <input type="hidden" id="baseURL" value="$baseURL"/> 
+					 
+    <table id="risk-config-table" class="aui" >
+	<thead>
+                
+                  #foreach( $key in $OptionsMap.keySet() )
+                   <tr>
+                    
+                    <div>
+                   <label > $key </label>
+                   <br/>
+ 					<select  id="$velocityCount" name="$velocityCount"> 
+ 					<option value="">---select---</option>
+ 					#foreach ($option in $OptionsMap.get($key))                                    
+	                                     #if ($selectedGroup && ($selectedGroup  == $option.getValue()))
+	                   							<option value="$option.getValue()"  title="$option.getValue()"  selected="selected">$option.getValue()</option>
+	              						 #else
+	                  							<option value="$option.getValue()"  title="$option.getValue()" >$option.getValue()</option>
+	            						 #end
+                                     #end 
+ 					
+ 					
+ 					
+ 					</select>
+ 					</div>
+ 					</tr>
+					#end
+					
+					
+					
+					
+					
+					<tr>
+					<td>
+					<div>
+                   <label> Condition </label>
+                   <select  id="conditionID">
+                   <option value="">---select---</option>
+                   <option value="And">And</option>
+                   <option value="Or">Or</option>
+                   </select>
+                   </div>
+                   </td>
+                   <td>
+                   <div>
+                   <label> result </label>
+                   <select  id="resultID">
+                   <option value="">---select---</option>
+                   #foreach ($option in $riskOptions)  
+                   
+                    #if (!($option.getDisabled()) )                                  
+	                                     #if ($selectedRisk && ($selectedRisk  == $option.getValue()) )
+	                   							<option value="$option.getValue()"  title="$option.getValue()"  selected="selected">$option.getValue()</option>
+	              						 #else
+	                  							<option value="$option.getValue()"  title="$option.getValue()" >$option.getValue()</option>
+	            						 #end
+                                     #end 
+                                   #end 
+ 					
+                   </select>
+                   </div>
+                   </td>
+                   <td>
+				   <div>
+                    <input type="button" name="add_config" id="add_risk" value="Add Condition" class="button spaced" style="float:center">
+                   </div>
+                   </td>
+                   </tr>
+                   
+                    
+                    </thead>
+                    
+	</table>
+	 <table id="risk-conditions-table" class="aui" >
+	<thead>
+	
+                    #foreach( $key in $OptionsMap.keySet() )
+                  <th> <label > $key </label></th>
+                   #end
+                   <th> <label> Condition </label></th>
+                   <th> <label> Result </label></th>
+                   <th></th>
+                    </thead>
+                    <tbody class="aui-restfultable-create-group-config">
+                    </tbody>
+                    </table>
+	
+	</form>
+	</div>
+</body>
+</html>

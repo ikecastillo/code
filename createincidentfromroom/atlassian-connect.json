@@ -1,0 +1,85 @@
+{
+  "key": "incident-creator-addon",
+  "name": "CreateIncident",
+  "description": "A simple add-on that creates incident tickets from hipchat room",
+  "vendor": {
+    "name": "Yagnesh Bhat",
+    "url": "https://www.hipchat.com"
+  },
+  "links": {
+    "self": "{{localBaseUrl}}/atlassian-connect.json",
+    "homepage": "{{localBaseUrl}}/atlassian-connect.json"
+  },
+  "capabilities": {
+    "hipchatApiConsumer": {
+      "scopes": [
+        "send_notification",
+        "view_group",
+        "view_room",
+        "admin_room"
+      ]
+    },
+    "glance": [
+      {
+        "name": {
+          "value": "Create Incident"
+        },
+        "key": "hctester.glance.dialog",
+        "target": "hctester.dialog.complex",
+        "icon": {
+          "url": "{{localBaseUrl}}/img/allthethings.png",
+          "url@2x": "{{localBaseUrl}}/img/allthethings.png"
+        }
+      }
+    ],
+    "installable": {
+      "allowRoom": true,
+      "allowGlobal": true,
+      "callbackUrl": "{{localBaseUrl}}/installable",
+      "updateCallbackUrl": "{{localBaseUrl}}/updated"
+    },
+    "action" : [
+      {
+        "key": "input.open.dialog.complex",
+        "name": {
+          "value": "Create Incident"
+        },
+        "target": "hctester.dialog.complex",
+        "location": "hipchat.input.action"
+      }
+    ],
+    "dialog" : [
+      {
+        "key": "hctester.dialog.complex",
+        "title": {
+          "value": "Create Incident ticket"
+        },
+        "url": "{{localBaseUrl}}/dialog/complex",
+        "options": {
+          "style": "normal",
+          "primaryAction": {
+            "name": {
+              "value": "Create"
+            },
+            "key": "dialog.yes",
+            "enabled": true
+          },
+          "secondaryActions": [
+            {
+              "name": {
+                "value": "Cancel"
+              },
+              "key": "dialog.no"
+            }
+          ],
+          "size": {
+            "width": "810px",
+            "height": "300px",
+            "margin-left":"-406px",
+            "margin-top":"-170.5px"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="FixVersionEnhancement"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="FixVersionEnhancement-resources" name="FixVersionEnhancement Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>		
+		<dependency>com.atlassian.auiplugin:aui-select2</dependency>        
+        <resource type="download" name="FixVersionEnhancement.css" location="/css/FixVersionEnhancement.css"/>
+        <resource type="download" name="FixVersionEnhancement.js" location="/js/FixVersionEnhancement.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>FixVersionEnhancement</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    
+	<web-resource key="test-js" name="javascript">
+        <dependency>jira.webresources:global-static</dependency>
+        <description>JavaScript</description>
+        <resource name="test.js" type="download" location="js/test.js" />	
+        <context>atl.general</context>
+         <context>atl.admin</context>
+    </web-resource>
+	<rest name="fixVersionEnhancement" i18n-name-key="fixVersionEnhancement.name" key="fixVersionEnhancement" path="/fixversionenhancement" version="1.0">
+    <description key="fixVersionEnhancement.description">Dealertrack REST Modules</description>
+  </rest>
+</atlassian-plugin>

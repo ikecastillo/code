@@ -1,0 +1,11 @@
+com\dt\jira\plugin\rest\ITILChngMgmtResourceModel.class
+com\dt\jira\plugin\rest\LdapSrvcResource$1.class
+com\dt\jira\plugin\rest\ITILChngMgmtResource$2.class
+com\dt\jira\plugin\rest\LdapSrvcResource$2.class
+com\dt\jira\plugin\rest\ITILChngMgmtResource$1.class
+com\dt\jira\plugin\rest\LdapSrvc.class
+com\dt\jira\plugin\ui\LdapServlet.class
+com\dt\jira\plugin\rest\LdapSrvcResource.class
+com\dt\jira\plugin\MyPluginComponentImpl.class
+com\dt\jira\plugin\rest\ITILChngMgmtResource.class
+com\dt\jira\plugin\MyPluginComponent.class

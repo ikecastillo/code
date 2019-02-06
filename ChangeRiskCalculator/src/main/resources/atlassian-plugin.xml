@@ -1,0 +1,79 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="ChangeRiskCalculator"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="ChangeRiskCalculator-resources" name="ChangeRiskCalculator Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <resource type="download" name="ChangeRiskCalculator.css" location="/css/ChangeRiskCalculator.css"/>
+        <resource type="download" name="ChangeRiskCalculator.js" location="/js/ChangeRiskCalculator.js"/>
+        <resource type="download" name="images/" location="/images"/>
+		<context>ChangeRiskCalculator</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.changeRisk.calculator.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.changeRisk.calculator.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/> 
+	
+	
+	<!-- Related to admin section - all the views with their associated actions -->
+	  <web-section key="risk-calculation-section" name="risk calculation Plugin Section" location="admin_plugins_menu" i18n-name-key="risk-calculation-section.name" weight="950">
+		<label key="Risk Calculation"/>
+		<description>Risk calculation Section</description>
+		<tooltip>Risk calculation  Section</tooltip>
+	  </web-section>
+	  
+	  <web-item key="risk-calculation-web-item-1" section="admin_plugins_menu/risk-calculation-section" i18n-name-key="risk-calculation-web-item.name-1" name="Risk calculation Initial Setup" weight="1050">
+		<description>Risk calculation configuration</description>
+		<label key="Risk Calculation Configuration"/>
+		<link linkId="risk-calculation-web-item-link-1">/plugins/servlet/riskCalculation</link>
+	  </web-item>
+		<!-- Restful Web service -->
+		<rest key="riskCalculationrest" name="riskCalculation" i18n-name-key="rest" path="/dealertrack/riskCalculationrest" version="1.0"><description key="rest.description">RiskCalculation rest Modules</description></rest>
+	
+	
+	
+		<!-- entities -->
+		<ao key="ao-module">
+		<description>The module configuring the Active Objects service used by this plugin</description>
+		<entity>com.dt.jira.plugin.changeRisk.calculator.ao.RiskCalculation</entity>
+		</ao>
+		
+		<component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+		<description>Component to access Active Objects functionality from the plugin</description>
+		</component-import>
+		<component key="tx-processor" name="Transactional Annotation Processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+		<decription>Processes @Transactional annotations.</decription>
+		</component>
+		<!-- Services -->
+	  <component key="riskService" name="riskService" class="com.dt.jira.plugin.changeRisk.calculator.service.RiskCalculationServiceImpl" />
+	
+	
+	 <!-- Event Listener -->	
+	  <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+	  <component key="riskeventListener" class="com.dt.jira.plugin.changeRisk.calculator.event.RiskCalculatorEventListener">
+			<description>Class that processes the incoming JIRA issue events.</description>
+	  </component>
+	
+	 <!-- Servlet  -->
+		<servlet key="risk-calculation-servlet" class="com.dt.jira.plugin.changeRisk.calculator.ui.RiskCalculationServlet"> 
+		<url-pattern>/riskCalculation</url-pattern>
+		</servlet>
+	    
+</atlassian-plugin>

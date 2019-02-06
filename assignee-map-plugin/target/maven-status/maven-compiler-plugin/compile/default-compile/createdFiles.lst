@@ -1,0 +1,11 @@
+com\dt\jira\assigneemap\plugins\rest\Assignee.class
+com\dt\jira\assigneemap\plugins\rest\AssigneeMapResource.class
+com\dt\jira\plugin\event\ComponentChangeEventListener$1.class
+com\dt\jira\assigneemap\plugins\condition\IssueTypeChangeCondition.class
+com\dt\jira\plugin\event\ComponentChangeEventListener.class
+com\dt\jira\assigneemap\plugins\ao\AssigneeMap.class
+com\dt\jira\assigneemap\plugins\MyPluginComponent.class
+com\dt\jira\assigneemap\plugins\ao\AssigneeMapService.class
+com\dt\jira\assigneemap\plugins\ao\AssigneeMapServiceImpl.class
+com\dt\jira\assigneemap\plugins\ui\AssigneeMapServlet.class
+com\dt\jira\assigneemap\plugins\MyPluginComponentImpl.class

@@ -1,0 +1,9 @@
+com\dt\jira\plugin\changeRisk\calculator\event\RiskCalculatorEventListener.class
+com\dt\jira\plugin\changeRisk\calculator\MyPluginComponentImpl.class
+com\dt\jira\plugin\changeRisk\calculator\service\RiskCalculationService.class
+com\dt\jira\plugin\changeRisk\calculator\MyPluginComponent.class
+com\dt\jira\plugin\changeRisk\calculator\ao\RiskCalculation.class
+com\dt\jira\plugin\changeRisk\calculator\ui\RiskCalculationServlet.class
+com\dt\jira\plugin\changeRisk\calculator\service\RiskCalculationServiceImpl.class
+com\dt\jira\plugin\changeRisk\calculator\rest\RestRiskCalculationResource.class
+com\dt\jira\plugin\changeRisk\calculator\rest\RiskCalculationModel.class

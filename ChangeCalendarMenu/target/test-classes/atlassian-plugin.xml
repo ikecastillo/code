@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="com.dt.jira.changecal.ChangeCalendarMenu-tests" name="ChangeCalendarMenu" plugins-version="2">
+  <plugin-info>
+    <description>This plugin adds links to a new menu in the JIRA header. This menu will have a sub menu for change calendar</description>
+    <version>1.0-SNAPSHOT</version>
+    <vendor name="DT Inc." url="http://www.dealertrack.com/"/>
+  </plugin-info>
+  <!-- from our base plugin -->
+  <component-import key="myComponent" interface="com.dt.jira.changecal.MyPluginComponent"/>
+  <!-- from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <component key="my-component-wired-test" class="it.com.dt.jira.changecal.MyComponentWiredTest" public="true">
+    <interface>it.com.dt.jira.changecal.MyComponentWiredTest</interface>
+    <service-properties>
+      <entry key="inProductTest" value="true"/>
+    </service-properties>
+  </component>
+</atlassian-plugin>

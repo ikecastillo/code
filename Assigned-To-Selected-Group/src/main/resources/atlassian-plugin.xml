@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/dtIcon.png</param>
+    <param name="plugin-logo">images/dtLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="Assigned-To-Selected-Group"/>
+  <!-- add our web resources -->
+  <web-resource key="Assigned-To-Selected-Group-resources" name="Assigned-To-Selected-Group Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="Assigned-To-Selected-Group.css" location="/css/Assigned-To-Selected-Group.css"/>
+    <resource type="download" name="Assigned-To-Selected-Group.js" location="/js/Assigned-To-Selected-Group.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>Assigned-To-Selected-Group</context>
+  </web-resource>
+  
+  <resource type="download" namePattern="thumbnails/" location="thumbnails/"/>
+      
+  <resource type="download" name="i18n/ALL_ALL.xml" location="i18n/ALL_ALL.xml">
+    <param name="content-type" value="text/xml; charset=UTF-8"/>
+  </resource>
+  
+  <!-- publish our component -->
+  <component key="myPluginComponent" class="com.dt.jira.gadget.plugin.MyPluginComponentImpl" public="true">
+    <interface>com.dt.jira.gadget.plugin.MyPluginComponent</interface>
+  </component>
+  <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <gadget name="AssignedToSelectedGroup" i18n-name-key="assigned-to-selected-group.name" key="assigned-to-selected-group" location="gadgets/assigned-to-selected-group/gadget.xml">
+    <description key="assigned-to-selected-group.description">The AssignedToSelectedGroup Plugin</description>
+  </gadget>
+  <rest name="Assigned To Selected Group Resource" i18n-name-key="assigned-to-selected-group-resource.name" key="assigned-to-selected-group-resource" path="/assigned-to-selected-group" version="1.0">
+    <description key="assigned-to-selected-group-resource.description">The Assigned To Selected Group Resource Plugin</description>
+  </rest>
+</atlassian-plugin>

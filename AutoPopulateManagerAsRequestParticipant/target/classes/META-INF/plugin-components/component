@@ -1,0 +1,4 @@
+com.dt.jira.plugin.autopopulatemanager.fnideveops.event.ManagerAsParticipantEvent#managerAsParticipantEvent
+com.dt.jira.plugin.autopopulatemanager.fnideveops.impl.MyPluginComponentImpl#myPluginComponent
+com.dt.jira.plugin.autopopulatemanager.fnideveops.rest.ServiceDeskLDAPIntegrationResource#ServiceDeskLDAPIntegrationResource
+com.dt.jira.plugin.autopopulatemanager.fnideveops.ui.LdapServlet#LDAPConfigServlet

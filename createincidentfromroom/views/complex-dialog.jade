@@ -1,0 +1,66 @@
+extends layout
+
+block javascript
+    script(src='/js/complex-dialog.js')
+
+block content
+    div#page
+        section#content(role='main')
+            div.aui-page-panel(style="margin: 0px; border: 0px;")
+                div.aui-page-panel-inner
+                    section.aui-page-panel-content
+                        form.aui
+                            div.field-group
+                                div#errorcreatingticket.error
+                            div.field-group
+                                label(for="clientsimpacted") Clients Impacted
+                                    span.req(class="aui-icon icon-required")
+                                select#clientsimpacted(name='Clients Impacted' class="select")
+                                    option(value='', selected='selected') None
+                                    option(value='Internal') Internal (Burlington)
+                                    option(value='External') External
+                                div.error
+                            div.field-group
+                                label(for="incidentsummary") Summary
+                                    span.req(class="aui-icon icon-required")
+                                input#incidentsummary(class="text long-field" type="text")
+                                div.error
+                            div.field-group
+                                label(for="incidentdescription") Description
+                                    span.req(class="aui-icon icon-required")
+                                textarea#incidentdescription(class="textarea long-field wiki-textfield long-field mentionable" rows="6")
+                                div.error
+                            div.field-group
+                                label(for="impacted") Impacted
+                                select#impacted(name='Impacted' class="select")
+                                    option(value='', selected='selected') None
+                                div.error
+                            div.field-group
+                                label(for="proddmkt") DDC Product
+                                select#proddmkt(name='Product' class="select")
+                                    option(value='', selected='selected') --Please select a product--
+                                div.error
+                            div.field-group
+                                label(for="incidentsev") Severity
+                                    span.req(class="aui-icon icon-required")
+                                select#incidentsev(name='Severity' class="select")
+                                    option(value='', selected='selected') None
+                                    option(value='Critical') Critical
+                                    option(value='High') High
+                                    option(value='Medium') Medium
+                                    option(value='Low') Low
+                                div.error
+                            div.field-group
+                                label(for="customerimpact") Customer Impact
+                                    span.req(class="aui-icon icon-required")
+                                textarea#customerimpact(class="textarea long-field wiki-textfield long-field mentionable" rows="4")
+                                div.error
+                            div.field-group
+                                label(for="incidentstart") Incident Start
+                                    span.req(class="aui-icon icon-required")
+                                input#incidentstart(type="text" class="text")
+                                div.description Incident Start in the format mmm d, yyyy hh:MM TT
+                                div.error
+                            div.field-group
+                                label(for="customertalkingpoints") Customer Talking Points
+                                textarea#customertalkingpoints(class="textarea long-field wiki-textfield long-field mentionable" rows="4")

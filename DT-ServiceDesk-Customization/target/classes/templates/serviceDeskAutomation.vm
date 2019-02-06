@@ -1,0 +1,425 @@
+<html>
+<head>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="projectKey" content="$projectKey"/>
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+    <meta name="admin.active.section" content="atl.jira.proj.config"/>
+    $webResourceManager.requireResource("com.dt.jira.servicedesk.customize.DT-ServiceDesk-Customization:DT-ServiceDesk-Customization-resources")
+    $webResourceManager.requireResource("com.atlassian.auiplugin:aui-select2")
+    <title>Desk Support Automation</title>
+
+    <style  type="text/css">
+
+
+
+
+
+
+        .toptblcss {
+            border:3px solid;
+            border-color:#D8D8D8;
+            border-top-left-radius: 7px 7px;
+            border-top-right-radius: 7px 7px;
+            border-bottom-left-radius: 7px 7px;
+            border-bottom-right-radius: 7px 7px;
+        }
+
+        .btmtblcss {
+            border:3px solid;
+            border-color:#D8D8D8;
+            border-top:0px;
+            border-bottom-left-radius: 10px 10px;
+            border-bottom-right-radius: 10px 10px;
+        }
+
+        .toptdcss{
+            float:right;
+            padding:5px 0px 0px 0px;
+            font-weight:bold;
+            color:black
+        }
+
+        .tablethcss{
+            float:right;
+            border:1px solid;
+            font-weight:bold;
+            color:black
+        }
+
+        .tablethcss{
+            float:right;
+            border:1px solid;
+            font-weight:bold;
+            color:black
+        }
+
+        .descCss{
+            font-size:11px;
+            color:#3b73af;
+        }
+
+    </style>
+
+
+    <script type="text/javascript" >
+
+    </script>
+
+</head>
+<body>
+<div class="header" style="padding-left:20px;width:96%">
+    <h3 class="formtitle">Service Desk Portal Automation</h3>
+</div>
+<div class="content-container">
+    <form  class="aui" >
+
+        <!-- Render the test user dialog -->
+        <section role="dialog" id="testuser-popup" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+            <!-- Dialog header -->
+            <header class="aui-dialog2-header">
+                <!-- The dialog's title -->
+                <h2 class="aui-dialog2-header-main"> User privilege on group </h2>
+
+                <!-- Close icon -->
+                <a class="aui-dialog2-header-close">
+                    <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+                </a>
+            </header>
+            <!-- Main dialog content -->
+            <div class="aui-dialog2-content">
+                <div class="form-body" style="max-height: 320px;">
+                    User Name : <input id="username" class="text" name="username"></input>
+                </div>
+
+                <div style="padding-bottom:10px;padding-left:10px" id="errPopMsgId">
+
+                </div>
+            </div>
+            <!-- Dialog footer -->
+            <footer class="aui-dialog2-footer">
+                <!-- Actions to render on the right of the footer -->
+                <div class="aui-dialog2-footer-actions">
+                    <button id="testuser-btn" class="aui-button aui-button-link">Test User </button>
+                    <button id="popup-close-button" class="aui-button aui-button-link dialog-close-button">Close</button>
+                </div>
+
+            </footer>
+        </section>
+
+        <input type="hidden" id="projectKey" name="projectKey" value="$projectKey">
+        <input type="hidden" id="baseURL" value="$baseURL"/>
+
+
+        <div  class="toptblcss">
+            <table style="width:99%;margin:4px">
+                <tr >
+                    <td class="toptdcss"><label for="projectList" style="color:black">Project:</label></td>
+                    <td>
+                        <div class="subTask_col1">
+
+                            <select id="proj" name="proj" style="min-width:190px;" class="sdaproj">
+                                <option value="None">---select---</option>
+                                #foreach ($option in $projectList)
+                                    #if ($selectedProject && ($selectedProject  == $option.getName()))
+                                        <option value="$option.getName()" selected="selected">$option.getName()</option>
+                                    #else
+                                        <option value="$option.getName()">$option.getName()</option>
+                                    #end
+                                #end
+                            </select>
+                        </div>
+                    </td>
+
+
+                    <td class="toptdcss"><label for="issueType" style="color:black">Issue Type:</label></td>
+                    <td >
+                        <div class="subTask_col2" >
+                            <select id="issue" name="issue" style="min-width:190px;">
+                                <option value="None">---select---</option>
+                                #foreach ($option in $issueList)
+                                    #if ($selectedissue && ($selectedissue  == $option.getName()))
+                                        <option value="$option.getKey()" selected="selected">$option.getName()</option>
+                                    #else
+                                        <option value="$option.getKey()">$option.getName()</option>
+                                    #end
+                                #end
+                            </select>
+                        </div>
+                    </td>
+
+
+                    <td class="toptdcss"><label for="subTaskId" style="color:black">Sub Task:</label></td>
+                    <td >
+                        <div class="subTask_col3" >
+                            <select id="subTaskId" name="subTaskId" style="min-width:190px;">
+                                <option value="None">---select---</option>
+                                #foreach ($option in $subTaskList)
+                                    #if ($selectedsubTask && ($selectedsubTask  == $option.getName()))
+                                        <option value="$option.getKey()" selected="selected">$option.getName()</option>
+                                    #else
+                                        <option value="$option.getKey()">$option.getName()</option>
+                                    #end
+                                #end
+                            </select>
+                        </div>
+                    </td>
+
+
+                </tr>
+            </table>
+        </div>
+        <div  class="toptblcss">
+            <table style="width:99%;margin:4px">
+                <tr>
+
+
+
+
+
+                    <td class="toptdcss"><label for="userDn" style="color:black">LDAP User LoginName:</label></td>
+                    <td>
+                        <div class="subTask_col1">
+                            <input id="userDn" type="text" class="text">
+                        </div>
+                    </td>
+
+
+
+                    <td class="toptdcss"><label for="Group" style="color:black">Group:</label></td>
+                    <td>
+
+                        <div class="subTask_col3">
+                            <select id="multiGroups" name="multiGroups" style="min-width:190px;" class="multi-select" multiple="multiple">
+                                <option value="None">select</option>
+                                #foreach ($option in $groupList)
+                                    #if ($selectedGroup && ($selectedGroup  == $option))
+                                        <option value="$option" selected="selected">$option</option>
+                                    #else
+                                        <option value="$option">$option</option>
+                                    #end
+                                #end
+                            </select>
+                        </div>
+                    </td>
+
+
+                </tr>
+
+                <tr>
+
+
+
+
+                    <td class="toptdcss" ><label for="password" style="color:black">LDAP Password:</label></td>
+
+
+                    <td style="vertical-align:top"> <div class="subTask_col5">
+                        <input type="password" id="password" class="text">
+                    </div>
+
+                        <div class="subTask_col6" style="padding-top:10px;padding-left:10px">
+                            <input type="button" name="test" id="authenticate" value="Test Connection" class="button spaced authenticate" style="float:center">
+                            <input type="button" name="testUser" id="testUser" value="Test User" class="button spaced authenticate" style="float:center">
+                        </div>
+                    </td>
+
+                    <td class="toptdcss" ><label for="assignee" style="color:black">Assignee:</label></td>
+
+                    <td >
+                        <div style="min-width:260px">
+                            <fieldset rel="multiUserPicker" class="hidden user-picker-params">
+                                <input title="formName" type="hidden" value="jiraform" />
+                                <input  title="fieldName" type="hidden" value="multiUserPicker" />
+                                <input title="multiSelect" type="hidden" value="true" />
+                                <input title="userPickerEnabled" type="hidden" value="true" /></fieldset>
+                            <div class="ajax_autocomplete" id="multiUserPicker_container">
+                                <textarea class="textarea long-field" cols="40" id="multiUserPicker" name="multiUserPicker" rows="3" style="width:230px;"></textarea>
+                                <a class="popup-trigger" href="#"><span class="aui-icon icon-userpicker" title="Select a user(s)"></span></a>
+                                <div id="multiUserPicker_results" class="ajax_results"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <!-- <td > <textarea class="textarea long-field customuserpickerfield" cols="40" id="customuserpickerfield" name="customuserpickerfield" rows="3" style="width:230px;"></textarea>
+                                </td> -->
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="text-align:center">
+                        <div style="padding-bottom:10px;padding-left:10px" id="errMsgId">
+
+                        </div>
+                    </td>
+
+                    <td colspan="2"  >
+
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td colspan="4"  style="text-align:right;">
+                        <input type="button" name="save" id="btnp_Save" value="Save" class="aui-button aui-button-primary" style="background-color:#3b73af;"/>
+                    </td>
+                </tr>
+            </table>
+
+
+
+        </div>
+
+
+
+
+
+        <div>
+
+            <table  id="records_table" style="width:98%;margin-top:10px;border:1px solid gray;margin-left:10px">
+                <thead>
+                <tr style="background-color:#ECECEC;border:1px solid black">
+                    <th><label>Project</label></th>
+                    <th><label>Issue Type</label></th>
+                    <th><label>sub Task</label></th>
+                    <th><label>User Dn</label></th>
+                    <th><label>Assignee</label></th>
+                    <th><label>Group</label></th>
+                    <th><label>Option</label></th>
+                </tr>
+                </thead>
+                <tbody style="border:1px solid black">
+                <tr>
+                    <td colspan="7" style="text-align:center">
+                        No records to display
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+        <input type="hidden" value="$applicationProperties.getBaseUrl()" id="baseUrl"/>
+
+    </form>
+
+</div>
+
+## Edit Settings Dialog ************************************************************************************
+<section role="dialog" id="editsettings" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main"> Edit Settings </h2>
+
+        <!-- Close icon -->
+        <a class="aui-dialog2-header-close">
+            <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+        </a>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content">
+        <form action="#" method="post" id="savesdaedit" class="aui">
+            <fieldset>
+                <div class="field-group" aria-hidden="true">
+                   #* <label for="projinEdit">
+                        Project
+                    </label>*#
+                    #*<select id="projinEdit" name="projinEdit" class="select sdaproj">
+                        <option value="None">---select---</option>
+                        #foreach ($option in $projectList)
+                            #if ($selectedProject && ($selectedProject  == $option.getName()))
+                                <option value="$option.getName()" selected="selected">$option.getName()</option>
+                            #else
+                                <option value="$option.getName()">$option.getName()</option>
+                            #end
+                        #end
+                    </select>*#
+                    <input id="projinEdit" name="projinEdit" type="text" class="text" hidden="hidden" />
+                </div>
+                <div class="field-group" aria-hidden="true">
+                    #*<label for="issueEdit">
+                        Issue Type
+                    </label>*#
+                    #*<select id="issueEdit" name="issueEdit" class="select">
+                        <option value="None">---select---</option>
+                        #foreach ($option in $issueList)
+                            #if ($selectedissue && ($selectedissue  == $option.getName()))
+                                <option value="$option.getKey()" selected="selected">$option.getName()</option>
+                            #else
+                                <option value="$option.getKey()">$option.getName()</option>
+                            #end
+                        #end
+                    </select>*#
+                    <input id="issueEdit" name="issueEdit" type="text" class="text" hidden="hidden" />
+                </div>
+                <div class="field-group" aria-hidden="true">
+                   #* <label for="subTaskEdit">
+                        Sub Task
+                    </label>*#
+                   #* <select id="subTaskEdit" name="subTaskEdit" class="select">
+                        <option value="None">---select---</option>
+                        #foreach ($option in $subTaskList)
+                            #if ($selectedsubTask && ($selectedsubTask  == $option.getName()))
+                                <option value="$option.getKey()" selected="selected">$option.getName()</option>
+                            #else
+                                <option value="$option.getKey()">$option.getName()</option>
+                            #end
+                        #end
+                    </select>*#
+                    <input id="subTaskEdit" name="subTaskEdit" type="text" class="text" hidden="hidden"/>
+                </div>
+                <div class="field-group">
+                    <label for="userDnEdit">User Dn</label>
+                    <input id="userDnEdit" type="text" class="text mandatorysdf"/>
+                    <div class="error"></div>
+                </div>
+                <div class="field-group">
+                    <label for="passwordEdit">LDAP Password</label>
+                    <input type="password" id="passwordEdit" class="text mandatorysdf">
+                    <div class="error"></div>
+                </div>
+                <div class="field-group">
+                    <label for="multiUserPickerEdit_container">Assignee</label>
+                    <fieldset rel="multiUserPickerEdit" class="hidden user-picker-params">
+                        <input title="formName" type="hidden" value="jiraform" />
+                        <input  title="fieldName" type="hidden" value="multiUserPickerEdit" />
+                        <input title="multiSelect" type="hidden" value="true" />
+                        <input title="userPickerEnabled" type="hidden" value="true" /></fieldset>
+                    <div class="ajax_autocomplete" id="multiUserPickerEdit_container">
+                        <textarea class="textarea long-field mandatorysdf" cols="40" id="multiUserPickerEdit" name="multiUserPickerEdit" rows="3" style="width:230px;"></textarea>
+                        <a class="popup-trigger" href="#"><span class="aui-icon icon-userpicker" title="Select a user(s)"></span></a>
+                        <div id="multiUserPickerEdit_results" class="ajax_results"></div>
+                        <div class="error"></div>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label for="multiGroupsEdit">Group</label>
+                    <select id="multiGroupsEdit" name="multiGroupsEdit" class="multi-select" multiple="multiple">
+                        <option value="None">select</option>
+                        #foreach ($option in $groupList)
+                            #if ($selectedGroup && ($selectedGroup  == $option))
+                                <option value="$option" selected="selected">$option</option>
+                            #else
+                                <option value="$option">$option</option>
+                            #end
+                        #end
+                    </select>
+                    <div class="error"></div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="editsettings-save-button" class="aui-button">
+                Save
+            </button>
+            <button id="editsettings-close-button" class="aui-button aui-button-link dialog-close-button">Close</button>
+        </div>
+
+    </footer>
+</section>
+## *************************************** Edit Settings dialog ends ********************************************
+
+</body>
+</html>

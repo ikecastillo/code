@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>$i18n.getText("ldap.service.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+   $webResourceManager.requireResource("com.dt.remote.DTChgCreator:DTChgCreator-resources")
+  
+  
+  </head>
+  <body>
+   <div class="header">
+        <h3 class="formtitle">LDAP details configuration</h3>
+    </div>
+    <form id="reqAppr" class="aui">
+    <input type="hidden" id="baseURL" value="$baseURL"/> 
+     
+     <div class="field-group">
+        <label for="ldapinitctx">$i18n.getText("ldap.service.initctx.label")</label>
+        <input type="text" id="ldapinitctx" name="ldapinitctx" class="text">
+      </div>
+      <div class="field-group">
+        <label for="ldapsrvrname">$i18n.getText("ldap.service.srvrname.label")</label>
+        <input type="text" id="ldapsrvrname" name="ldapsrvrname" class="text">
+      </div>
+      <div class="field-group">
+        <label for="ldapbasedn">$i18n.getText("ldap.service.basedn.label")</label>
+        <input type="text" id="ldapbasedn" name="ldapbasedn" class="text">
+      </div>
+      <div class="field-group">
+        <label for="ldapuid">$i18n.getText("ldap.service.uid.label")</label>
+        <input type="text" id="ldapuid" name="ldapuid" class="text">
+      </div>
+      <div class="field-group">
+        <label for="ldappwd">$i18n.getText("ldap.service.pwd.label")</label>
+        <input type="password" id="ldappwd" name="ldappwd" class="text">
+      </div>
+      <div class="field-group">
+        <input type="submit" value="$i18n.getText("ldap.service.save.label")" class="button" id="ldapConfigSave">
+		<input type="button" value="$i18n.getText("ldap.service.cancel.label")" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+      </div>
+      
+      
+    </form>
+	
+ 		
+	</body>
+</html>

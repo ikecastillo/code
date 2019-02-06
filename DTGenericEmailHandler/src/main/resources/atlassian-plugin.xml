@@ -1,0 +1,55 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="DTGenericEmailHandler"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="DTGenericEmailHandler-resources" name="DTGenericEmailHandler Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="DTGenericEmailHandler.css" location="/css/DTGenericEmailHandler.css"/>
+        <resource type="download" name="DTGenericEmailHandler.js" location="/js/DTGenericEmailHandler.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>DTGenericEmailHandler</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.generichandler.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.generichandler.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+
+
+    <!-- Related to the message handler -->
+    <message-handler i18n-name-key="genericHandler.name" key="genericHandler.name"
+                     class="com.dt.jira.generichandler.GenericEmailHandler"
+                     add-edit-url="/secure/admin/EditGenericHandlerDetails!default.jspa" weight="0"/>
+
+    <webwork1 key="generichandleractions" name="generichandleractions" class="java.lang.Object">
+        <actions>
+            <action name="com.dt.jira.generichandler.EditGenericEmailHandlerDetailsWebAction"
+                    alias="EditGenericHandlerDetails"
+                    roles-required="admin">
+                <view name="input">/templates/editGenericHandlerDetails.vm</view>
+                <view name="securitybreach">/secure/views/securitybreach.jsp</view>
+            </action>
+        </actions>
+    </webwork1>
+
+    <component key="issue-key-validator" class="com.dt.jira.generichandler.IssueKeyValidator"/>
+
+    <rest key="generichandlerrest" path="/ghrest" version="1.0">
+        <description>Provides the REST resource for the generic handler</description>
+    </rest>
+    
+</atlassian-plugin>

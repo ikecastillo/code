@@ -1,0 +1,4 @@
+com\dt\jira\gadget\plugin\MyPluginComponentImpl.class
+com\dt\jira\gadget\plugin\rest\AssignedToSelectedGroupResource.class
+com\dt\jira\gadget\plugin\rest\AssignedToSelectedGroupResourceModel.class
+com\dt\jira\gadget\plugin\MyPluginComponent.class

@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>$i18n.getText("ldap.service.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+   $webResourceManager.requireResource("com.dt.atlassian.criticalAccess.requestApprovl.DTRequestApproval:DTRequestApproval-resources")
+  
+  <script type="text/javascript">
+   
+   
+   
+   
+   
+   
+</script>
+  </head>
+  <body>
+   <div class="header">
+        <h3 class="formtitle">Request Approval Configuration</h3>
+    </div>
+    <form id="reqAppr" class="aui">
+    <input type="hidden" id="baseURL" value="$baseURL"/> 
+     <div class="field-group">
+        <label for="chgUrl">Remote Change issue URL</label>
+        <input type="text" id="chgUrl" name="chgUrl" class="text">
+      </div>
+      <div class="field-group">
+        <label for="remoteLinkUrl">Remote issue link URL</label>
+        <input type="text" id="remoteLinkUrl" name="remoteLinkUrl" class="text">
+      </div>
+      <div class="field-group">
+        <label for="applinkId">Applink Id</label>
+        <input type="text" id="applinkId" name="applinkId" class="text">
+      </div>
+      
+      <div class="field-group">
+        <input type="submit" value="Save" class="button" id="approverSave">
+		<input type="button" value="Cancel" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+      </div>
+    </form>
+	
+ 		
+	</body>
+</html>

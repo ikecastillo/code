@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Assigned To Individual or Group" title_url="" directory_title="Assigned To Individual or Group" description="Assigned To Individual or Group Gadget" author="DT" thumbnail="http://goo.gl/LDofI"><Optional feature="gadget-directory"><Param name="categories">
+                JIRA
+            </Param></Optional><Require feature="dynamic-height"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="auth-refresh"/><Require feature="views"/><Require feature="settitle"/><Require feature="setprefs"/><Require feature="oauthpopup"/>
+		#oauth 
+		#supportedLocales("gadget.common")
+        #supportLocales
+		<Locale lang="en" country="US"><messagebundle><msg name="gadget.issuetable.common.fields.to.display">Fields to display</msg><msg name="gadget.issuetable.common.column.picker.prompt">Select a field...</msg><msg name="gadget.issuetable.common.fields.add">Add</msg><msg name="gadget.issuetable.common.column.reorder.instructions">Drag-drop to reorder the fields.</msg><msg name="gadget.issuetable.common.column.picker.instructions">
+			Add fields to the list above by selecting them and clicking ''Add''.
+		</msg></messagebundle></Locale></ModulePrefs><UserPref name="num" datatype="hidden" default_value="10"/><UserPref name="columnNames" datatype="hidden" default_value="--Default--"/><UserPref name="groups" datatype="hidden" default_value="--Default--"/><UserPref name="mygroups" datatype="hidden" default_value="--Default--"/><UserPref name="sortColumn" datatype="hidden" default_value=""/><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><Content type="html" view="profile,canvas,home">
+        <![CDATA[
+             #requireResource("com.atlassian.jira.gadgets:common")
+			 #requireResource("com.atlassian.gadgets.publisher:ajs-gadgets")
+			 #requireResource("com.atlassian.jira.gadgets:column-picker")		
+	         #requireResource("com.atlassian.jira.gadgets:g-assigned-to-me")
+	         #includeResources()
+	      <style type="text/css">
+		    #issuetable {margin:0 0 0.25em;width:100%;}
+		    #issuetable .issuetype {width:1%;}
+		    
+		    #column-picker-restful-table th, #column-picker-restful-table td{		    
+		    	border:1px solid #D2D2D2;
+		    	border-left:0px;
+		    	border-right:0px;
+		        padding:4px;
+		        vertical-align:top;
+		    }
+		    
+		     #column-picker-restful-table, .bordered {
+		        background-color:#FCFCFC;
+		        border:1px solid #D2D2D2;
+		        border-left:0px;
+		    	border-right:0px;
+		        border-collapse:collapse;
+		        margin-bottom:0.5em;
+		        margin-top:0.5em;
+		    }
+		    
+		    td.colHeaderLink {
+		        font-family:Arial,Helvetica,sans-serif;
+		        font-size:12px;
+		        white-space:nowrap;
+		    }
+		    .grid, .bordered {
+		        background-color:#FCFCFC;
+		        border:1px solid #D2D2D2;
+		        border-collapse:collapse;
+		        margin-bottom:0.5em;
+		        margin-top:0.5em;
+		    }
+		    .grid th, .grid td {
+		        border:1px solid #D2D2D2;
+		        padding:4px;
+		        vertical-align:top;
+		    }
+		 
+		</style>
+            <script type="text/javascript">
+			(function () {
+            var contextPath = "__ATLASSIAN_BASE_URL__"; // Adding context path as it is required for actions dropdowns
+
+            gadgets.window.setTitle("Assigned To Individual or Group");
+             AJS.Gadget({
+                baseUrl: "__ATLASSIAN_BASE_URL__",
+                useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function (args) {
+                        var gadget = this;
+                        
+                       var columnType=function(name){
+                       
+                       var options=[];
+                       for (var groupIndex in args.columnGroups) {
+                       		options.push({label:args.columnGroups[groupIndex].label,value:args.columnGroups[groupIndex].value});
+                       }
+                                              
+                        return {
+                                userpref: name,
+                                label: "Groups",
+                                description: "Select groups",
+                                type: "multiselect",
+                                selected: gadget.getPref(name),
+                                options: options              
+                            };
+                       };
+
+                        return  {
+                            action: "/rest/gadget/1.0/issueTable/jql/validate",
+                            theme : function(){
+                                if (gadgets.window.getViewportDimensions().width < 450){
+                                    return "gdt top-label";
+                                } else{
+                                    return "gdt";
+                                }
+                            }(),
+                            fields: [
+                                AJS.gadget.fields.numberToShow(gadget, "num"),
+								columnGadgetFieldType(gadget, "columnNames", args.columnChoices.availableColumns),
+								columnType("groups"),
+                                AJS.gadget.fields.nowConfigured()
+                            ]
+                        };
+                    },
+                    args: [{
+                            key: "columnChoices",
+                            ajaxOptions:  "/rest/gadget/1.0/availableColumns"
+                           },
+                           {
+                            key: "columnGroups",
+                            ajaxOptions:  "/rest/assigned-to-selected-group/1.0/message.json"
+                           }
+                    ]
+                },
+                view: {
+                onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args) {
+	                       var gadget = this;
+	                      
+	                       var groupsNamesArrays = gadget.getPrefArray("groups");
+	                       var grpQryLinkHtml='(';
+                            for(var grps = 0; grps<groupsNamesArrays.length;grps++){
+                                 grpQryLinkHtml+="assignee in membersOf('"+groupsNamesArrays[grps]+"') OR ";
+                            }
+                            
+							var jqlQueryLinkHtml=grpQryLinkHtml.substring(0,grpQryLinkHtml.length-3)+")"; 
+	                                        
+                            args.linkHtml = "<a href=\"__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?reset=true&jqlQuery="+jqlQueryLinkHtml+"+AND+resolution+%3D+unresolved+ORDER+BY+priority+DESC%2C+created+ASC\" target=\"_parent\" title=\"__MSG_gadget.assignedtome.title__\">";
+							args.linkEndHtml = "</a>"; 
+							args.issueTable.empty = args.issueTable.displayed === 0; 
+							args.issueTable.hasPaging = args.issueTable.displayed === args.issueTable.total; 
+							gadget.getView().attr("id", "assigned-to-groups-content") .html(JIRA.Templates.Gadgets.assignedToMe(args));
+							var $resultCountLink = gadget.getView().find(".results-count-link"); 
+							$resultCountLink.replaceWith(AJS.$(args.linkHtml + $resultCountLink.html() + args.linkEndHtml)); 
+							
+
+                            AJS.$("th.sortable").each(function(){
+                                this.onclick = null;
+                            }).click(function(){
+                                gadget.sortBy = AJS.$(this).attr("rel");
+                                gadget.showView(true);
+                            });
+
+                            AJS.$(".pagination a").click(function(event){
+                                event.preventDefault();
+                                gadget.startIndex = AJS.$(this).attr("rel");;
+                                gadget.showView(true);
+                            });
+                            if (gadget.isLocal()){
+                                if (typeof contextPath === "undefined"){
+                                    contextPath = "__ATLASSIAN_BASE_URL__";
+                                }
+                                AJS.Dropdown.create({
+                                    trigger: ".issue-actions-trigger",
+                                    ajaxOptions: {
+                                        dataType: "json",
+                                        cache: false,
+                                        formatSuccess: JIRA.FRAGMENTS.issueActionsFragment
+                                    }
+                                });
+                            }
+
+
+                        // Apply hover class to issuetable
+                        jQuery("#issuetable tr").hover(function ()
+                        {
+                            jQuery(this).addClass("hover");
+                        }, function () {
+                            if (!AJS.dropDown.current) {
+                                jQuery(this).removeClass("hover");
+                            }
+                        });
+
+
+                        gadget.resize();
+                    },
+                    args: [{
+                        key: "issueTable",
+                        ajaxOptions: function () {
+                            var gadget = this;
+                             
+                            var groupsNames = gadgets.util.unescapeString(this.getPref("groups"));
+                            var groupsNamesArray = gadget.getPrefArray("groups");                              
+                                                        
+                            var grpQry='(';
+                            for(var grp = 0; grp<groupsNamesArray.length;grp++){
+                                 grpQry+="assignee in membersOf('"+groupsNamesArray[grp]+"') OR ";
+                            }
+                            
+							var jqlQueryString=grpQry.substring(0,grpQry.length-3)+") AND resolution = unresolved ORDER BY priority DESC, created ASC";
+														
+							var columnNames = gadget.getPrefArray("columnNames");
+							
+                            var hasDefault = false;
+                            var indexOf = -1;
+                            for (var i = 0; i < columnNames.length; i++)
+                            {
+                                if (columnNames[i] === "--Default--")
+                                {
+                                    hasDefault = true;
+                                    indexOf = i;
+                                    break;
+                                }
+                            }
+                            if (hasDefault)
+                            {
+                                columnNames.splice(indexOf, 1);
+                            }
+
+                            if (!this.sortBy){
+                                this.sortBy = null;
+                            }
+                            return {                            
+                                url: "/rest/gadget/1.0/issueTable/jql",
+                                data:  {
+                                    jql: jqlQueryString,
+                                    num: this.getPref("num"),
+                                    addDefault : hasDefault,
+                                    columnNames : columnNames,                                 
+                                    enableSorting: true,
+                                    sortBy: function() {
+                                        if (gadget.sortBy && gadget.sortBy !== "") {
+                                            return gadget.sortBy;
+                                        } else {
+                                            return null;
+                                        }
+                                    }(),
+                                    paging: true,
+                                    startIndex: function () {
+                                        if (gadget.startIndex && gadget.startIndex !== "") {
+                                            return gadget.startIndex;
+                                        } else {
+                                            return "0";
+                                        }
+                                    }(),
+                                    showActions: gadget.isLocal()
+                                }
+                            };
+                        }
+
+                    }]
+                }
+            });
+             })();
+    </script>
+           
+        ]]>
+    </Content></Module>

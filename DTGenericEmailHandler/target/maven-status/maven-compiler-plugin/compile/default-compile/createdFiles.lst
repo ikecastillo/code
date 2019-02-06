@@ -1,0 +1,10 @@
+com\dt\jira\generichandler\MyPluginComponentImpl.class
+com\dt\jira\generichandler\IssueKeyValidator.class
+com\dt\jira\generichandler\MyPluginComponent.class
+com\dt\jira\generichandler\rest\GetStatusTypes.class
+com\dt\jira\generichandler\rest\GetIssueTypes.class
+com\dt\jira\generichandler\EditGenericEmailHandlerDetailsWebAction.class
+com\dt\jira\generichandler\rest\GetStatusTypesModel.class
+com\dt\jira\generichandler\GenericEmailHandler.class
+com\dt\jira\generichandler\utils\IssueListCreatorFromSubscriptionMail.class
+com\dt\jira\generichandler\rest\GetIssueTypesModel.class

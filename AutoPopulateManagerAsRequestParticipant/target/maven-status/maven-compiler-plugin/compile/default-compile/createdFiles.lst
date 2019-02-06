@@ -1,0 +1,9 @@
+com\dt\jira\plugin\autopopulatemanager\fnideveops\rest\ServiceDeskLDAPIntegrationResource$2.class
+com\dt\jira\plugin\autopopulatemanager\fnideveops\impl\MyPluginComponentImpl.class
+com\dt\jira\plugin\autopopulatemanager\fnideveops\rest\ServiceDeskLDAPIntegrationResource$1.class
+com\dt\jira\plugin\autopopulatemanager\fnideveops\rest\LdapSrvc.class
+com\dt\jira\plugin\autopopulatemanager\fnideveops\event\ManagerAsParticipantEvent.class
+com\dt\jira\plugin\autopopulatemanager\fnideveops\rest\ServiceDeskLDAPIntegrationResourceModel.class
+com\dt\jira\plugin\autopopulatemanager\fnideveops\api\MyPluginComponent.class
+com\dt\jira\plugin\autopopulatemanager\fnideveops\rest\ServiceDeskLDAPIntegrationResource.class
+com\dt\jira\plugin\autopopulatemanager\fnideveops\ui\LdapServlet.class

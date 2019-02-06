@@ -1,0 +1,6 @@
+com\dt\jira\plugin\rest\CreateCISubtaskRest.class
+com\dt\jira\plugin\rest\ComponentsRestResourceModel.class
+com\dt\jira\plugin\rest\ComponentsRestResource.class
+com\dt\jira\plugin\MyPluginComponentImpl.class
+com\dt\jira\plugin\MyPluginComponent.class
+com\dt\jira\plugin\rest\CreateCISubtaskModel.class

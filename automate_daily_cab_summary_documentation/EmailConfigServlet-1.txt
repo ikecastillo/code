@@ -1,0 +1,11 @@
+EmailConfigServlet.java
+
+It is extending from HttpServlet .
+There are two properties defined inside EmailConfigServlet.
+1.TemplateRenderer
+2.ApplicationProperties
+In the constructor thes two properties are initialized.
+
+Insisde doGet method we are creating a map object and add one key value pair with key as "baseURL"
+
+we are rendering the emailConfiguration.vm file.

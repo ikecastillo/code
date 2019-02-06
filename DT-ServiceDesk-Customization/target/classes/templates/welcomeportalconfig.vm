@@ -1,0 +1,345 @@
+<html>
+<head>
+   <meta name="decorator" content="atl.admin" />
+      <meta name="projectKey" content="$projectKey"/>
+      <meta name="application-base-url" content="$applicationProperties.getBaseUrl()"> 
+      $webResourceManager.requireResource("com.dt.jira.servicedesk.customize.DT-ServiceDesk-Customization:DT-ServiceDesk-Customization-resources")
+      <title>Desk Configuration</title>
+	
+	<style type='text/css'>
+		.aui-page-panel-content{
+		box-sizing: border-box;
+		display: table-cell;
+		padding: 20px;
+		vertical-align: top;
+		}
+		body{
+			color: #333;
+			font-family: Arial,sans-serif;
+			font-size: 14px;
+			line-height: 1.42857142857143;
+		}
+		.sd-portal-preview {
+		  border-bottom: 1px solid #d3d3d3;
+		  font-size: 16px;
+		  text-align: right;
+		  padding-bottom: 20px;
+		  height: 20px;
+		}
+		.sd-portal-preview div.breadcrumb {
+		  float: left;
+		}
+		.sd-portal-preview div.breadcrumb .header {
+		  font-size: 20px;
+		}
+		form.aui {
+		  margin: 20px 0 0 0;
+		  position: relative;
+		}
+		table.aui {
+		  border-collapse: collapse;
+		  width: 100%;
+		  vertical-align: top;
+			margin: 10px 0 0 0;
+		}
+		table {
+		  display: table;
+		  border-spacing: 2px;
+		  border-color: grey;
+		}
+		thead {
+		  display: table-header-group;
+		  vertical-align: middle;
+		  border-color: inherit;
+		}
+		table.aui>thead {
+		  border-bottom: 1px solid #ccc;
+		}
+		tr {
+		  display: table-row;
+		  vertical-align: inherit;
+		  border-color: inherit;
+		}
+		table.aui.aui-restfultable>thead>tr>th {
+		  background-color: #fff;
+		}
+		table.aui>thead>tr>th
+		{
+		  padding: 7px 10px;
+		  text-align: left;
+		  vertical-align: top;
+		}
+		th {
+		  font-weight: bold;
+		   display: table-cell;
+		}
+		#request-types-table-main th .descLight {
+		  font-weight: normal;
+		  color: #707070;
+		}
+		tbody {
+		  display: table-row-group;
+		  vertical-align: middle;
+		  border-color: inherit;
+		}
+		.aui-restfultable-create td {
+		  border: solid #bbb;
+		  border-width: 1px 0;
+		}
+		table.aui>tbody>tr, 
+		{
+		  background: #fff;
+		  border-bottom: 1px solid #ccc;
+		  color: #333;
+		}
+		tr 
+		{
+		  display: table-row;
+		  vertical-align: inherit;
+		  border-color: inherit;
+		}
+		table.aui>tbody>tr:first-child>td
+		{
+		  border-top: 1px solid #ccc;
+		}
+		.aui-restfultable-allowhover tr.aui-restfultable-focused td {
+		  background-color: #ebf1fd;
+		}
+		#request-types-table-main .aui-restfultable-row td {
+		  padding-top: 15px;
+		  padding-bottom: 15px;
+		}
+		.aui-restfultable .aui-restfultable-order {
+		  width: 8px;
+		}
+		.aui-restfultable .aui-restfultable-row .aui-restfultable-draghandle {
+		  display: inline-block;
+		  width: 8px;
+		  height: 100%;
+		  min-height: 24px;
+		  margin-bottom: -6px;
+		  background-image: url("/s/en_USbusnmh/64014/47/2.5.0/_/download/resources/com.atlassian.servicedesk:restful-table/experimentalimages/bg-grippy.png");
+		  cursor: move;
+		}
+		#request-types-table-main .aui-restfultable-row td.request-type-icon {
+		  padding-top: 5px;
+		  padding-bottom: 5px;
+		}
+		#request-types-table-main .request-type-icon {
+		  width: 65px;
+		}
+		#request-types-table-main .aui-restfultable-editrow .aui-restfultable-hovercell {
+		   box-sizing: border-box;
+		  display: block;
+		  margin: 0;
+		  height: 1%;
+		  padding: 3px 24px 2px 4px;
+		  position: relative;
+		}
+		#request-types-table-main .request-type-name {
+		  width: 220px;
+		}
+		.aui-restfultable .aui-restfultable-row input.text {
+		  box-sizing: border-box;
+		  margin: 0;
+		  min-width: 0;
+		}
+		form.aui .text, form.aui .select{
+			height: 2.1428571428571em;
+			line-height: 1.4285714285714;
+			border: 1px solid #ccc;
+			border-radius: 3.01px;
+			font-size: inherit;
+			max-width: 250px;
+			vertical-align: baseline;
+			background: #fff;
+			color: #333;
+			font-family: inherit;
+		}
+		input,textarea,select{
+			-webkit-appearance: textfield;
+			-webkit-rtl-ordering: logical;
+			-webkit-user-select: text;
+			-webkit-writing-mode: horizontal-tb;
+			cursor: auto;
+			font: normal normal normal 13.3333330154419px/normal Arial;
+			  text-rendering: auto;
+			  color: initial;
+			  letter-spacing: normal;
+			  word-spacing: normal;
+			  text-transform: none;
+			  text-indent: 0px;
+			  text-shadow: none;
+			  display: inline-block;
+			  text-align: start;
+		}
+		
+		.aui-ss {
+		  box-sizing: border-box;
+		  display: inline-block;
+		  overflow: visible;
+		  position: relative;
+		}
+		.chrome form.aui .aui-ss>.aui-ss-field{
+			vertical-align: middle;
+		}
+		.aui-ss.aui-ss-has-entity-icon>.aui-ss-field {
+		  padding-left: 25px;
+		}
+		form.aui .aui-ss>.aui-ss-field{
+			padding-right: 28px;
+		}
+		.aui-ss>.aui-ss-field {
+		  overflow: hidden;
+		  text-overflow: ellipsis;
+		  white-space: nowrap;
+		  resize: none;
+		}
+		.ajs-layer-placeholder {
+		  display: none;
+		  position: relative;
+		}
+		.ajs-layer.box-shadow{
+			  box-shadow: 0 3px 6px 
+			  rgba(111,111,111,0.2);
+		}
+
+		.ajs-layer {
+		  background-color: #fff;
+		  border: 1px solid #ccc;
+		  border-bottom-left-radius: 3px;
+		  border-bottom-right-radius: 3px;
+		  margin-top: 1px;
+		  min-width: 200px;
+		  overflow-x: hidden;
+		  overflow-y: auto;
+		  z-index: 12000;
+		}
+		.aui-list .aui-list-scroll {
+		  max-height: 450px;
+		}
+		.aui-list ul {
+		  list-style: none;
+		  margin: 0;
+		  padding: 2px 0;
+		}
+		ul, menu, dir {
+		  display: block;
+		  -webkit-margin-before: 1em;
+		  -webkit-margin-after: 1em;
+		  -webkit-margin-start: 0px;
+		  -webkit-margin-end: 0px;
+		  -webkit-padding-start: 40px;
+		}
+		li {
+		  display: list-item;
+		  text-align: -webkit-match-parent;
+		}
+		
+		
+
+		
+
+		form.aui textarea {
+		  box-sizing: border-box;
+		  border-radius: 3.01px 3.01px 3.01px 3.01px;
+		  background-clip: padding-box;
+		  box-shadow: 0 1px 3px 0 #ccc inset;
+		  border: 1px solid #ccc;
+		  font-family: Arial,sans-serif;
+		  font-size: 14px;
+		  height:auto;
+		 }
+		 
+		 
+		   
+		
+		
+		input[type="submit"]{
+		  -webkit-appearance: button;
+		}
+
+		.aui-button {
+		  color: #333;
+		}
+		.aui-button{
+		  box-sizing: border-box;
+		  background: #f5f5f5;
+		  border: 1px solid #ccc;
+		  border-radius: 3.01px;
+		  cursor: pointer;
+		  display: inline-block;
+		  font-family: inherit;
+		  font-size: 14px;
+		  font-variant: normal;
+		  font-weight: normal;
+		  height: 2.14285714em;
+		  line-height: 1.42857143;
+		  margin: 0;
+		  padding: 4px 10px;
+		  text-decoration: none;
+		  vertical-align: baseline;
+		  white-space: nowrap;
+		}
+
+		.aui-restfultable-row .aui-restfultable-throbber {
+		  width: 20px;
+		  }
+		  
+		  .tdhover{
+    border:1px solid gray;
+    background-color: #FCFAB3;
+    }
+	</style>
+</head>
+<body>
+	
+		<section class="aui-page-panel-content">
+			<div class="sd-portal-preview">
+				<div class="breadcrumb">
+					<span class="header">Service Desk Portal Configuration</span>
+				</div>
+			</div>
+			<div>
+		<form class="aui">
+		<input type="hidden" id="projectKey" name="ProjectKey" value="$projectKey"/>
+				<input type="hidden" id="baseURL" value="$baseURL"/>
+			<table id="request-types-table-main-field" class="aui-restfultable aui-restfultable-allowhover aui" style="width:100%">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>
+							<span class="descBold">Description</span>&nbsp; 
+						</th>
+						<th>Actions</th>
+			
+					</tr>
+				</thead>
+			<tbody class="aui-restfultable-create">
+				<tr class="aui-restfultable-row aui-restfultable-editrow aui-restfultable-focused">
+                    				
+					
+					<td class="request-type-name">
+						<input type="text" id="name" class="text" name="name" value="">
+					</td>
+			
+					<td class="request-type-description">
+						<textarea  rows="3" cols="70" class="textarea-cell" id="description" name="description" value=""></textarea>
+					</td>
+			
+					<td class="aui-restfultable-operations" colspan="2">
+						<input class="aui-button add-main-config" type="submit" value="Add">
+					</td>
+			
+				</tr>
+			</tbody>
+			<tbody class="ui-sortable">
+	
+			</tbody>
+			</table>
+		</form>
+		</div>
+		</section>
+		
+</body>
+</html>

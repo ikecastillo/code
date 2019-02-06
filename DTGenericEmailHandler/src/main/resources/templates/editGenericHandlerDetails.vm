@@ -1,0 +1,191 @@
+## couple of available navigation helpers
+#set ($modifierKey = $action.browserUtils.getModifierKey())
+#set ($submitAccessKey = $i18n.getText('AUI.form.submit.button.accesskey'))
+#set ($submitTitle = $i18n.getText('AUI.form.submit.button.tooltip', [$submitAccessKey, $modifierKey]))
+#set ($cancelAccessKey = $i18n.getText('AUI.form.cancel.link.accesskey'))
+#set ($cancelTitle = $i18n.getText('AUI.form.cancel.link.tooltip', [$cancelAccessKey, $modifierKey]))
+<html>
+<head>
+    <title>DT Generic Email Handler</title>
+</head>
+<body>
+<form class="aui" action="EditGenericHandlerDetails.jspa" method="POST" name="EditGenericHandlerForm" id="EditGenericHandlerForm">
+    <div class="form-body">
+        <h2>DT Generic Email Handler</h2>
+
+        <span class="global-errors-location">
+            #if ($action.getHasErrorMessages())
+                    #foreach ($error in $action.getFlushedErrorMessages())
+                        #AUImessage("error" "" $textutils.htmlEncode(${error}) "" "" "" "false")
+                    #end
+            #end
+       </span>
+
+        <input type="hidden" name="atl_token" value="$atl_token">
+
+        <table>
+               <tr><td>
+                   <label for="project">Project </label>
+               </td><td>
+                   <select name="project" id="project" class="select">
+                       #foreach($project in $projectManager.getProjectObjects())
+                           #if($project == $selectedProject)
+                               <option value="${project.key}" selected>$project.getName()</option>
+                           #else
+                               <option value="${project.key}" >$project.getName()</option>
+                           #end
+                       #end
+                   </select>
+               </td>
+               </tr>
+
+               <tr><td>
+                   <label for="ghissuetype">Issue Type</label>
+               </td>
+                   <td>
+                       <select name="ghissuetype" id="ghissuetype" class="select">
+                       </select>
+                   </td>
+               </tr>
+
+           <tr>
+               <td>
+                   <label for="associatedstatusms">Associated Status </label>
+               </td>
+               <td>
+                   <select name="associatedstatusms" size="5" multiple="multiple" id="associatedstatusms" class="multi-select">
+                   </select>
+               </td>
+           </tr>
+
+            <tr>
+                <td>
+                    <label for="keyword">KeyWord(s) (Pipe Separated if > 1) </label>
+                </td>
+                <td>
+                    <input type="text" class="text" id="keyword"
+                           name="keyword" value="$!textutils.htmlEncode($keyword)"  size=140>
+                </td>
+            </tr>
+
+            <tr>
+               #*IMPORTANT : This is the input field that will actually hold the associated status.
+               This will basically pick it up from the multiselect*#
+                <td>
+                    <input type="text" class="text" id="associatedstatus"
+                           name="associatedstatus" value="$!textutils.htmlEncode($associatedstatus)" hidden="hidden">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="buttons-container form-footer">
+        <div class="buttons">
+            #if ($action.editing)
+                #set ($addButtonLabel = $i18n.getText('common.words.save'))
+            #else
+                #set ($addButtonLabel = $i18n.getText('common.forms.add'))
+            #end
+            <input id="addButton" type="submit" class="button" value="$!addButtonLabel" accesskey="$submitAccessKey" title="$submitTitle">
+            <a href="IncomingMailServers.jspa" class="cancel" accesskey="$cancelAccessKey" title="$cancelTitle">$i18n.getText("AUI.form.cancel.link.text")</a>
+        </div>
+</form>
+
+<script>
+    //Populate the issue types based on project
+   jQuery(function() {
+       var currentProjKey = jQuery("#project option:selected").val();
+       console.log("Current project key selected is " + currentProjKey);
+       populateIssueTypeBasedOnProject(currentProjKey);
+       var statusSelect = jQuery("#associatedstatusms");
+       var blankStatusOption = jQuery("<option/>").attr("value","").text("-- Select --");
+       statusSelect.append(blankStatusOption);
+
+       jQuery("#associatedstatusms").change(CopyValsFromMultiSelect);
+       CopyValsFromMultiSelect();
+   });
+
+    //Update the issuetypes dropdown based on project change and wait for the user to select the ghissuetype.
+    //Based on what ghissuetype he selects, update the status
+    jQuery("#project").change(function() {
+        var currentProjKey = jQuery("#project option:selected").val();
+        populateIssueTypeBasedOnProject(currentProjKey);
+        var statusSelect = jQuery("#associatedstatusms");
+        statusSelect.empty();
+        var blankStatusOption = jQuery("<option/>").attr("value","").text("-- Select --");
+        statusSelect.append(blankStatusOption);
+    });
+
+    //Update the statuses based on the issue type selected.
+    jQuery("#ghissuetype").change(function() {
+        var currentProjKey = jQuery("#project option:selected").val();
+        var currentIssueType = jQuery("#ghissuetype option:selected").text();
+        populateStatusBasedOnIssueTypeAndProject(currentProjKey,currentIssueType);
+    });
+
+
+
+    function populateIssueTypeBasedOnProject(currentProjKey) {
+        jQuery.ajax({
+            url: "/rest/ghrest/1.0/getIssueTypes",
+            type: 'GET',
+            contentType: "application/json",
+            data: {
+                projectkey: currentProjKey
+            },
+            success:function(data) {
+                var issueTypeSelect = jQuery("#ghissuetype");
+                issueTypeSelect.empty();
+                var blankIssueTypeOption = jQuery("<option/>").attr("value","").text("-- Select --");
+                issueTypeSelect.append(blankIssueTypeOption);
+                for(var i=0 ; i<data.length; i++) {
+                    var label = data[i].label;
+                    var value = data[i].value; //This is the ghissuetype Id;
+                    var issueTypeOption = jQuery("<option/>").attr("value",value).text(label);
+                    issueTypeSelect.append(issueTypeOption);
+                }
+            }
+
+        });
+    }
+
+    function populateStatusBasedOnIssueTypeAndProject(currentProjKey, currentIssueType) {
+        jQuery.ajax({
+            url: "/rest/ghrest/1.0/getStatusTypes",
+            type: 'GET',
+            contentType: "application/json",
+            data: {
+                projectkey: currentProjKey,
+                issueType: currentIssueType
+            },
+            success:function(data) {
+                var statusSelect = jQuery("#associatedstatusms");
+
+                //Remove everything but the --select-- option
+                AJS.$('option', statusSelect).not(':eq(0)').remove();
+
+                for(var i=0 ; i<data.length; i++) {
+                    var label = data[i].label;
+                    var value = data[i].value; //This is the ghissuetype Id;
+                    var statusOption = jQuery("<option/>").attr("value",value).text(label);
+                    statusSelect.append(statusOption);
+                }
+            }
+
+        });
+    }
+
+    /*
+        Copies the associated statuses from the dropdown and populates the pipe separated values
+        list in the hidden input box which is used by the handler as parameters.
+     */
+    function CopyValsFromMultiSelect() {
+        var multipleValues = jQuery("#associatedstatusms").val() || [];
+        jQuery("#associatedstatus" ).val(multipleValues.join( "|" ));
+    }
+
+
+
+</script>
+</body>
+</html>

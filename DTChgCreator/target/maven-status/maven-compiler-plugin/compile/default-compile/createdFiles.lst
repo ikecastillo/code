@@ -1,0 +1,10 @@
+com\dt\remote\dtchgcreator\MyPluginComponentImpl.class
+com\dt\remote\dtchgcreator\rest\ChangeResource.class
+com\dt\remote\dtchgcreator\utils\PropertyUtils.class
+com\dt\remote\dtchgcreator\rest\LdapConfiguration.class
+com\dt\remote\dtchgcreator\ui\LdapConfigServlet.class
+com\dt\remote\dtchgcreator\rest\LDAPConfigResource$1.class
+com\dt\remote\dtchgcreator\utils\ChanageConstants.class
+com\dt\remote\dtchgcreator\rest\LDAPConfigResource$2.class
+com\dt\remote\dtchgcreator\MyPluginComponent.class
+com\dt\remote\dtchgcreator\rest\LDAPConfigResource.class

@@ -1,0 +1,57 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+        <param name="configure.url">/plugins/servlet/ldap/service</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="ITILChangeRequest"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="ITILChangeRequest-resources" name="ITILChangeRequest Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="ITILChangeRequest.css" location="/css/ITILChangeRequest.css"/>
+        <resource type="download" name="ITILChangeRequest.js" location="/js/ITILChangeRequest.js"/>
+        <resource type="download" name="ldapUI.js" location="/js/ldapUI.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>ITILChangeRequest</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.MyPluginComponent</interface>
+    </component>
+
+	<servlet key="ldap-servlet" class="com.dt.jira.plugin.ui.LdapServlet"> 
+			<url-pattern>/ldap/service</url-pattern>
+	</servlet>
+	
+	<!-- LDAP REST Modules
+	<rest name="ldaprest" i18n-name-key="rest.name" key="ldaprest" path="/dealertrack/ldap" version="1.0">
+    <description key="rest.description">Dealertrack LDAP REST Modules</description>
+  </rest>-->
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
+ 
+       
+	<web-resource key="changerequest-js" name="javascript">
+        <dependency>jira.webresources:global-static</dependency>
+        <description>JavaScript</description>
+        <resource name="changerequest.js" type="download" location="js/changerequest.js" />	
+        <context>atl.general</context>
+         <context>atl.admin</context>
+    </web-resource>
+	 <rest name="My Rest Resource" i18n-name-key="my-rest-resource.name" key="my-rest-resource" path="/myrestresource" version="1.0">
+		<description key="my-rest-resource.description">The My Rest Resource Plugin</description>
+	</rest>
+</atlassian-plugin>

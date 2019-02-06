@@ -1,0 +1,52 @@
+Manifest-Version: 1.0
+Atlassian-Build-Date: 2018-02-14T15:42:27+0530
+Atlassian-Plugin-Key: com.dt.jira.plugin.autopopulatemanager.fnideveops.
+ AutoPopulateManagerAsRequestParticipant
+Bnd-LastModified: 1518603162799
+Build-Jdk: 1.8.0_102
+Built-By: JPADHIARY
+Bundle-Description: This plugin Automatically adds Reporter's manager as
+  a participant when a FNIDEVOPS ticket is created in service desk porta
+ l.
+Bundle-DocURL: http://www.dealertrack.com/
+Bundle-ManifestVersion: 2
+Bundle-Name: AutoPopulateManagerAsRequestParticipant
+Bundle-SymbolicName: com.dt.jira.plugin.autopopulatemanager.fnideveops.A
+ utoPopulateManagerAsRequestParticipant
+Bundle-Vendor: Dealertrack
+Bundle-Version: 1.0.0
+Created-By: Apache Maven Bundle Plugin
+Export-Package: com.dt.jira.plugin.autopopulatemanager.fnideveops.api;ve
+ rsion="1.0.0"
+Import-Package: org.springframework.osgi.context;resolution:=optional,or
+ g.springframework.osgi.service.exporter.support;resolution:=optional,or
+ g.springframework.osgi.service.importer.support;resolution:=optional,or
+ g.eclipse.gemini.blueprint.context;resolution:=optional,org.eclipse.gem
+ ini.blueprint.service.exporter;resolution:=optional,org.eclipse.gemini.
+ blueprint.service.exporter.support;resolution:=optional,org.eclipse.gem
+ ini.blueprint.service.importer.support;resolution:=optional,com.atlassi
+ an.event.api,com.atlassian.jira.component,com.atlassian.jira.event.issu
+ e,com.atlassian.jira.event.type,com.atlassian.jira.issue,com.atlassian.
+ jira.issue.fields,com.atlassian.jira.issue.fields.layout.field,com.atla
+ ssian.jira.issue.index,com.atlassian.jira.issue.status,com.atlassian.ji
+ ra.issue.util,com.atlassian.jira.project,com.atlassian.jira.security,co
+ m.atlassian.jira.user,com.atlassian.jira.user.util,com.atlassian.plugin
+ .osgi.factory,com.atlassian.plugins.rest.common.security,com.atlassian.
+ sal.api,com.atlassian.sal.api.pluginsettings,com.atlassian.sal.api.tran
+ saction,com.atlassian.sal.api.user,com.atlassian.templaterenderer,com.d
+ t.jira.plugin.autopopulatemanager.fnideveops.api;version="[1.0,2)",com.
+ google.common.base,com.google.common.collect,javax.annotation,javax.inj
+ ect,javax.naming,javax.naming.directory,javax.servlet,javax.servlet.htt
+ p,javax.ws.rs,javax.ws.rs.core,javax.xml.bind.annotation,org.apache.com
+ mons.lang,org.apache.commons.logging,org.apache.log4j,org.osgi.framewor
+ k,org.springframework.aop.support,org.springframework.beans,org.springf
+ ramework.beans.factory,org.springframework.beans.factory.annotation,org
+ .springframework.beans.factory.config,org.springframework.beans.factory
+ .parsing,org.springframework.beans.factory.support,org.springframework.
+ beans.factory.xml,org.springframework.context.annotation,org.springfram
+ ework.core.io,org.springframework.stereotype,org.springframework.util,o
+ rg.w3c.dom
+Originally-Created-By: Apache Maven Bundle Plugin
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.6))"
+Spring-Context: *
+Tool: Bnd-2.4.1.201501161923

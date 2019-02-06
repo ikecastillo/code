@@ -1,0 +1,3 @@
+com\dt\jira\daterange\plugin\jira\jql\DateRangeJqlFunction.class
+com\dt\jira\daterange\plugin\MyPluginComponentImpl.class
+com\dt\jira\daterange\plugin\MyPluginComponent.class

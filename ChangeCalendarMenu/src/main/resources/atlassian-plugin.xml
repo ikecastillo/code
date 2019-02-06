@@ -1,0 +1,51 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="ChangeCalendarMenu"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="ChangeCalendarMenu-resources" name="ChangeCalendarMenu Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="ChangeCalendarMenu.css" location="/css/ChangeCalendarMenu.css"/>
+        <resource type="download" name="ChangeCalendarMenu.js" location="/js/ChangeCalendarMenu.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>ChangeCalendarMenu</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.changecal.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.changecal.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+
+
+    <!-- The new menu related to Change Calendar -->
+    <web-section key="favorites_section" name="Change Calendar Main Section" location="changeCalLink" weight="10"/>
+
+    <web-item key="changeCalLink" name="Link on Change Calendar Main Section" section="system.top.navigation.bar" weight="47">
+        <label>Calendars</label>
+        <link linkId="changeCalLink"></link>
+    </web-item>
+
+    <web-item key="website_link" name="Change Calendar" section="changeCalLink/favorites_section" weight="10">
+        <label>Change Calendar</label>
+        <link linkId="website_link">https://wiki.dealertrack.com/display/TOSM/Change+Calendar</link>
+    </web-item>
+
+   <!-- <web-item key="documentation_link" name="Documentation Web Site" section="changeCalLink/my_links_section" weight="10">
+        <label>Documentation</label>
+        <link linkId="documentation_link">http://confluence.atlassian.com</link>
+    </web-item>-->
+    
+</atlassian-plugin>

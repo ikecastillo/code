@@ -1,0 +1,120 @@
+<html>
+  <head>
+    
+   
+   
+  
+
+
+<style  type="text/css">
+
+
+/* 
+Generic Styling, for Desktops/Laptops 
+*/
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+}
+/* Zebra striping */
+tr:nth-of-type(odd) { 
+  background: #eee; 
+}
+th { 
+  font-weight: bold;
+  font-size:16px;
+  font-weight: bold;
+  background:#d9d9d9;
+}
+td, th { 
+  padding: 6px; 
+  border: 1px solid #ccc; 
+  text-align: left;
+  font-family: Calibri, sans-serif;
+  font-size:14px;
+  
+}
+.sec-head{
+background: #C3CCF1; 
+width: 100%;
+font-weight: bold;
+text-align:center;
+
+}
+
+.nodata-div{
+width: 100%;
+text-align:center;
+
+}
+
+.issuekey{
+color:#3399FF;
+text-decoration: underline;
+}
+
+.divfont{
+font-family: Calibri, sans-serif;
+  font-weight: normal;
+  font-size:14px;
+}
+</style>
+
+
+
+
+  </head>
+  <body>
+  
+  <div class="divfont">
+  Hi Team Members,
+ </div>
+ <br></br>
+ <div class="divfont">
+$mailBody
+</div>
+ <br></br> 
+ <br></br> 
+#set ($data=$templateDetails.keySet())
+#foreach ($template in $data)
+<table>
+#foreach ($section in $templateDetails.get($template))
+#if(($section.headers) && (! $section.headers.empty))
+<tr>
+#foreach ($header in $section.headers.split(","))
+<th> $header </th>
+#end
+</tr>
+#end
+<tr class="sec-head"  ><td class="sec-head" colspan=$colSize > $section.section_name </td></tr>
+#if ($section.jql_result.isEmpty())
+<tr class="nodata-div"> <td class="nodata-div" colspan=$colSize > No Data </td> </tr>
+#else
+#foreach ($issueMap in $section.jql_result)
+<tr>
+#foreach ($column in $section.columns.split(","))
+<td>
+#foreach ($issueValue in $issueMap.get($column))
+#if ($column == "issueKey")
+<a class="issuekey" href=$chgUrl$issueValue >$issueValue </a>
+#else
+<div>$issueValue</div>
+#end
+#foreach ($value in $issueValue)
+#set($hypen = " - ")
+ $hypen $value 
+ #end
+ #end
+ </td>
+ 
+ #end
+#end
+ </tr>
+ #end
+ 
+ 
+ #end
+ </table>
+ #end
+
+</body>

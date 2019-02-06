@@ -1,0 +1,3 @@
+com\dt\jira\plugin\event\AddIssueToSprintEvent.class
+com\dt\jira\plugin\event\MyPluginComponent.class
+com\dt\jira\plugin\event\MyPluginComponentImpl.class

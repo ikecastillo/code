@@ -1,0 +1,8 @@
+com\dt\criticalAccess\requestApproval\DTRequestApproval\MyPluginComponent.class
+com\dt\criticalAccess\requestApproval\DTRequestApproval\MyPluginComponentImpl.class
+com\dt\criticalAccess\requestApproval\DTRequestApproval\rest\RequestApproverResource.class
+com\dt\criticalAccess\requestApproval\DTRequestApproval\ui\ApproverServlet.class
+com\dt\criticalAccess\requestApproval\DTRequestApproval\rest\RequestApproverResource$1.class
+com\dt\criticalAccess\requestApproval\DTRequestApproval\rest\RequestApproverResource$2.class
+com\dt\criticalAccess\requestApproval\DTRequestApproval\rest\ApproverConfig.class
+com\dt\criticalAccess\requestApproval\DTRequestApproval\event\ApprovalEventListener.class

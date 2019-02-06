@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="ImportComponentsPlugin"/>
+  <!-- add our web resources -->
+  <web-resource key="ImportComponentsPlugin-resources" name="ImportComponentsPlugin Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="ImportComponentsPlugin.css" location="/css/ImportComponentsPlugin.css"/>
+    <resource type="download" name="ImportComponentsPlugin.js" location="/js/ImportComponentsPlugin.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>ImportComponentsPlugin</context>
+  </web-resource>
+  <!-- publish our component -->
+  <component key="myPluginComponent" class="com.dt.jira.plugin.MyPluginComponentImpl" public="true">
+    <interface>com.dt.jira.plugin.MyPluginComponent</interface>
+  </component>
+  <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <!-- import the data into components fields from given location-->
+  <rest name="Components Rest Resource" i18n-name-key="components-rest-resource.name" key="components-rest-resource" path="/componentsrestresource" version="1.0">
+    <description key="components-rest-resource.description">The Components Rest Resource Plugin</description>
+  </rest>
+   <!--component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+  <component key="eventListener" class="com.dt.jira.plugin.event.CIChangeEventListener">
+		<description>Class that processes the incoming JIRA issue events.</description>
+  </component-->
+  
+  <web-resource key="cifiledmapping-js" name="javascript">
+        <dependency>jira.webresources:global-static</dependency>
+        <description>JavaScript</description>
+        <resource name="cifiledmapping.js" type="download" location="/js/cifiledmapping.js" />	
+        <context>atl.general</context>
+         <context>atl.admin</context>
+  </web-resource>
+  <!-- Create the sub-task for select ci field-->
+   <rest name="createCI" i18n-name-key="create CI sub-task"  key="changeitem" path="/createci" version="1.0">
+    <description key="rest.description">Dealertrack Create CI REST Modules</description>
+  </rest>
+</atlassian-plugin>
