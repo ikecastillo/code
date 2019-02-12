@@ -1,0 +1,130 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+	
+	<!-- Incident Count Gadgets -->
+	<gadget key="incidentcountsummary" location="gadgets/incidentcountsummary.xml"/>
+	<gadget key="incidentcountsummaryreadonly" location="gadgets/incidentcountsummaryreadonly.xml"/>
+	<gadget key="incidentcountbarchartview" location="gadgets/incidentcountbarchartview.xml"/>
+	<gadget key="incidentcountbarchartviewreadonly" location="gadgets/incidentcountbarchartviewreadonly.xml"/>
+	
+	<!-- Incident Duration Count Gadgets -->
+	<gadget key="incidentdurationsummary" location="gadgets/incidentdurationsummary.xml"/>
+	<gadget key="incidentdurationsummaryreadonly" location="gadgets/incidentdurationsummaryreadonly.xml"/>
+    <gadget key="incidentdurationbarchartview" location="gadgets/incidentdurationbarchartview.xml"/>
+	<gadget key="incidentdurationbarchartviewreadonly" location="gadgets/incidentdurationbarchartviewreadonly.xml"/>
+	
+	<!-- Problem Count Gadgets -->
+    <gadget key="problemcountsummary" location="gadgets/problemcountsummary.xml"/>
+	<!-- <gadget key="problemcountsummaryreadonly" location="gadgets/problemcountsummaryreadonly.xml"/> -->
+	<gadget key="problemcountbarchartview" location="gadgets/problemcountbarchartview.xml"/>
+	<!-- <gadget key="problemcountbarchartviewreadonly" location="gadgets/problemcountbarchartviewreadonly.xml"/> -->
+    
+    <!-- Problem Duration Count Gadgets -->
+    <gadget key="problemdurationsummary" location="gadgets/problemdurationsummary.xml"/>
+    <!--<gadget key="problemdurationsummaryreadonly" location="gadgets/problemdurationsummaryreadonly.xml"/> -->
+	<gadget key="problemdurationbarchartview" location="gadgets/problemdurationbarchartview.xml"/>
+	<!-- <gadget key="problemdurationbarchartviewreadonly" location="gadgets/problemdurationbarchartviewreadonly.xml"/> -->
+	
+	<!-- Third Level Gadgets -->
+	<gadget key="itsm-dashboard-thirdLevel" location="gadgets/gadget.xml"/>	
+	
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="ITSMDashboard"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="ITSMDashboard-resources" name="ITSMDashboard Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="ITSMDashboard.css" location="/css/ITSMDashboard.css"/>
+        <resource type="download" name="ITSMDashboard.js" location="/js/ITSMDashboard.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>ITSMDashboard</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.dashboard.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.dashboard.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+	
+	<web-resource name="itsmchosen" key="itsmchosen">
+		<resource name="chosen.js" type="download" location="js/chosen_v1.0.0/chosen.jquery.min.js"/>
+		<resource name="chosen.css" type="download" location="js/chosen_v1.0.0/chosen.min.css"/>
+		<resource type="download" name="chosen/chosen-sprite.png" location="js/chosen_v1.0.0/chosen-sprite.png">
+            <param name="content-type" value="image/png"/>
+        </resource>
+		<resource type="download" name="chosen/chosen-sprite@2x.png" location="js/chosen_v1.0.0/chosen-sprite@2x.png">
+            <param name="content-type" value="image/png"/>
+        </resource>		
+       <context>atl.general</context>
+	</web-resource>
+	
+	<web-resource name="itsm-gadgets-common-js" key="itsm-gadgets-common-js">
+		<dependency>com.atlassian.auiplugin:ajs</dependency>		 		
+		<resource name="userpref.js" type="download" location="js/userpref.js"/>
+		<resource name="dt-common.js" type="download" location="js/dt-common.js"/>	
+       <context>atl.general</context>
+	</web-resource>
+	
+	<web-resource name="itsmjqplotRes" key="itsmjqplot">
+		<!-- Javascript -->
+		<!-- <resource name="jquery.min.js" type="download" location="jqplot/jquery.min.js"/> -->
+		<resource name="excanvas.min.js" type="download" location="jqplot/excanvas.min.js">
+			<param name="conditionalComment" value="lt IE 9"/>
+		</resource>
+		<resource name="vchart.js" type="download" location="vchart.js"/>		
+		<resource name="jquery.jqplot.min.js" type="download" location="jqplot/jquery.jqplot.min.js"/>
+		<resource name="jqplot.barRenderer.min.js" type="download" location="jqplot/plugins/jqplot.barRenderer.min.js"/>
+		<resource name="jqplot.categoryAxisRenderer.min.js" type="download" location="jqplot/plugins/jqplot.categoryAxisRenderer.min.js"/>
+		<resource name="jqplot.pointLabels.js" type="download" location="jqplot/plugins/jqplot.pointLabels.js"/>
+		<resource name="jqplot.trendline.min.js" type="download" location="jqplot/plugins/jqplot.trendline.min.js"/>
+		<resource name="jqplot.canvasTextRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasTextRenderer.min.js"/>
+		<resource name="jqplot.canvasAxisTickRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"/>
+		<resource name="jqplot.dateAxisRenderer.min.js" type="download" location="jqplot/plugins/jqplot.dateAxisRenderer.min.js"/>
+		<resource name="jqplot.pieRenderer.min.js" type="download" location="jqplot/plugins/jqplot.pieRenderer.min.js"/>
+		<resource name="jqplot.cursor.min.js" type="download" location="jqplot/plugins/jqplot.cursor.min.js"/>
+		<resource name="jqplot.canvasOverlay.min.js" type="download" location="jqplot/plugins/jqplot.canvasOverlay.min.js"/>
+		<resource name="jqplot.canvasAxisLabelRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js"/>
+		<!-- CSS -->
+		<resource name="jquery.jqplot.min.css" type="download" location="jqplot/jquery.jqplot.min.css">
+			<property key="content-type" value="text/css"/>
+		</resource>
+		<resource name="excanvas.min.css" type="download" location="jqplot/excanvas.css">
+			<param name="conditionalComment" value="lt IE 9"/>
+		</resource>		
+		
+		<resource name="highcharts.js" type="download" location="highcharts/highcharts.js"/>
+		<resource name="exporting.js" type="download" location="highcharts/exporting.js"/>
+		<resource name="highcharts-3d.js" type="download" location="highcharts/highcharts-3d.js"/>
+       <context>atl.general</context>
+</web-resource>
+    <!-- rest resource for ITSMDashboard  -->
+	<rest key="im-executesummary" path="/incident" version="1.0">
+        <description>Provides the REST resource to show all incident count for Solution Groups on based on the severity.</description>
+    </rest>
+	
+	 <!-- rest resource for ITSMDashboard  -->
+	<rest key="problemexecutesummary" path="/problemexec" version="1.0">
+        <description>Provides the REST resource to show all problem count for Solution Groups on based on the severity.</description>
+    </rest>
+
+<!-- ***************************************************************************************************************************************** -->
+	<!-- From here on, all the components that show up , would be for the enhanced gadgets -->
+	<gadget key="enhancedincidentcountbarchartview" location="gadgets/enhancedincidentcountbarchartview.xml"/>
+	<gadget key="incidentAging" location="gadgets/incidentAging.xml"/>
+	<gadget key="deployments" location="gadgets/numberOfDeployments.xml"/>
+
+	<!-- The new gadget for change management details summary -->
+	<gadget key="changedetails" location="gadgets/itsmchangedetailssummary.xml"/>
+
+	<gadget key="itsmgenerictable" location="gadgets/itsmgenerictable.xml" />
+</atlassian-plugin>

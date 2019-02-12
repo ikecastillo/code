@@ -1,0 +1,1 @@
+define("jira/mail/views/issue-types-view",["jira/mail/views/options-view","jquery"],function(a,b){return a.extend({setSelectedId:function(c){var d=this.collection.find(function(e){return e.get("id")==c});this.model.set({issueTypeId:d.get("id")})},render:function(){var c=this.model.get("issueTypeId");if(c){b(this.el).val(c)}return this}})});

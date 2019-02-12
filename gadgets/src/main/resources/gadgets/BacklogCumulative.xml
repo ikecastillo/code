@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Backlog Cumulative Flow Diagram"
+                 directory_title="Backlog Cumulative Flow Diagram"
+                 description="Backlog Cumulative Flow chart"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">Charts</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="issueTypes" datatype="hidden" default_value="All"/>
+	<UserPref name="startDate" datatype="hidden" default_value="2013-01-01"/>
+	<UserPref name="endDate" datatype="hidden" default_value="2013-03-01"/>
+	<UserPref name="interval" datatype="hidden" default_value="2"/>
+    <UserPref name="headertxt" datatype="hidden" default_value="Backlog Cumulative Flow Diagram"/>
+	
+	
+    <Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						desc.fields.splice(3,1);
+						desc.fields.push ({
+							id: "start-date-picker",
+							userpref: "startDate",
+							label: "Start Date",
+							type: "date",
+							value: gadget.getPref("startDate")							
+							}
+						);
+						desc.fields.push ({
+							id: "end-date-picker",
+							userpref: "endDate",
+							label: "End Date",
+							type: "date",
+							value: gadget.getPref("endDate")		
+							}
+						);
+						desc.fields.push ( 
+						DTGADGET.issueTypesPicker(gadget, "projectId","issueTypes", true, false)
+						
+						);
+						desc.fields.push ({
+							id: "interval",
+							userpref: "interval",
+							label: "Interval(wk)",
+							type: "text",
+							value: gadget.getPref("interval")							
+							}
+						);
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				view: {
+
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+                    var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                          if(header != "" && header != null ){
+                              gadgets.window.setTitle(header);
+                          }
+                          else{
+                              gadgets.window.setTitle("Backlog Cumulative Flow Diagram");
+                          }
+						drawchart(args.backlogcumulative);
+					},
+					args: [
+                        {
+                            key: "backlogcumulative",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/BacklogCumulativeFlow.json",
+									contentType: "application/json",
+									data:  { 
+											projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+											version : gadgets.util.unescapeString(this.getPref("version").split('|').toString()),
+											startdate: gadgets.util.unescapeString(this.getPref("startDate")),
+											enddate	: gadgets.util.unescapeString(this.getPref("endDate")),
+											issuetypes	: gadgets.util.unescapeString(this.getPref("issueTypes")),
+											interval: gadgets.util.unescapeString(this.getPref("interval"))
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(_restdata) {
+		var _indefinition = new Array();
+		var _readyForDevelopment = new Array();
+		var _inprogress = new Array();
+		var _devComplete = new Array();
+		var _qaTesting = new Array();
+		var _qaComplete = new Array();		
+		var _closed = new Array();
+		var _date = new Array();
+		console.log(_restdata); 
+		
+         var s1 = [2, 6, 7, 10];
+        var s2 = [7, 5, 3, 2];
+        var s3 = [14, 9, 3, 8];
+		if (_restdata.length < 1) {
+				_indefinition.push(0);
+				_readyForDevelopment.push(0);
+				_inprogress.push(0);
+				_devComplete.push(0);
+				_qaTesting.push(0);
+				_qaComplete.push(0);
+				_closed.push(0);								
+				_date.push('');
+		}
+		if (_restdata.length > 0) {
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {	
+					_date.push((_restdata[_i].date == '')?'None':_restdata[_i].date);
+					_indefinition.push(_restdata[_i].indefinition);
+					_readyForDevelopment.push(_restdata[_i].readyForDevelopment);
+					_inprogress.push(_restdata[_i].inprogress);
+					_devComplete.push(_restdata[_i].devComplete);
+					_qaTesting.push(_restdata[_i].qaTesting);
+					_qaComplete.push(_restdata[_i].qaComplete);
+					_closed.push(_restdata[_i].closed);					
+				}
+		}
+        console.log('_date'+_date); 
+		console.log('_indefinition '+_indefinition); 
+		console.log('_readyForDevelopment '+_readyForDevelopment); 
+		console.log('_inprogress '+_inprogress); 
+		console.log('_devComplete '+_devComplete); 
+		console.log('_qaTesting '+_qaTesting); 
+		console.log('_qaComplete '+_qaComplete); 
+		console.log('_closed '+_closed); 
+		
+		   plot1 = AJS.$.jqplot('cumulativechart', [_indefinition, _readyForDevelopment, _inprogress,_devComplete,_qaTesting,_qaComplete,_closed], {
+             stackSeries: true,
+            captureRightClick: true,
+            seriesDefaults:{
+                 fill: true
+            },
+			series: [
+							{label: 'In Defination', color: '#FACC2E'},
+							{label: 'Ready For Development', color: '#298A08'},
+							{label: 'In Progress', color: '#2ECCFA'},
+							{label: 'Dev Complete', color: '#0000FF'},
+							{label: 'QA Testing' , color: '#191007'},
+							{label: 'QA Complete' , color: '#FF8000' },
+							{label: 'Closed' , color: '#8000FF'}
+			],
+			axes: {
+			   xaxis: {
+				   min: 0,				   
+				   renderer: AJS.$.jqplot.CategoryAxisRenderer,
+				   ticks: _date,
+				   tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer,
+				   tickOptions: {
+					  angle: -55,
+					  fontSize:'8pt',
+					  fontFamily: 'Helvetica',
+					  fontWeight: 'normal',
+					  textColor : '#211717'
+					},
+					label:'Date',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'						
+					}
+			   },
+			    yaxis: {
+                    min: 0,
+					pad:1,
+					label:'No.of Issues',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'
+					}
+				}
+			},
+            legend: {
+                show: true,
+                location: 'nw'
+               // placement: 'outside'
+            }
+			
+        });
+		plot1.redraw();
+		plot1.replot( {axes: {
+					xaxis: {
+						renderer: AJS.$.jqplot.CategoryAxisRenderer,						
+						min:0						
+						}
+					},
+					yaxis: {
+						min:0,
+						pad:1					
+					}
+				}
+			);
+		
+		console.log(plot1);
+		};
+	</script>		
+		<div id="cumulativechart"> </div>
+	]]>
+
+  </Content>
+</Module>

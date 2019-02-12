@@ -1,0 +1,127 @@
+<html>
+	<head>
+		<title> Innotas </title>
+		$webResourceManager.requireResource("com.atlassian.tutorial.ao.todo.ao-tutorial:admin-resources")
+		<meta name="decorator" content="atl.admin" />
+		<meta name="admin.active.section" content="atl.jira.proj.config">
+		<meta name="admin.active.tab" content="innotas_tab_link"/>
+		<meta name="projectKey" content="$textutils.htmlEncode($action.jiraProjectKey)"/>
+		<style>
+			table,td,th { border:0px solid black; }
+			td { text-align:right; padding:5px; }
+		</style>
+	</head>
+	<body> 	
+		<div><br><br>
+			#set ($innotaslink = $action.innotasservice)
+			#set ($bu = $innotaslink.getInnotasBUs())
+			##*************** $innotaslink
+			##******* $action.businessUnit
+			#if ("$!action.businessUnit" != "")
+				#set ($prj = $innotaslink.getInnotasProjects($action.businessUnit))
+			#end
+			##$textutils.htmlEncode($issue.getProject().getString("name"))
+			<form id="uniqueid1" method="post" action="${req.contextPath}/secure/admin/InnotasAction.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)">
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<td>Jira Project Key: </td>
+						<td style="text-align:left"> <input type="text" id="jiraProjectKey" name="jiraProjectKey" class="ajs-dirty-warning-exempt" value="$textutils.htmlEncode($action.jiraProjectKey)" disabled></td>
+					</tr>
+					<tr>
+						<td >Business Unit:</td>
+						<td width="400px"> 	
+							<!--aui-field-versionspicker-->
+							<!--<div class="aui-field-versionspicker frother-control-renderer" style="text-align:left;width=300px">-->
+							<div class="frother-control-renderer" style="text-align:left;width=300px">
+										<select id="businessUnit" name="businessUnit" class="ajs-dirty-warning-exempt" >
+										<option value="">Select a Innotas BU...</option>
+										#foreach ($buKey in $bu.keySet())
+											#set ($selected = "")
+											#if ($!buKey == ${businessUnit}) 
+												#set ($selected = "Selected")
+											#end
+											<option value="$!buKey" $!selected>$!bu.get($!buKey)</option>
+										#end
+										</select>
+							</div>			
+
+						</td>
+					</tr>
+					<tr>
+						<td >Innotas Project:</td>
+						<td width="300px"> 	
+							<!--aui-field-versionspicker-->
+							<!--<div class="aui-field-versionspicker frother-control-renderer" style="text-align:left;width=300px">-->
+							<div class="frother-control-renderer" style="text-align:left;width=300px">
+										<select id="innotasProjectId" name="innotasProjectId" class="ajs-dirty-warning-exempt" >
+										<option value="">Select a Innotas Project...</option>
+										#foreach ($prjKey in $prj.keySet() ) 			
+											#set ($selected = "")
+											#if ($!prjKey == ${innotasProjectId}) 
+												#set ($selected = "Selected") 
+											#end
+											#set ($ipm = $!prj.get($!prjKey))
+											<option value="$ipm.getInnotasId()" data-sbu="$ipm.getSbuName()" data-prg="$ipm.getProgramName()" $!selected>$ipm.getInnotasName()</option>
+										#end
+										</select>
+							</div>			
+						</td>
+					</tr>
+					<tr>
+						<td>Innotas Project Id: </td>
+						<td style="text-align:left"> <input type="text" id="innotasProjectIdtxt" name="innotasProjectIdtxt" disabled class="ajs-dirty-warning-exempt" value="$textutils.htmlEncode(${innotasProjectId})"></td>
+					</tr>					
+					<tr>
+						<td>Sub Business Unit: </td>
+						<td style="text-align:left"> <input type="text" id="subBusinessUnit" name="subBusinessUnit" class="ajs-dirty-warning-exempt" value="$textutils.htmlEncode(${subBusinessUnit})" disabled></td>
+					</tr>
+					<tr>
+						<td>Program: </td>
+						<td style="text-align:left"> <input type="text" id="program" name="program" class="ajs-dirty-warning-exempt" value="$textutils.htmlEncode(${program})" disabled></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>					
+					<tr>
+						<td></td>
+						<td style="text-align:left"> <input type="submit" class="aui-button" value=" Save " ></td>
+					</tr>
+					</table>  
+				<br><div id="successmsg"> Innotas Mapping saved successfully ! </div>
+				
+				<p style="color:white">Admin Tasks:
+				<br><a style="color:white" href="${req.contextPath}/secure/admin/InnotasAction!syncCache.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)">Sync-up Jira Cache</a> with latest Innotas data
+				<br><a style="color:white" href="${req.contextPath}/secure/admin/InnotasAction!updateOldIssues.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)">Update Existing Issues </a> with currently mapped Innotas attributes
+				</p>
+			</form>
+		</div>
+		<script>
+		AJS.$("#successmsg").fadeIn().delay(10000).queue(function(next) {AJS.$("#successmsg").fadeOut("slow");});
+		//AJS.$("#successmsg").fadeOut("slow");
+		AJS.$( '#innotasProjectId' )
+		  .change(function () {
+			var str = "";
+			AJS.$( "select option:selected" ).each(function() {
+			  str += AJS.$( this ).text() + " ";
+			});
+			//$( "log" ).text( str );
+			var selected = AJS.$(this).find('option:selected');
+			console.log('selected sbu: ' + selected.data('sbu') + ' & program: ' + selected.data('prg'));
+			AJS.$('#subBusinessUnit').val(selected.data('sbu'));
+			AJS.$('#program').val(selected.data('prg'));
+			AJS.$('#innotasProjectIdtxt').val(selected.val());
+			window.formDirty = false;
+			console.log('***** ' + str);
+		  })
+		  .change();
+		  AJS.$( '#businessUnit' )
+		  .change(function () {
+			var selected = AJS.$(this).find('option:selected');
+			var ax = '${req.contextPath}/secure/admin/InnotasAction!refreshProject.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)&businessUnit=' + selected.val();
+			AJS.$('form').get(0).setAttribute('action', ax);
+			this.form.submit();
+		  });
+		</script>			
+	</body>
+</html>

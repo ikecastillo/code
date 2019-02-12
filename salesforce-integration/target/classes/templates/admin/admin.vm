@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>$i18n.getText("sfintegration.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jira.plugin.salesforce-integration:salesforce-integration-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+  </head>
+  <body>
+		<div class="header">
+        <h3 class="formtitle">$i18n.getText("sfintegration.admin.label")</h3>
+    </div>
+    <form id="admin" class="aui">
+      <div class="field-group">
+        <label for="sfintegrationurl">$i18n.getText("sfintegration.admin.sfintegrationurl.label")</label>
+        <input type="text" id="sfintegrationurl" name="sfintegrationurl" class="text">
+      </div>
+      <div class="field-group">
+        <label for="sfintegrationuid">$i18n.getText("sfintegration.admin.sfintegrationuid.label")</label>
+        <input type="text" id="sfintegrationuid" name="sfintegrationuid" class="text">
+      </div>
+      <div class="field-group">
+        <label for="sfintegrationpwd">$i18n.getText("sfintegration.admin.sfintegrationpwd.label")</label>
+        <input type="password" id="sfintegrationpwd" name="sfintegrationpwd" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="sfclientid">$i18n.getText("sfintegration.admin.sfclientid.label")</label>
+        <input type="text" id="sfclientid" name="sfclientid" class="text">
+      </div>
+	  
+	  <div class="field-group">
+        <label for="sfclientsecretkey">$i18n.getText("sfintegration.admin.sfclientsecretkey.label")</label>
+        <input type="text" id="sfclientsecretkey" name="sfclientsecretkey" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="sfinterval">$i18n.getText("sfintegration.admin.sfinterval.label")</label>
+        <input type="text" id="sfinterval" name="sfinterval" class="text" value="600000">   [ note: If any changes on the interval time then disable plugin and enable plugin to effect new changes.]
+      </div>
+      <div class="field-group">
+        <input type="submit" value="$i18n.getText("sfintegration.admin.save.label")" class="button">
+        <input type="button" value="$i18n.getText("sfintegration.admin.test.label")" class="button" onclick="alert('Test not implemented yet');return false;">
+				<input type="button" value="$i18n.getText("sfintegration.admin.cancel.label")" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+      </div>
+    </form>
+
+		<script type="text/javascript">
+      var baseUrl = "$applicationProperties.getBaseUrl()";
+    </script>
+	</body>
+</html>

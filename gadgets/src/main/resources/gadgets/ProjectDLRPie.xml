@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Overall DLR Pie Chart "
+                 directory_title="Overall DLR Pie Chart"
+                 description="Overall DLR Pie Chart"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">Charts</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="sprint" datatype="hidden" default_value="All"/>
+	<UserPref name="groupbyField" datatype="hidden" default_value="Severity"/>
+    <UserPref name="headertxt" datatype="hidden" default_value="Overall DLR Pie Chart"/>
+	
+    <Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+		<style type="text/css">
+		.jqplot-point-label {
+		  border: 1.5px solid #aaaaaa;
+		  padding: 1px 3px;
+		  background-color: #eeccdd;
+		}
+		</style>
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		prj='';ver='';spr='';grp=''; 
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.DLRdescriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						 desc.fields.push ({
+							id: "groupbyField",
+							userpref: "groupbyField",
+							label: gadget.getMsg("Group By"),
+							//description:gadget.getMsg("The filtered data will be grouped by this field"),
+							type: "select",
+							selected: gadget.getPref("groupbyField"),
+							options:[								
+								{								
+									label:"Severity",
+									value:"Severity"
+								}							
+							] 
+						});				
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+						//var grpBy = gadget.getPref("groupbyField");
+						//gadgets.window.setTitle("Defect Distribution - " + grpBy);
+						//this.getView().empty();
+						//this.getView().append(AJS.$('<div id="defectdistChart"> </div>'));
+						var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                        if(header != "" && header != null ){
+                            gadgets.window.setTitle(header);
+                        }
+                        else{
+                            gadgets.window.setTitle("Overall DLR Pie Chart");
+                        }
+						drawchart(args.projectdlr);
+					},
+					args: [
+                        {
+                            key: "projectdlr",
+                            ajaxOptions: function ()
+                            {
+                                return {
+									url: "/rest/dealertrack/1.0/projectdlr.json",
+									contentType: "application/json",
+									data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprint").split('|').toString()),
+												groupbyField: gadgets.util.unescapeString(this.getPref("groupbyField"))
+												
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});			
+		})();
+		function sortBy(prop){
+		   return function(a,b){
+			  return (a[prop] > b[prop])?-1:(a[prop] < b[prop])?1:0;
+		   }
+		};
+		drawchart=function(_restdata) {
+			//_restdata.sort(sortBy('data'));
+			//console.log(_restdata); 
+			//var _data = [{"Severity":"Critical","FistTimeFix":"2","Rework":"1","TotalDef":"3"},{"Severity":"Total","FistTimeFix":"2","Rework":"1","TotalDef":"3"},{"Severity":"FTF","FistTimeFix":"66.0","Rework":"33.0%","TotalDef":"100%"}];
+			//_restdata = _data;
+			var pidata = new Array();
+			if(_restdata.length<1){
+				pidata.push(['None', 0]);
+			}
+			if(_restdata.length>0){
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {
+					if(_restdata[_i].field=='DLR'){
+					pidata.push(['Prod', +_restdata[_i].proddefects,_restdata[_i].URLForProd ]);
+					pidata.push(['QA', +_restdata[_i].qadefects,_restdata[_i].URLForQA]);
+					}
+				}
+			}
+			console.log(pidata);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			var plot1 = AJS.$.jqplot('defectdistChart', [pidata], 
+				{ 
+					animate: !AJS.$.jqplot.use_excanvas,
+					grid: {
+						drawBorder: false, 
+						drawGridlines: false,
+						background: '#ffffff',
+						shadow:false
+					},
+					//seriesColors: [ "#ADB8D6", "#BFD482", "#CC6600", "#FFFF99", "#20B2AA", "#FFA500","#6A5ACD", "#8dcd5a", "#ff0000" ],
+					seriesColors: [ "#5193C8", "#D7561F", "#769810", "#DEE439", "#61BE43", "#00367A","#F58530", "#ECEE00", "#30B5AA", "#ff0000" ],
+					seriesDefaults: {
+						renderer: AJS.$.jqplot.PieRenderer, 
+						rendererOptions: {
+						  showDataLabels: true,
+						  padding: 5
+						}
+					},
+					highlighter: {
+						show: true,
+						formatString:'%s', 
+						tooltipLocation:'sw', 
+						useAxesFormatters:false
+					},	  				  
+					cursor:{
+						style: 'pointer',
+						show:true,
+						showTooltip: true
+					},
+					legend:{
+						show:true, 
+						//placement: 'outside', 
+						fontSize: '11px',
+						rendererOptions: {
+							numberRows: 2
+						}, 
+						location:'s',
+						marginTop: '0px', 
+						marginBottom: '0px',
+						padding:0
+					}
+				}
+			);
+			AJS.$('#defectdistChart').on('jqplotDataHighlight', function () {
+				AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+			});
+			AJS.$('#defectdistChart').on('jqplotDataUnhighlight', function () {
+				AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+			});
+			
+			AJS.$('#defectdistChart').on('jqplotDataClick', 
+				function (ev, seriesIndex, pointIndex, data) {
+					console.log(pidata[pointIndex][2]);
+					top.location.href = pidata[pointIndex][2];
+					//console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+				}
+			);
+//			console.log(plot1);			
+		};
+		</script>		
+		<div id="defectdistChart"> </div>
+		<div id="info1"> </div>
+	]]>
+
+  </Content>
+</Module>

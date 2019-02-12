@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Emergency Tickets per Release"
+                 directory_title="Emergency Tickets per Release"
+                 description="Emergency Tickets per Release"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">Charts</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="sprintId" datatype="hidden" default_value="All"/>
+	<UserPref name="groupbyField" datatype="hidden" default_value="Severity"/>
+	<UserPref name="baseline" datatype="hidden" default_value="2"/>
+    <UserPref name="headertxt" datatype="hidden" default_value="Emergency Tickets per Release"/>
+
+    <Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						desc.fields.push ({
+							id: "baseline",
+							userpref: "baseline",
+							label: gadget.getMsg("Base line"),
+							type: "text",
+							value: gadget.getPref("baseline")
+							}
+						);
+
+
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				view: {
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+						//this.getView().empty();
+						//this.getView().append(AJS.$('<div id="defectdistChart"> </div>'));
+						//AJS.$('#baseline_box').val(this.getPref("baseline"));
+						var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                                if(header != "" && header != null ){
+                                    gadgets.window.setTitle(header);
+                                }
+                                 else{
+                                    gadgets.window.setTitle("Emergency Tickets per Release");
+                                }
+						drawchart(args.defectdistribution);
+						draw_baseline(this.getPref("baseline"));
+					},
+					args: [
+                        {
+                            key: "defectdistribution",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/defectrelease.json",
+									//url: "/rest/dealertrack/1.0/defectdistribution.json",
+									contentType: "application/json",
+									data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprintId").split('|').toString())												
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(_restdata) {
+			//console.log(_restdata); 
+	
+			//var emergencyTikts = [8, 67,78, 58,38, 65];     
+			//var releases = ['1.1.1 R', '1.1.1 P', 'AHFC1.2', '1.1.1 R','1.1.1 p','1.2.1 R'];
+			 
+			var emergencyTikts = new Array();
+			var releases = new Array();
+			for (var _i=0, _len=_restdata.length; _i<_len; _i++) {
+					releases.push((_restdata[_i].release == '')?'None':_restdata[_i].release);
+					emergencyTikts.push((_restdata[_i].data == '')? 0 : parseInt(_restdata[_i].data));
+			}
+			console.log(emergencyTikts);
+			console.log(releases);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			plot1 = AJS.$.jqplot('defectdistChart', [emergencyTikts], {
+            // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+            //animate: !AJS.$.jqplot.use_excanvas,
+			 //title: '# of Emergency Tickets ',  
+            seriesDefaults:{
+                renderer: AJS.$.jqplot.BarRenderer,
+				 rendererOptions: {
+						fillToZero: false, 
+						barWidth:25,
+						barPadding:-1,
+						barMargin:3
+				},
+                pointLabels: { show: true }
+            },
+			series: [
+				{label:'Emergency Tickets', renderer:AJS.$.jqplot.BarRenderer, color:'green', trendline: {show: false}}
+			],
+			grid:{ background: 'white'},
+			canvasOverlay: {
+				show: true,
+				objects: [
+					{horizontalLine: {
+						name: 'bline',
+						y: (new gadgets.Prefs()).getString('baseline'),
+						lineWidth: 1,
+						color: 'orange',
+						shadow: false
+					}}]
+			},
+            axes: {
+                xaxis: {
+                    renderer: AJS.$.jqplot.CategoryAxisRenderer,
+                    ticks: releases,
+					tickOptions: {
+						angle: -30
+					}
+                }
+            },
+            highlighter: { show: false },
+			legend: { show: true }
+        });
+		AJS.$('#defectdistChart').on('jqplotDataHighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+		});
+		AJS.$('#defectdistChart').on('jqplotDataUnhighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+		});
+        AJS.$('#defectdistChart').on('jqplotDataClick', 
+            function (ev, seriesIndex, pointIndex, data) {
+                //AJS.$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+				var lnk='';				
+				var prefs = new gadgets.Prefs();
+					var pId = gadgets.util.unescapeString(prefs.getString('projectId'));
+					var vId = gadgets.util.unescapeString(prefs.getString('version').split('|').toString());
+					if(vId!='All'){
+						lnk = lnk +  ' AND version in (' + vId + ')';
+					}
+					var sId = gadgets.util.unescapeString(prefs.getString('sprintId').split('|').toString());
+					if(sId!='All'){
+						 lnk = lnk + ' AND version in (' + sId + ')';
+					}
+					var  index = data.toString().split(',')[0];
+					var  fixversion = releases[index-1];
+					lnk = '/issues/?jql=project=' + pId + lnk + ' AND  issueType = release and status not in (Cancel,Cancelled,Rejected) and "Emergency Type" = yes AND fixVersion = "'+ fixversion +'"';
+				console.log( 'url: ' + lnk );
+				top.location.href = lnk;
+				//console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+            }
+        );
+		/*AJS.$('#baseline_box').on('change', function(e) {
+			var bl = AJS.$('#baseline_box').val();
+			draw_baseline(bl);
+			//alert ('change: ' + bl);
+			
+		});*/
+		};
+		function draw_baseline(bl) {
+			var co = plot1.plugins.canvasOverlay;
+			console.log(co);
+			var line = co.get('bline');
+			line.options.y = bl;
+			console.log(line.options.y);
+			co.draw(plot1);
+			(new gadgets.Prefs()).set('baseline',bl);
+			plot1.redraw();
+		}
+		</script>		
+		
+		<div id="defectdistChart"> </div>
+	]]>
+
+  </Content>
+</Module>

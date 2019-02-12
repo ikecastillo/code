@@ -1,0 +1,146 @@
+
+.qandamenu {
+    /*font-size: 80%;*/
+}
+
+.qandaq {
+
+}
+
+.qandadateq {
+    font-color: 060606;
+    font-size: 80%;
+    display: inline-block;
+}
+
+.qandadatea {
+    font-color: 060606;
+    font-size: 80%;
+    display: inline-block;
+}
+
+.qandaunas {
+    font-color: 060606;
+    /*margin-left: 35px;*/
+}
+
+.qandaa {
+    /*margin-left: 35px;*/
+}
+
+.qandauser .user-hover {
+	font-weight: bold;
+}
+
+.qandauser .user-hover.user-avatar {
+	background-repeat: no-repeat;
+	background-position: center left;
+	padding: 2px 0 2px 24px;
+}
+
+.qanda-question-thread {
+	background-color: white;
+	padding: 10px;
+}
+
+.qanda-question-thread:hover {
+	background-color: #f0f0f0;
+}
+
+.qanda-question-thread .qanda-question-panel .user-content-block {
+	margin: 5px 0 10px 0;
+}
+
+.qanda-panel-item {
+    padding : 10px;
+    border-bottom : 1px solid #ddd;
+    background-color: white;
+}
+
+.qanda-panel-item .actions-toolbar {
+    float : right;
+    display : none;
+}
+
+.qanda-panel-item:hover .actions-toolbar {
+    display : block;
+	margin-top: -2px;
+	margin-right: 5px;
+}
+
+.qanda-panel-item .actions-toolbar .toolbar-action {
+    vertical-align: text-bottom;
+}
+
+.qanda-panel-item .aui-lozenge {
+    float: right;
+}
+
+.qanda-question-panel {
+	padding-left: 30px;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+}
+
+.qanda-question-panel .twixi-trigger {
+	position: absolute;
+	margin-left: -20px;
+}
+
+.qanda-answers-panel {
+	margin-left: 75px;
+	border-left : 1px solid #ddd;
+}
+
+.qanda-answers-panel .user-content-block {
+	margin-top: 5px;
+}
+
+.qanda-icon {
+	background: transparent url(images/accept_reject.png) no-repeat 0 0;
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	background-position: 20px 0px;
+}
+
+.qanda-icon-accept {
+	background-position: -22px -21px;
+}
+
+.qanda-icon-accept:hover {
+	background-position: -2px -21px;
+}
+
+.qanda-icon-reject {
+	background-position: -22px -1px;
+}
+
+.qanda-icon-reject:hover {
+	background-position: -2px -1px;
+}
+
+.qanda-accepted-answer {
+	background-color: #ebffe6;
+}
+
+
+
+/*=====================================*/
+/*==========  G A D G E T  ============*/
+/*=====================================*/
+
+.qanda-gadget-view {
+	padding-left : 10px;
+	padding-right : 10px;
+}
+
+.qanda-gadget-panel .issue-link {
+	font-weight: bolder;
+}
+
+.qanda-gadget-panel .user-content-block {
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+

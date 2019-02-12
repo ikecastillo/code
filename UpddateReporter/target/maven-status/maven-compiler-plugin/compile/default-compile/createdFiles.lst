@@ -1,0 +1,4 @@
+com\dt\jira\plugin\updatereporter\MyPluginComponentImpl.class
+com\dt\jira\plugin\updatereporter\MyPluginComponent.class
+com\dt\jira\plugin\updatereporter\rest\CreateRemoteLinkToIncidentTicket.class
+com\dt\jira\plugin\updatereporter\rest\UpdateReporterResource.class

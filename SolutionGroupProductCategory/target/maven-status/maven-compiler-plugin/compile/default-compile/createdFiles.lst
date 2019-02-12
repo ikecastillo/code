@@ -1,0 +1,8 @@
+com\dt\jira\plugin\sgpc\UpdateFourthLevelFandI.class
+com\dt\jira\plugin\sgpc\MyPluginComponentImpl.class
+com\dt\jira\plugin\sgpc\MyPluginComponent.class
+com\dt\jira\plugin\sgpc\SolutionGroupModel.class
+com\dt\jira\plugin\sgpc\SyncSolutionGroupREST.class
+com\dt\jira\plugin\sgpc\SolutionGroupThirdLevelProdModel.class
+com\dt\jira\plugin\sgpc\UpdateThirdLevelFandI.class
+com\dt\jira\plugin\sgpc\SolutionGroupFourthLevelProdModel.class

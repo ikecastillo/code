@@ -1,0 +1,111 @@
+package com.dt.jira.pagerduty.intgt.plugin.service;
+
+import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.sal.api.transaction.TransactionCallback;
+import com.dt.jira.pagerduty.intgt.plugin.ao.JiraFieldDB;
+import com.dt.jira.pagerduty.intgt.plugin.rest.FieldBean;
+import net.java.ao.Query;
+import org.apache.log4j.Logger;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * Contains all the service methods pertaining to
+ * Adding JIRA fields
+ */
+public class FieldMapperServiceImpl implements FieldMapperService
+{
+	private final Logger logger = Logger.getLogger(FieldMapperServiceImpl.class);
+    private final ActiveObjects ao;
+    /**
+     * Constructor
+     * @param ao the ActiveObjects to be injected
+     */
+    public FieldMapperServiceImpl(ActiveObjects ao) {
+        this.ao = checkNotNull(ao);
+    }
+
+    /**
+     * Save field mapping on DB
+     * @param fieldBean 
+     */
+	@Override
+	public FieldBean addMapping(final FieldBean fieldBean) {
+		List<FieldBean> mappingsList = getMapping(fieldBean);
+
+        //If the X_MATTERS_FIELD is already there, then we dont allow the mapping to happen. In other words
+        //the mapping will happen only if the xmatters field is new.
+        if (mappingsList!=null && mappingsList.size() == 0) {
+           ao.executeInTransaction(new TransactionCallback<FieldBean>() {
+               @Override
+               public FieldBean doInTransaction() {
+                   final JiraFieldDB jiraFieldDB1 = ao.create(JiraFieldDB.class);
+                   jiraFieldDB1.setJiraField(fieldBean.getJiraFieldName());
+                   jiraFieldDB1.save();
+                   return fieldBean;
+               }
+           });
+        }
+        return null;
+	}
+
+	 /**
+     * Delete field mapping from  DB
+     * @param fieldBean 
+     */
+	@Override
+	public FieldBean deleteMapping(final FieldBean fieldBean) {
+        ao.executeInTransaction(new TransactionCallback<FieldBean>() {
+            @Override
+            public FieldBean doInTransaction() {
+                FieldBean fb = new FieldBean();
+                JiraFieldDB[] jiraFieldDb = ao.find(JiraFieldDB.class, " JIRA_FIELD = ? ", fieldBean.getJiraFieldName());
+                if (jiraFieldDb.length > 0 ) {
+                    ao.delete(jiraFieldDb);
+                }
+                return fb;
+            }
+        });
+		 return null;
+	}
+
+    /**
+     * Get all field mapping from  DB
+     * @return list of all mappings
+     */
+	@Override
+	public List<FieldBean> getAllMappingsFromDB() {
+		List<FieldBean> mappingsList = new ArrayList<>();
+        FieldBean fieldBean;
+        JiraFieldDB[] jiraFieldDB = ao.find(JiraFieldDB.class, Query.select().order("JIRA_FIELD ASC"));
+        for (JiraFieldDB jiraFieldDB1 : jiraFieldDB) {
+            fieldBean = new FieldBean();
+            fieldBean.setJiraFieldName(jiraFieldDB1.getJiraField());
+            mappingsList.add(fieldBean);
+        }
+        return mappingsList;
+	}
+
+    /**
+     * Get field mapping from  DB
+     * @param fieldBean
+     * @return bean containing the concerned mapping
+     */
+	@Override
+	public List<FieldBean> getMapping(FieldBean fieldBean) {
+		List<FieldBean> mappingsList = new ArrayList<>();
+        
+        JiraFieldDB[] jiraFieldDB = ao.find(JiraFieldDB.class, " JIRA_FIELD = ? ", fieldBean.getJiraFieldName());
+        for (JiraFieldDB jiraFieldDB1 : jiraFieldDB) {
+            fieldBean = new FieldBean();
+            fieldBean.setJiraFieldName(jiraFieldDB1.getJiraField());
+            mappingsList.add(fieldBean);
+        }
+        return mappingsList;		
+	}
+    
+}
+
+    

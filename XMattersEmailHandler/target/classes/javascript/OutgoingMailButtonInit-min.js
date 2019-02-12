@@ -1,0 +1,1 @@
+require(["jquery","jira/mail/outgoing-mail-button"],function(b,a){b(function(){b("#outgoing-mail-toggle").each(function(){new a(b(this))})})});

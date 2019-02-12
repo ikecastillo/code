@@ -1,0 +1,35 @@
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="MultiLevelCascadeOptionForDepthJQL"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="MultiLevelCascadeOptionForDepthJQL-resources" name="MultiLevelCascadeOptionForDepthJQL Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="MultiLevelCascadeOptionForDepthJQL.css" location="/css/MultiLevelCascadeOptionForDepthJQL.css"/>
+        <resource type="download" name="MultiLevelCascadeOptionForDepthJQL.js" location="/js/MultiLevelCascadeOptionForDepthJQL.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>MultiLevelCascadeOptionForDepthJQL</context>
+    </web-resource>
+
+    <jql-function name="Multilevel Cascade Option for Depth" i18n-name-key="mlcoptionfordepth-function.name"
+                  key="mlcoptionfordepth-function"
+                  class="com.dt.jira.multilevelcascadedepth.jql.MultilevelCascadeOptionForDepthJQLfunction">
+        <description key="mlcoptionfordepth-function.description">Function to look for multilevel cascade item at depth
+        </description>
+        <!--The name of the function-->
+        <fname>MultiLevelCascadeOptionForDepth</fname>
+        <!--Whether this function returns a list or a single value-->
+        <list>true</list>
+    </jql-function>
+    
+</atlassian-plugin>

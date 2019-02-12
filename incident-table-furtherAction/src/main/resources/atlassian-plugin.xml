@@ -1,0 +1,46 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="incident-table-furtherAction"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="incident-table-furtherAction-resources" name="incident-table-furtherAction Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="incident-table-furtherAction.css" location="/css/incident-table-furtherAction.css"/>
+        <resource type="download" name="incident-table-furtherAction.js" location="/js/incident-table-furtherAction.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>incident-table-furtherAction</context>
+    </web-resource>
+    
+
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    
+        <web-resource key="furtherActionmapping-js" name="furtherActionmapping-js">
+        <dependency>jira.webresources:global-static</dependency>
+        <description>furtherActionmapping</description>
+        <resource name="furtherActionmapping.js" type="download" location="/js/furtherActionmapping.js" />	
+        <resource name="jquery.tabletojson.min.js" type="download" location="/js/jquery.tabletojson.min.js"/> 	
+		<resource name="jquery.jsonTable.js" type="download" location="/js/jsonTable.js"/> 		
+        <context>atl.general</context>
+   </web-resource>
+   
+    
+    <customfield-type key="FurtherActionCustomField" name="Further Action Custom Field" class="com.dt.jira.table.furtherAction.FurtherActionTable">
+  		<description>Further Action Custom Field</description> 
+  		<resource type="velocity" name="edit" location="templates/furtherActionEdit.vm" /> 
+  		<resource type="velocity" name="view" location="templates/furtherActionView.vm" /> 
+ 		<resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-basictext.vm" /> 
+    </customfield-type>
+    
+    
+</atlassian-plugin>

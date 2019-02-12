@@ -1,0 +1,64 @@
+# Ticket Id: WCDICC-421 : update new mulitelevel cascade field "Solution Groups - Products"
+# This update script is written for to sync up old cascade field(Solution Group - Product) values to new mulitelevel cascade field "Solution Groups - Products"
+# 14807 - Problem context
+# Table:  AO_F68019_RCASUBTASK_MAP
+
+# Steps to follow
+# Step 1. backup the table into new temparory table
+# Step 2. Run select sql script to to generate the update scripts for only parent i.e  "Solution Groups". 
+# Step 3. Run update script below to update option id of first level option (solution group) 
+# Step 4. Run select sql script to to generate the update scripts for only child i.e " Products". 
+# Step 5. Run update script below to update option id of second level option (Product) 
+# Step 6. Update new column values with None - this is only for incident not for the problem
+
+
+# Step 1. back the table into new temparory table
+  CREATE TABLE jirainfra.AO_F68019_RCASUBTASK_MAP_Backup20152108
+  AS (SELECT * FROM jirainfra.AO_F68019_RCASUBTASK_MAP);
+  
+# total no.of rows 
+select count(*) from  jirainfra.AO_F68019_RCASUBTASK_MAP t1
+
+# Step 2. Run select sql script to to generate the update scripts for only parent i.e  "Solution Groups". 
+#For Parent
+SELECT 
+  CONCAT( 
+	CONCAT('update `jirainfra`.`AO_F68019_RCASUBTASK_MAP` set GRP_OPTION_ID = ''',
+	(SELECT id FROM customfieldoption where customfieldconfig = (
+		 SELECT  ID FROM fieldconfigscheme WHERE 
+		 FIELDID = CONCAT('customfield_',(SELECT ID FROM customfield WHERE CFNAME = 'Solution Groups - Products')) 
+		 AND configname = 'Problem Issue Type Context') AND customvalue =  MAP.Grp_option_name AND parentoptionid is null )
+,'''  WHERE ID = ''',MAP.ID,''';'))
+FROM jirainfra.AO_F68019_RCASUBTASK_MAP MAP where  type = 'External';
+
+# Step 3. from above 2. Run update script below to update option id of first level option (solution group) 
+
+
+# Step 4. Run select sql script to to generate the update scripts for only child i.e " Products". 
+#For Child
+SELECT id, 
+  CONCAT( 
+	CONCAT('update `jirainfra`.`AO_F68019_RCASUBTASK_MAP` set CLD_GRP_OPTION_ID = ''',
+	(SELECT id FROM customfieldoption where customfieldconfig = (
+		 SELECT  ID FROM fieldconfigscheme WHERE 
+		 FIELDID = CONCAT('customfield_',(SELECT ID FROM customfield WHERE CFNAME = 'Solution Groups - Products')) 
+		 AND configname = 'Problem Issue Type Context') AND parentoptionid = MAP.Grp_option_id and parentoptionid is not null and customvalue =  MAP.CLD_Grp_option_name )
+,'''  WHERE ID = ''',MAP.ID,''';'))
+FROM jirainfra.AO_F68019_RCASUBTASK_MAP MAP where  type = 'External'; 
+
+ 
+
+
+# Step 5. from above 4. Run update script below to update option id of first level option (solution group) 
+
+
+# Step 6. Update new column values with None - this is only for incident not for the problem
+update jirainfra.AO_F68019_RCASUBTASK_MAP t1
+set t1.FOURTH_LEVEL_OPTION_ID = 'None' , t1.FOURTH_LEVEL_OPTION_NAME = 'None' 
+
+
+
+
+
+
+ 

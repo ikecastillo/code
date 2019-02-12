@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Test Case Execution Status (Bar view)"
+                 directory_title="Test Case Execution Status (Bar view)"
+                 description="Test Case Execution Status (Bar view)"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">JIRA</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="sprintId" datatype="hidden" default_value="All"/>
+	<UserPref name="groupbyField" datatype="hidden" default_value="Severity"/>
+    <Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+	#includeResources()
+		<script type="text/javascript">
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var GROUP_BY_FIELD = "DT-Environment";
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+				config: {
+                 descriptor: function(args)
+                 {
+                     var gadget = this;
+                     var projectPicker = AJS.gadget.fields.projectPicker(gadget, "projectId", args.projectOptions);
+                     return {
+                         theme : function()
+                         {
+                             if (gadgets.window.getViewportDimensions().width < 450)
+                             {
+                                 return "gdt top-label";
+                             }
+                             else
+                             {
+                                 return "gdt";
+                             }
+                         }(),
+                         fields: [
+                             projectPicker,
+							 DTGADGET.releasePicker(gadget, "projectId", "version", true, false),
+                             AJS.gadget.fields.nowConfigured()
+                         ]
+                     };
+                 },
+                 args: function()
+                 {
+                     return [
+                         {
+                             key: "projectOptions",
+                             ajaxOptions:  "/rest/dealertrackqmetry/1.0/testexecutionstatus/getProjects.json" 
+                         } 
+                     ];
+                 }()
+				},
+			 
+				      view: {
+							//enableReload: true,
+							template: function(args) {
+								drawchart(args.projectData);
+							},
+							args: [{
+								key: "projectData",
+								ajaxOptions: function() {
+									return {
+										url: "/rest/dealertrackqmetry/1.0/testexecutionstatus.json", 
+										contentType: "application/json",
+										data:  { 
+												projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprintId").split('|').toString())												
+										}
+									};
+								}
+							}]
+						}
+			});
+		})();
+	 drawchart=function(_restdata) {
+			console.log(_restdata); 
+			
+			var build = new Array();
+			var totDefects = new Array();
+			var totTestcases = new Array();
+			var totTestcasesExec = new Array();
+			var totPassed= new Array();
+			var totFailed = new Array();
+			var totNotrun = new Array();
+			var totNotApplicable = new Array();
+			var totBlocked = new Array();
+			
+			 var s1 = [5, 57,68, 48,28, 55];     
+			// var ticks = ['1.1.1 R', '1.1.1 P', 'AHFC1.2', '1.1.1 R','1.1.1 p','1.2.1 R'];
+			if (_restdata && _restdata !== "null" && _restdata.length > 0) {
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {
+						build.push((_restdata[_i].build == '')?'None':_restdata[_i].build);
+					
+						totDefects.push((_restdata[_i].totdefects == 0)?'': _restdata[_i].totdefects );
+						totTestcases.push((_restdata[_i].tottestcases == 0)?'': _restdata[_i].tottestcases);
+						totTestcasesExec.push((_restdata[_i].tottestcasesexec == 0)?'': _restdata[_i].tottestcasesexec);
+						totPassed.push((_restdata[_i].passed == 0)?'': _restdata[_i].passed);
+						totFailed.push((_restdata[_i].failed == 0)?'': _restdata[_i].failed);
+						totNotrun.push((_restdata[_i].notrun == 0)?'': _restdata[_i].notrun);
+						totNotApplicable.push((_restdata[_i].notapplicable == 0)?'': _restdata[_i].notapplicable);
+						totBlocked.push((_restdata[_i].blocked == 0)?'': _restdata[_i].blocked);						
+				}
+			} else {
+				totDefects.push(0);
+				totTestcases.push(0);
+				totTestcasesExec.push(0);
+				totPassed.push(0);
+				totFailed.push(0);
+				totNotrun.push(0);
+				totNotApplicable.push(0);
+				totBlocked.push(0);				
+				build.push('');
+			}
+			console.log(build);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			plot1 = AJS.$.jqplot('velocityChart', [totDefects, totTestcases,totTestcasesExec,totPassed,totFailed,totNotrun,totNotApplicable,totBlocked], {
+            // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+            //animate: !AJS.$.jqplot.use_excanvas,
+			//			  ['totDefects','Test cases','Testcases Exec','Pass','Failed','Not run','Not applicable','Blocked'],  	
+			seriesColors: ['#E15F92','#AA00FF','#B25AA8','#9CBC5B','#C1504D','#4E81BF','#E4E4E4','#FFD162'],
+            seriesDefaults:{
+				renderer:AJS.$.jqplot.BarRenderer,
+				rendererOptions: {
+					fillToZero: false, 
+					barWidth:15,
+					barPadding:1,
+					barMargin:10
+				},
+				pointLabels: {show: true},
+				trendline: {show: false, color: 'gray'}
+			},
+			 grid:{ background: 'white'},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series:[
+				{label:'Total Defects'},
+				{label:'Total Testcases'},
+				{label:'Total Testcases Executed'},
+				{label:'Passed'},
+				{label:'Failed'},
+				{label:'Not Run'},
+				{label:'Not Applicable'},
+				{label:'Blocked'}
+			],
+			 // Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+			  show: true,
+			  location: 'e'
+			},
+			axesDefaults:{
+				tickOptions: {
+					showGridline: false
+				}
+			},
+            axes: {
+                xaxis: {
+                    renderer: AJS.$.jqplot.CategoryAxisRenderer,
+                    ticks: build,
+					tickInterval:10,
+					tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer,
+					tickOptions: {
+					  angle: -30
+					},
+					pad:1	
+                },
+				 // Pad the y axis just a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					min:0,
+					pad:1.2,
+					tickOptions: {formatString: '%d'}
+				}
+            },
+            highlighter: { show: false }
+        });
+			plot1.redraw();
+
+			
+			console.log(plot1);
+			
+		};
+ </script>
+ <div id="velocityChart"> </div>
+  ]]>
+  </Content>
+</Module>

@@ -1,0 +1,95 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="JIRASDFieldMapper"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="JIRASDFieldMapper-resources" name="JIRASDFieldMapper Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:aui-messages</dependency>
+        <dependency>com.atlassian.auiplugin:dialog2</dependency>
+        <transformation extension="js">
+            <transformer key="jsI18n"/>
+        </transformation>
+        <resource type="download" name="JIRASDFieldMapper.css" location="/css/JIRASDFieldMapper.css"/>
+        <resource type="download" name="JIRASDFieldMapper.js" location="/js/JIRASDFieldMapper.js"/>
+        <resource type="download" name="admin.js" location="/js/admin.js"/>
+        <resource type="download" name="configureMapping.js" location="/js/configureMapping.js"/>
+        <resource type="download" name="tableFormatter.js" location="/js/tableFormatter.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <context>atl.admin</context>
+    </web-resource>
+
+
+    <!-- Related to admin section - all the views with their associated actions -->
+    <web-section key="jirasdfm-admin-section" name="jirasdfm Plugin Section" location="admin_plugins_menu" i18n-name-key="jirasdfm-admin-section.name" weight="900">
+        <label key="jirasdfm-admin-section.label"/>
+        <description>JIRA SD Field Mapper Admin Section</description>
+        <tooltip>JIRA SD Field Mapper Admin Section</tooltip>
+    </web-section>
+    <web-item key="jirasdfm-admin-web-item-1" section="admin_plugins_menu/jirasdfm-admin-section" i18n-name-key="jirasdfm-admin-web-item.name-1" name="jirasdfm Plugin Initial Setup" weight="1000">
+        <description>Initial Setup</description>
+        <label key="jirasdfm-admin-web-item.initialsetup"/>
+        <link linkId="jirasdfm-admin-web-item-link-1">/secure/plugins/jirasdfm/jirasdfmConfigure.jspa</link>
+    </web-item>
+    <web-item key="jirasdfm-admin-web-item-2" section="admin_plugins_menu/jirasdfm-admin-section" i18n-name-key="jirasdfm-admin-web-item.name-2" name="JIRA to jirasdfm Field Mappings" weight="1010">
+        <description>JIRA/JIRA Service Desk Field Mappings</description>
+        <label key="jirasdfm-admin-web-item.fieldmappings"/>
+        <link linkId="jirasdfm-admin-web-item-link-2">/secure/plugins/jirasdfm/jirasdfmMapping.jspa</link>
+    </web-item>
+    <webwork1 name="jirasdfmadminwebwork" key="jirasdfm-admin-webwork" class="java.lang.Object">
+        <description key="jirasdfm-webwork.description">The Admin Page input webwork</description>
+        <actions>
+            <action alias="jirasdfmConfigure" name="com.dt.jirasdfieldmapper.webwork.ConfigureAction" roles-required="sysadmin">
+                <view name="success" type="velocity">/templates/admin/admin.vm</view>
+                <view name="error" type="velocity">/templates/admin/admin.vm</view>
+            </action>
+            <action alias="jirasdfmMapping" name="com.dt.jirasdfieldmapper.webwork.MappingAction" roles-required="sysadmin">
+                <view name="success" type="velocity">/templates/admin/mapping.vm</view>
+                <view name="error" type="velocity">/templates/admin/mapping.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+
+    <rest name="jirasdfm Rest API" i18n-name-key="jirasdfm-rest-api.name" key="jirasdfm-rest-api" path="/jirasdfm" version="1.0">
+        <description key="jirasdfm-rest-api.description">The JiraSDFM Rest API Plugin</description>
+    </rest>
+
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jirasdfieldmapper.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jirasdfieldmapper.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+    <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+    <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+
+    <ao key="ao-module-group">
+        <description>The module configuring the Active Objects service used by this plugin</description>
+        <entity>com.dt.jirasdfieldmapper.ao.JIRASDMapDB</entity>
+    </ao>
+    <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+        <description>Component to access Active Objects functionality from the plugin</description>
+    </component-import>
+
+    <!-- Field mapping service  for ao object -->
+    <component key="field-mapping-service" name="field-mapping-service" class="com.dt.jirasdfieldmapper.service.FieldMapperServiceImpl"
+               public="true">
+        <interface>com.dt.jirasdfieldmapper.service.FieldMapperService</interface>
+    </component>
+    <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+  <component key="eventListener" class="com.dt.jirasdfieldmapper.event.StandardBAUChangeEventListener">
+		<description>Event get the Service Management issue details and populates once change ticket has been created.</description>
+  </component>
+</atlassian-plugin>

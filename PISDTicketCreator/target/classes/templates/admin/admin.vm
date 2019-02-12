@@ -1,0 +1,100 @@
+<html>
+<head>
+    <title>$i18n.getText("pisdtktadmin.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.remote.pisdtktcreator.PISDTicketCreator:PISDTicketCreator-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+</head>
+<body>
+<div class="header">
+    <h3 class="pisdadminformtitle">$i18n.getText("pisdticket.admin.label")</h3>
+</div>
+<form id="pistticketadmin2" class="aui">
+    #*<div class="field-group">
+        <label for="pisdticketbaseURL">$i18n.getText("pisdticket.admin.pisdticketbaseurl.label")</label>
+        <input type="text" id="pisdticketbaseURL" name="pisdticketbaseURL" class="text">
+    </div>*#
+    <div class="field-group">
+        <label for="pisdticketSDApplicationName">$i18n.getText("pisdticket.admin.pisdticketSDApplicationName.label")</label>
+        #*<input type="text" id="pisdticketSDApplicationName" name="pisdticketSDApplicationName" class="text">*#
+        <select class="select" id="pisdticketSDApplicationName" name="pisdticketSDApplicationName">
+        </select>
+    </div>
+    <div class="field-group">
+        <label for="pisdticketuid">$i18n.getText("pisdticket.admin.pisdticketuid.label")</label>
+        <input type="text" id="pisdticketuid" name="pisdticketuid" class="text">
+    </div>
+    <div class="field-group">
+        <label for="pisdticketpwd">$i18n.getText("pisdticket.admin.pisdticketpwd.label")</label>
+        <input type="password" id="pisdticketpwd" name="pisdticketpwd" class="text">
+    </div>
+    #*<div class="field-group">
+        <label for="pisdticketapplnlinkid">$i18n.getText("pisdticket.admin.pisdticketapplnlinkid.label")</label>
+        <input type="text" id="pisdticketapplnlinkid" name="pisdticketapplnlinkid" class="text">
+        <div class="description">$i18n.getText("pisdticket.admin.pisdticketapplnlinkid.description")</div>
+    </div>
+    <div class="field-group">
+        <label for="pisdticketapplnlinkid2">$i18n.getText("pisdticket.admin.pisdticketapplnlinkid2.label")</label>
+        <input type="text" id="pisdticketapplnlinkid2" name="pisdticketapplnlinkid2" class="text">
+        <div class="description">$i18n.getText("pisdticket.admin.pisdticketapplnlinkid2.description")</div>
+    </div>*#
+    <div class="field-group">
+        <input type="submit" value="$i18n.getText("pisdticket.admin.save.label")" class="button">
+        <input type="button" value="$i18n.getText("pisdticket.admin.cancel.label")" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+    </div>
+</form>
+
+<script type="text/javascript">
+    var baseUrl = "$applicationProperties.getBaseUrl()";
+
+    function populatePISDForm() {
+        jQuery.ajax({
+            url: "/rest/pisd-ticket-creator-api/1.0/pisdadminconfig",
+            dataType: "json",
+            success: function(config) {
+
+                AJS.$("#pisdticketuid").attr("value", config.pisdTicketUid);
+                AJS.$("#pisdticketpwd").attr("value", config.pisdTicketPwd);
+
+                AJS.$("#pisdticketSDApplicationName").attr("value", config.pisdticketSDApplicationName);
+            }
+        });
+    }
+    AJS.$(function() {
+        jQuery.ajax({
+            url: AJS.params.baseURL + "/rest/applinks/1.0/applicationlink",
+            type: 'GET',
+            contentType: "application/json" ,
+            async:false,
+            success: function(data) {
+                console.log("AJAX call to get application links");
+                var  applicationNameSelectfield = AJS.$("#pisdticketSDApplicationName");
+                console.log("Data returned is ");
+                console.log(data);
+
+                var applicationLinkNames = [];
+
+                AJS.$('applicationLinks', data).each(function () {
+                    AJS.$('applicationLinks', this).each(function () {
+                        var applnName = AJS.$('name', this).text();
+                        applicationLinkNames.push(applnName);
+                    });
+                });
+
+                console.log( applicationLinkNames );
+
+                for(var i=0;i<applicationLinkNames.length;i++){
+                    var value = applicationLinkNames[i];
+                    console.log("Application link name " + value);
+
+                    var applicationNameOption = AJS.$("<option/>").attr("value", value).text(value);
+                    applicationNameSelectfield.append(applicationNameOption);
+                }
+                populatePISDForm();
+            }
+        });
+    });
+</script>
+</body>
+</body>
+</html>

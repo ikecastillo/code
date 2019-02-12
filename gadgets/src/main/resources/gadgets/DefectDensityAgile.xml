@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Defect Density (Agile)"
+                 directory_title="Defect Density (Agile)"
+                 description="Total defects that are accepted as valid ones vs the total of story points"
+				 author="Ness"				 
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">Charts</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="sprint" datatype="hidden" default_value="All"/>
+    <UserPref name="headertxt" datatype="hidden" default_value="Defect Density (Agile)"/>
+    <Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+
+        #requireResource("com.pyxis.greenhopper.jira:gh-gadget-common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:chosen")
+
+		#includeResources()
+		<script type="text/javascript">
+		        (function () {
+            var gadget = AJS.Gadget({
+                baseUrl: "__ATLASSIAN_BASE_URL__",
+                useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        return DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+/*                view: {
+                	onResizeReload: true,
+                    onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args) {
+                        return DTGADGET.template(this, args, "__ATLASSIAN_BASE_URL__");
+                    },
+                    args: DTGADGET.templateArgs("__ATLASSIAN_BASE_URL__")
+					
+                }
+*/
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+
+						drawchart(this, args.dar);
+					},
+					args: [
+                        {
+                            key: "dar",
+                            ajaxOptions: function ()
+                            {
+                                return {
+									url: "/rest/dealertrack/1.0/defectdensityagile.json",
+									contentType: "application/json",
+									data:  { projectKey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprint").split('|').toString())
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(gadget, _restdata) {
+		var ratio = _restdata.data;
+		//ratio = Math.round(ratio * 10) / 10;
+		console.log (ratio);	
+		
+		var tableList = AJS.$("<table/>").css("width","100%").css("height","50%").css("border","1px solid #B3B8B9");
+								var sevTR =  AJS.$("<tr/>").css("height","50%").css("width","100%").css("border","1px solid #B3B8B9");
+								var h1 = '<h2> Defect Density <br> </h2>  Defects per size ';
+								sevTR.append(AJS.$("<td/>").html(h1).css("border-right","1px solid #B3B8B9"))
+								var d1 = '<h2>&nbsp; &nbsp;&nbsp; '+ ratio + '% </h2> &nbsp; &nbsp;&nbsp;';
+								sevTR.append(AJS.$("<td/>").html(d1).css("border-right","1px solid #B3B8B9"))
+			tableList.append(sevTR);
+			//div.innerHTML=tableList;
+		//gadget.getView().empty();
+		//gadget.getView().append(div);
+		gadget.getView().html(tableList);
+		};
+		</script>
+			
+	]]>
+
+  </Content>
+</Module>

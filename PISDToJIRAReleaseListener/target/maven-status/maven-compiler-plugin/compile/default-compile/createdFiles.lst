@@ -1,0 +1,3 @@
+com\dt\jira\plugin\rest\CreateLinkInJiraResource.class
+com\dt\jira\plugin\rest\GetIssueTypesModel.class
+com\dt\jira\plugin\rest\GetIssueTypes.class

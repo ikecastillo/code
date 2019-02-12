@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+	<param name="configure.url">/plugins/servlet/qmetry/admin</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="qmetry-integration"/>
+  <!-- add our web resources -->
+  <web-resource key="qmetry-integration-resources" name="qmetry-integration Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="qmetry-integration.css" location="/css/qmetry-integration.css"/>
+    <resource type="download" name="qmetry-integration.js" location="/js/qmetry-integration.js"/>
+	<resource type="download" name="admin.js" location="js/admin.js"/> 
+    <resource type="download" name="images/" location="/images"/>
+    <context>qmetry-integration</context>
+	<dependency>jira.webresources:autocomplete</dependency>
+		<dependency>jira.webresources:jira-fields</dependency>
+		<dependency>com.atlassian.jira.jira-project-config-plugin:project-config-global</dependency>
+		<dependency>com.atlassian.gadgets.embedded:gadget-standalone-resources</dependency>
+	<transformation extension="js">
+			<transformer key="jsI18n"/>
+	</transformation>
+		<transformation extension="soy">
+			<transformer key="jiraSoyTransformer"/>
+		</transformation>
+		<dependency>com.atlassian.jira.jira-soy-plugin:soy-deps</dependency>
+  </web-resource>
+  <!-- publish our component -->
+<!--   <component key="myPluginComponent" class="com.dt.jira.plugin.rest.MyPluginComponentImpl" public="true">
+    <interface>com.dt.jira.plugin.rest.MyPluginComponent</interface>
+  </component>
+ -->  
+  <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+  <servlet key="admin-servlet" class="com.dt.jira.plugin.adminui.AdminServlet"> <url-pattern>/qmetry/admin</url-pattern></servlet>
+  <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate" />
+  
+  <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <template-context-item key="applicationPropertiesContextItem" component-ref="applicationProperties" context-key="applicationProperties" name="Application Properties Context Item"/>
+  
+  <rest name="Test Case Execution Status" i18n-name-key="test-case-execution-status.name" key="test-case-execution-status" path="/dealertrackqmetry" version="1.0">
+    <description key="test-case-execution-status.description">The Test Case Execution Status Plugin</description>
+  </rest>
+</atlassian-plugin>

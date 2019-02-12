@@ -1,0 +1,8 @@
+com\dt\userfromemail\MyPluginComponentImpl.class
+com\dt\userfromemail\MyPluginComponent.class
+com\dt\userfromemail\rest\JIRAUserRESTAPI.class
+com\dt\userfromemail\rest\IncidentOutageModel.class
+com\dt\userfromemail\utils\EmailToUserID.class
+com\dt\userfromemail\rest\JIRAUserModel.class
+com\dt\userfromemail\rest\IssueBean.class
+com\dt\userfromemail\rest\CreateIncidentOrOutageREST.class

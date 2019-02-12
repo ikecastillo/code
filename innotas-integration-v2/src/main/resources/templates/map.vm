@@ -1,0 +1,166 @@
+<html>
+  <head>
+    <title>$i18n.getText("innotas.ui.title")</title>
+		<meta name="decorator" content="admin" />
+		<meta name="projectKey" content="$project.key"/>
+		<meta name="projectId" content="$project.id"/>
+		<meta name="admin.active.tab" content="innotas_tab_link2"/>
+		<meta name="admin.active.section" content="atl.jira.proj.config"/>
+    $webResourceManager.requireResource("com.dt.jira.plugin.innotas-integrationv2:innotas-integration-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+		<script>
+        //AJS.$(document).ready(function() { AJS.$("#businessunit").select2(); });
+	//Added code for Sync Icon
+	updateJiraRelease=function(obj)
+		{	
+			var retVal = confirm("Are you sure you want to update the Jira Release Name?");
+			if( retVal == true ){
+					var idx = obj.id.substring(obj.id.indexOf('_'));
+					var jiraRelName = AJS.$('#relName'+idx).val();
+					var innRelName= AJS.$('#in-release'+idx).find('option:selected').text();
+					var jiraRelId = AJS.$('#relId'+idx).val();
+					callAjax(jiraRelId,innRelName);
+			  return true;
+		   }else{
+			  //alert("User does not want to continue!");
+			  return false;
+		   }			
+			
+		}
+		
+    </script>	
+		##set ($sync = $innotas-cache-service.syncCache())
+		## Get the Jira Releases for this project
+		#set ($relList = $innotas-cache-service.getReleases($project.key))
+		#set ($bu = $innotas-cache-service.getInnotasBUs())
+		## Get the Innotas/Jira mapping for this project
+		##set ($mapList = $innotas-cache-service.getMapping($project.key))
+		##Get the mapped BU to show the selected BU on the dropdown
+		#set ($mappedBuId = $innotas-cache-service.getMappedBuId($project.key))
+		## Get all Innotas Projects corresponding to the selected BU
+		#set ($prj = $innotas-cache-service.getInnotasProjects($mappedBuId))
+
+  </head>
+  <body>
+		##*********$bu
+		##*************************** $project.key
+		##Mapped BU: $mappedBuId
+		##Mapping: $mapList
+		<div class="header">
+        <h3 class="formtitle">$i18n.getText("innotas.ui.title")</h3>
+    </div>
+		#if ($relList.isEmpty())
+			<div> 
+				<p>This Project does not have any Releases/Versions to map.
+				<p>Navigate to <a href="${req.contextPath}/plugins/servlet/project-config/$textutils.htmlEncode($action.jiraProjectKey)/versions">Versions Tab</a> to create Releases/Versions. 
+			</div>
+		#else
+			<form id="mapping" class="aui">
+				<div align="center" width="100%">
+					 <label for="space1" width="40%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<label  for="space2" width="10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<label for="space3"  width="10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<label for="space4"  width="10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<div id="logingImg" class="app-switcher-loading" >  </div>						
+			  </div>
+				<div class="field-group">
+					<label for="projectkey">$i18n.getText("innotas.ui.projectkey.label")</label> 
+					<div id="projectkey">$project.key</div>											
+				</div>
+				<div class="field-group">
+					<label for="businessunit">Business Unit<span class="aui-icon icon-required"> required</span></label>
+					<select id="businessunit" class="select">
+						<option value="">Select...</option>
+					#foreach ($buKey in $bu.keySet())
+							#set ($buSelected = "")
+							#if ($mappedBuId == $buKey) 
+								#set ($buSelected = "Selected")
+							#end
+							<option value="$!buKey" $buSelected>$!bu.get($!buKey)</option>
+					#end
+					</select>					
+					## <div class="description">Select a Business Unit to populate the corresponding Projects and releases below</div>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<input type="submit" id="btn_save_top" value="$i18n.getText("innotas.ui.save.label")" class="button">
+					<input type="button" id="btn_revert_top"value="$i18n.getText("innotas.ui.revert.label")" class="button">
+					<span> &nbsp;&nbsp;&nbsp;</span>
+					<input type="button" id="btn_sync_top" value="$i18n.getText("innotas.ui.synccache.label")" class="button" >	
+								
+				</div>						
+				<table class="aui">
+					<thead>
+						<tr>
+							<th id="jira-release">Jira Release</th>
+							<th id="jira-rel-sync">&nbsp;&nbsp;&nbsp;</th>
+							<th id="in-project">Innotas Project</th>
+							<th id="in-release">Innotas Release</th>
+							<th id="in-pId">Innotas ProjectId</th>
+							<th id="in-sbu">Sub Business Unit</th>
+							<th id="in-prg">Program</th>
+							<th id="in-agile">Agile Project</th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+					#foreach($relId in $relList.keySet())
+						#set($rel = $relList.get($relId))
+						##set($map = $mapList.get($relId))
+						##set($ipId = $map.getInnotasProjectId())
+							<td headers="jira-release"> $rel.getName()
+							<input type="hidden" id="relId_$velocityCount" name="relId" value="$relId">
+							<input type="hidden" id="relName_$velocityCount" name="relName" value="$rel.getName()">
+							</td>
+							<td headers="jira-rel-sync-button">							 
+							<img src="" id="sync-button_$velocityCount" title="Update Jira Release name with Innotas Release." class="aui-sync-button" onClick='updateJiraRelease(this)'/>
+							</td>
+							<td headers="in-project">
+								<select id="in-project_$velocityCount" style="width:300px">
+								<option value="" data-sbu="" data-prg="" data-agile=""></option>
+								#foreach ($prjKey in $prj.keySet() ) 			
+									#set ($ipm = $!prj.get($!prjKey))
+									<option value="$ipm.getProjectId()" data-sbu="$ipm.getSbuName()"  data-prg="$ipm.getProgramName()" data-agile="$ipm.getAgileProject()"  $prjSelected>$ipm.getProjectName()</option>
+								#end
+								</select>
+							</td>
+							<td headers="in-release">				
+								<select id="in-release_$velocityCount" class="select" style="width:250px">
+								<option value=""></option>
+								</select>
+							</td>
+							<td headers="in-pId"><div id="in-pId_$velocityCount"></div></td>
+							<td headers="in-sbu"><div id="in-sbu_$velocityCount"></div></td>
+							<td headers="in-prg"><div id="in-prg_$velocityCount"></div></td>
+							<td headers="in-agile"><div id="in-agile_$velocityCount"></div></td>
+							
+						</tr>
+					#end	
+					</tbody>
+				</table>
+				<br>
+				
+				<div class="field-group">
+					<input type="submit" id="btn_save" value="$i18n.getText("innotas.ui.save.label")" class="button">
+					<input type="button" id="btn_revert"value="$i18n.getText("innotas.ui.revert.label")" class="button" >
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<span> &nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<input type="button" id="btn_sync" value="$i18n.getText("innotas.ui.synccache.label")"
+					class="button" >					
+					<input type="button" id="btn_syncall" value="$i18n.getText("innotas.ui.syncallissues.label")"
+					class="button" >
+					
+				</div>
+			</form>
+		#end	
+		<div id="error"> </div>
+	</body>
+</html>

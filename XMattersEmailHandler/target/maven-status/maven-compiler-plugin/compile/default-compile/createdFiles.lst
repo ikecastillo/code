@@ -1,0 +1,3 @@
+com\dt\plugin\xmattersehandler\impl\EmailParserImpl.class
+com\dt\plugin\xmattersehandler\api\EmailParser.class
+com\dt\plugin\xmattersehandler\emailhandler\XMattersEmailHandler.class

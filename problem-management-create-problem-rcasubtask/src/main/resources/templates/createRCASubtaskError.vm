@@ -1,0 +1,30 @@
+<html>
+  <head> 
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <meta name="decorator" content="atl.general"/>
+  
+    $webResourceManager.requireResource("com.dt.jira.problem.rcasubtask.problem-management-create-problem-rcasubtask:create-problem-rcasubtask-resources")  
+    #if (${action.issueObject})
+        <meta name="decorator" content="issueaction" />
+    #else
+        <meta name="decorator" content="message" />
+    #end
+   	
+	
+   </head>
+  <body>
+
+       #if ($action.getMessages() != "")
+
+<div class="remove-me">
+    <h2 class="dialog-title">${action.getText('create-and-link-rcasubtask.error.header')}</h2>
+     <div class="aui-message error"><span class="aui-icon icon-error"></span>
+        #foreach($message in $action.flushedErrorMessages)
+            <p>$message</p>
+        #end
+    </div>
+</div>
+#end
+
+  </body>
+  </html>

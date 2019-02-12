@@ -1,0 +1,158 @@
+<html>
+<head>
+    <title>$i18n.getText("xmatters.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jira.xmatters.intgt.plugin.xMatters-integration-plugin:xMatters-integration-plugin-v2-resources1.0")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+</head>
+<body>
+
+<div class="header">
+    <h3 class="formtitle">$i18n.getText("xmatters.admin.mgmthcroomform.label")</h3>
+</div>
+
+<p/>
+
+<h3>$i18n.getText("xmatters.admin.mgmtroomconfig.label")</h3>
+<p/>
+
+<button id="hipchat-config-button" class="aui-button">$i18n.getText("xmatters.admin.mgmthcroomform.addhipchatroomconfig")</button>
+
+<!-- Add config dialog -->
+<section role="dialog" id="hipchat-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">$i18n.getText("xmatters.admin.mgmthcroomform.dialog.header")</h2>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content">
+        <form action="#" method="post" id="addhipchatconfigform" class="aui">
+            <fieldset>
+                <div class="field-group">
+                    <!-- for Severity -->
+                    <label for="sollinemgmt">
+                        $i18n.getText("xmatters.admin.mgmthcroomform.dialog.sollinemgmt")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <select class="select mandatoryhcField" id="sollinemgmt" name="sollinemgmt" title="Solution Line">
+                        <option></option>
+                    </select>
+                    <div class="description">$i18n.getText("xmatters.admin.mgmthcroomform.descriptionsollinemgmt")</div>
+                    <div class="error"></div>
+                </div>
+
+                <div class="field-group">
+                    <!-- for xMatters Form/Template Name -->
+                    <label for="formTemplateName">
+                        $i18n.getText("xmatters.admin.mgmthcroomform.dialog.hipchatroomurl")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <input class="text mandatoryhcField" type="text" id="hipchatroomurl" name="hipchatroomurl" title="Hip Chat Room URL">
+                    <div class="description">$i18n.getText("xmatters.admin.mgmthcroomform.descriptionhipchatroomurl")</div>
+                    <div class="error"></div>
+                </div>
+                <fieldset>
+        </form>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="hipchatconfig-dialog-add-button" class="aui-button">
+                $i18n.getText("xmatters.admin.mgmthcroomform.dialog.addbutton")
+            </button>
+            <button id="hipchatconfig-dialog-cancel-link" class="aui-button aui-button-link">
+                $i18n.getText("xmatters.admin.mgmthcroomform.dialog.cancellink")
+            </button>
+        </div>
+    </footer>
+</section>
+<!-- Add Config dialog ends -->
+
+<!-- Confirmation dialog to delete the hipchat config -->
+<section role="dialog" id="delete-hipchat-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">$i18n.getText("xmatters.admin.deletehcconfigform.dialog.header")</h2>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content" id="deleteeventconfirmationtext">
+        <strong>$i18n.getText("xmatters.admin.deletehcconfigform.dialog.message.areyousure")</strong>
+        <p/>
+        <table class="aui">
+            <thead>
+            <tr>
+                <th>Solution Line</th>
+                <th>HipChat Room URL</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td id="sollinemgmtconf"></td>
+                <td id="hipchatroomurlconf"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="hipchat-dialog-delete-button" class="aui-button">
+                $i18n.getText("xmatters.admin.deletehcconfigform.dialog.deletebutton")
+            </button>
+            <button id="hipchat-dialog-delete-cancel-link" class="aui-button aui-button-link">
+                $i18n.getText("xmatters.admin.deletehcconfigform.dialog.cancellink")
+            </button>
+        </div>
+    </footer>
+</section>
+<!-- Confirmation dialog to delete the hipchat config ends -->
+
+<table id="hipchatconfigtable" class="aui aui-table-sortable">
+    <thead>
+    <tr>
+        <th>Solution Line</th>
+        <th>HipChat Room URL</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+
+<p/>
+
+
+## Commenting out the below form for now after my discussion with Vikas - we can work on this functionality later on
+#*
+<h3>$i18n.getText("xmatters.admin.hipchatpersist.label")</h3>
+<p/><p/>
+<fieldset class="group">
+    <div class="radio">
+        <input class="radio" type="radio" name="hcp" id="sendhcr"
+               value="Send hipchat room information to XMatters">
+        <label for="sendhcr">Send hipchat room  information to XMatters</label>
+    </div>
+    <div class="radio">
+        <input class="radio" type="radio" name="hcp" id="sendnohcr"
+               value="DO NOT send hipchat room information to XMatters">
+        <label for="sendnohcr">DO NOT send hipchat room  information to XMatters</label>
+    </div>
+</fieldset>
+<p/>
+<button id="hipchat-persist-button" class="aui-button">$i18n.getText("xmatters.admin.hipchatpersist.savehipchatsettings")</button>
+*#
+
+
+
+
+</body>
+</html>
+
+
+
+
+

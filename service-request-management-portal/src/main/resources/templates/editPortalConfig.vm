@@ -1,0 +1,69 @@
+<html>
+<head>
+    <title>$action.getText("menu.config.form.title.edit")</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="admin.active.tab" content="wi-service-desk-admin-custmenu-link"/>
+    <meta name="admin.active.section" content="service-desk-admin/service-desk-admin-main"/> 
+</head>
+<body class="page-type-admin">
+<div class="content-container">
+
+    <div class="content-body">
+        <h2>$action.getText("menu.config.form.title.edit")#if($customerPortal.ID): $customerPortal.ID#end</h2>
+		#parse("templates/errorPage.vm")
+        <div class="create-issue-panel">
+
+            <form method="post" id="h" action="EditCustomerPortalAction.jspa" class="aui">
+                <input type="hidden" name="key" value="$customerPortal.ID">
+                 <div class="field-group">
+                    <label for="h-fname">
+                        $action.getText("menu.config.form.title.name")
+                        <span class="aui-icon icon-required"></span>
+                        <span class="content">required</span>
+                    </label>
+                    <input type="text" id="h-fname" name="name" value="#if($customerPortal.name)$customerPortal.name#end"/>
+                </div>
+                <div class="field-group">
+                    <label for="h-furl">
+                        $action.getText("menu.config.form.title.url")
+                        <span class="aui-icon icon-required"></span>
+                        <span class="content">required</span>
+                    </label>
+                    <input type="text" id="h-furl" name="url" value="#if($customerPortal.url)$customerPortal.url#end"/>
+                </div>
+                <div class="field-group">
+                    <label for="h-ficon">
+                        $action.getText("menu.config.form.title.icon")
+                        <span class="aui-icon icon-required"></span>
+                        <span class="content">required</span>
+                    </label>
+                     <input type="text" id="h-ficon" name="icon" value="#if($customerPortal.icon)$customerPortal.icon#end"/>
+                </div>
+                <div class="field-group">
+                    <label for="h-fdescription">
+                        Description
+                        <span class="aui-icon icon-required"></span>
+                        <span class="content">required</span>
+                    </label>
+                    <input type="text" id="h-fdescription" name="description" value="#if($customerPortal.description)$customerPortal.description#end"/>
+                </div>
+                
+                <div class="field-group">
+                    <label for="h-fparentid">
+                        $action.getText("menu.config.form.title.parentid")
+                        <span class="aui-icon icon-required"></span>
+                        <span class="content">required</span>
+                    </label>
+                    <input type="text" id="h-fparentid" name="parentId" value="#if($customerPortal.parentId)$customerPortal.parentId#end"/>
+                </div>
+                
+				<input class="aui-button" type="submit" name="update" value="$action.getText("menu.config.form.button.update")" accesskey="S" title="Press Alt+Shift+S to submit form"" />&nbsp;
+                <a accesskey="'" class="cancel" href="#" id="menu.config-edit-cancel" title="Press Alt+Shift+' to cancel" onclick="location.href='ViewCustomerPortalAction.jspa'">Cancel</a>
+                
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

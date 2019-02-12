@@ -1,0 +1,151 @@
+#disable_html_escaping()
+#* @vtlvariable name="action" type="com.atlassian.jira.plugins.mail.webwork.ViewMailServers" *#
+$webResourceManager.requireResource("com.atlassian.jira.jira-mail-plugin:global-resources")
+$webResourceManager.requireResource("com.atlassian.jira.jira-mail-plugin:mail-handlers-table")
+
+<header class="aui-page-header">
+    <div class="aui-page-header-inner">
+        <div class="aui-page-header-main">
+            <h2 class="item-summary">
+                $action.getText('admin.loggingandprofiling.mail.outgoing')
+                #if($action.isOutgoingMailEnabled())
+                    <span id="outgoing-mail-status" class="aui-lozenge status-active">$action.getText('admin.mailservers.outgoing.status.enabled')</span>
+                #elseif($action.isOutgoingMailDisabledAtStartup())
+                    <span id="outgoing-mail-status" class="aui-lozenge status-inactive">$action.getText('admin.mailservers.outgoing.status.disabled.before.start')</span>
+                #elseif($action.isOutgoingMailDisabledAtRuntime())
+                    <span id="outgoing-mail-status" class="aui-lozenge status-inactive">$action.getText('admin.mailservers.outgoing.status.disabled.at.runtime')</span>
+                #end
+            </h2>
+        </div>
+        <div class="aui-page-header-actions">
+            #if($action.isOutgoingMailEnabled())
+                <button id="outgoing-mail-toggle" class="aui-button disable-outgoing" data-enabled="$action.outgoingMailEnabled">$action.getText('admin.mailservers.outgoing.toggle.disable')</button>
+            #elseif ($action.isOutgoingMailDisabledAtStartup())
+                <button id="outgoing-mail-toggle" class="aui-button enable-outgoing" data-enabled="$action.outgoingMailEnabled" aria-disabled="true">$action.getText('admin.mailservers.outgoing.toggle.enable')</button>
+            #elseif ($action.isOutgoingMailDisabledAtRuntime())
+                <button id="outgoing-mail-toggle" class="aui-button enable-outgoing" data-enabled="$action.outgoingMailEnabled">$action.getText('admin.mailservers.outgoing.toggle.enable')</button>
+            #end
+        </div>
+    </div>
+</header>
+
+#if (!$action.outgoingMailEnabled)
+    ## meta-div used in page object
+    #set ($meta = "<div class='hidden disabled-meta'
+                        data-at-startup='${action.outgoingMailDisabledAtStartup}'
+                        data-at-runtime='${action.outgoingMailDisabledAtRuntime}'>
+                   </div>")
+
+    #if ($action.outgoingMailDisabledAtRuntime)
+        #set ($title = "$action.getText('admin.mailservers.outgoing.status.disabled.at.runtime')")
+        #set ($msg = "$action.getText('admin.mailservers.outgoing.disabled.at.runtime', $action.outgoingMailDisabledByHtml, $action.outgoingMailDisabledDate)")
+        #set ($meta = "${meta} <div class='hidden disabled-by-meta' data-user='$!action.outgoingMailDisabledByUser' data-millis='$!action.outgoingMailDisabledMillis'></div>")
+    #else
+        #set ($title = "$action.getText('admin.mailservers.outgoing.status.disabled.before.start')")
+        #set ($msg = "$action.getText('admin.mailservers.outgoing.disabled.before.start', '<code>', '</code>')")
+    #end
+
+    #AUImessage("info" "${title}" "${msg} ${meta}" "outgoing-mail-disabled-info" "")
+#end
+
+#if ($action.canManageSmtpMailServers())
+    <div id="smtp-mail-servers-panel">
+        <h3 class="formtitle">$action.getText('admin.mailservers.smtp.mail.servers')</h3>
+
+        #if(!$action.smtpMailServers.empty)
+        <p>$action.getText('admin.mailservers.the.table.below.smtp')</p>
+        #end
+
+        #if($action.smtpMailServers.empty)
+            #set ($messageBody = "$action.getText('admin.mailservers.no.smtp.servers.configured')")
+            #set ($howToLinkText = "$action.getText('admin.mailservers.no.smtp.servers.configured.howto')")
+            #set ($howToLink = "$action.smtpServerHelpLink")
+            #AUImessage("info" "" "<p>${messageBody}</p><a target=_blank href=${howToLink}>${howToLinkText}</a>" "" "" "" "")
+            <div class="buttons-container aui-toolbar2 noprint">
+                <a class="aui-button" id="add-new-smtp-server" href="AddSmtpMailServer!default.jspa">$action.getText('admin.mailservers.configure.new.smtp.mail.server')</a>
+            </div>
+        #else
+            <table class="aui aui-table-rowhover">
+                <thead>
+                <tr>
+                    <th width="30%">
+                        $action.getText('common.words.name')
+                    </th>
+                    <th>
+                        $action.getText('admin.common.words.details')
+                    </th>
+                    <th width="10%">
+                        $action.getText('common.words.operations')
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                    #foreach ($server in $action.smtpMailServers)
+                    <tr>
+                        <td>
+                            <strong>$esc.html($server.name)</strong>
+                            #if ($server.description)
+                                <div class="description">$esc.html($server.description)</div>
+                            #end
+                        </td>
+                        <td>
+                            <ul class="item-details">
+                                <li>
+                                    <dl>
+                                        <dt>$action.getText('admin.mailservers.from'):</dt>
+                                        <dd>$esc.html($server.defaultFrom)</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>$action.getText('admin.mailservers.prefix'):</dt>
+                                        <dd>$esc.html($server.prefix)</dd>
+                                    </dl>
+                                </li>
+                                #if ($server.sessionServer)
+                                    <li>
+                                        <dl>
+                                            <dt>$action.getText('admin.mailservers.jndi.location'):</dt>
+                                            <dd>$esc.html($server.jndiLocation)</dd>
+                                        </dl>
+                                    </li>
+                                #else
+                                    <li>
+                                        <dl>
+                                            <dt>$action.getText('admin.mailservers.host'):</dt>
+                                            <dd>$esc.html($server.hostname)</dd>
+                                        </dl>
+                                        #if ($server.port)
+                                            <dl>
+                                                <dt>$action.getText('admin.mailservers.smtp.port'):</dt>
+                                                <dd>$esc.html($server.port)</dd>
+                                            </dl>
+                                        #end
+                                        #if ($server.username)
+                                            <dl>
+                                                <dt>$action.getText('common.words.username'):</dt>
+                                                <dd>$esc.html($server.username)</dd>
+                                            </dl>
+                                        #end
+                                    </li>
+                                #end
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="operations-list">
+                                <li>
+                                    <a id="edit_${server.id}" href="UpdateSmtpMailServer!default.jspa?id=${server.id}">$action.getText('common.words.edit')</a>
+                                </li>
+                                <li>
+                                    <a id="deleteSMTP" href="DeleteMailServer!default.jspa?id=${server.id}">$action.getText('common.words.delete')</a>
+                                </li>
+                                <li>
+                                    <a id="sendTestEmail" href="SendTestMail!default.jspa">$action.getText('admin.mailservers.send.a.test.email')</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        #end
+    </div>
+#end

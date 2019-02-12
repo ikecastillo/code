@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="PagerDuty-integration-plugin"/>
+  <!-- add our web resources -->
+  <web-resource key="PagerDuty-integration-plugin-resources1.0" name="PagerDuty-integration-plugin Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:aui-messages</dependency>
+    <dependency>com.atlassian.auiplugin:dialog2</dependency>
+    <transformation extension="js">
+          <transformer key="jsI18n"/>
+    </transformation>
+    <resource type="download" name="PagerDuty-integration-plugin.css" location="/css/PagerDuty-integration-plugin.css"/>
+    <resource type="download" name="PagerDuty-integration-plugin.js" location="/js/PagerDuty-integration-plugin.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <resource type="download" name="admin.js" location="/js/admin.js"/>
+    <resource type="download" name="configureMapping.js" location="/js/configureMapping.js"/>
+    <resource type="download" name="tableFormatter.js" location="/js/tableFormatter.js"/>
+    <context>atl.admin</context>
+  </web-resource>
+
+
+  <web-resource key="PagerDuty-integration-plugin-services" name="PagerDuty-integration-plugin Web Resources for Services">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:aui-messages</dependency>
+    <dependency>com.atlassian.auiplugin:dialog2</dependency>
+    <transformation extension="js">
+      <transformer key="jsI18n"/>
+    </transformation>
+    <resource type="download" name="tableFormatter.js" location="/js/tableFormatter.js"/>
+    <resource type="download" name="pdService.js" location="/js/pdservice/pdService.js"/>
+    <resource type="download" name="configurePagerDutyService.js" location="/js/pdservice/configurePagerDutyService.js"/>
+    <context>PagerDuty-integration-plugin</context>
+  </web-resource>
+
+  <!-- Related to admin section - all the views with their associated actions -->
+  <web-section key="pagerduty-admin-section" name="XMatters Plugin Section" location="admin_plugins_menu" i18n-name-key="pagerduty-admin-section.name" weight="900">
+    <label key="pagerduty-admin-section.label"/>
+    <description>PagerDuty Admin Section</description>
+    <tooltip>PagerDuty Admin Section</tooltip>
+  </web-section>
+  <web-item key="pagerduty-admin-web-item-1" section="admin_plugins_menu/pagerduty-admin-section" i18n-name-key="pagerduty-admin-web-item.name-1" name="Pagerduty Plugin Initial Setup" weight="1000">
+    <description>Initial Setup</description>
+    <label key="pagerduty-admin-web-item.initialsetup"/>
+    <link linkId="pagerduty-admin-web-item-link-1">/secure/plugins/pagerduty/pagerdutyConfigure.jspa</link>
+  </web-item>
+  <web-item key="pagerduty-admin-web-item-2" section="admin_plugins_menu/pagerduty-admin-section" i18n-name-key="pagerduty-admin-web-item.name-2" name="JIRA to PagerDuty Field Mappings" weight="1010">
+    <description>JIRA Field Mappings For PagerDuty Incident</description>
+    <label key="pagerduty-admin-web-item.fieldmappings"/>
+    <link linkId="pagerduty-admin-web-item-link-2">/secure/plugins/pagerduty/pagerdutyMapping.jspa</link>
+  </web-item>
+
+
+  <webwork1 name="pagerdutyadminwebwork" key="pagerduty-admin-webwork" class="java.lang.Object">
+    <description key="pagerduty-webwork.description">The Admin Page input webwork</description>
+    <actions>
+      <action alias="pagerdutyConfigure" name="com.dt.jira.pagerduty.intgt.plugin.webwork.ConfigureAction" roles-required="sysadmin">
+        <view name="success" type="velocity">/templates/admin/admin.vm</view>
+        <view name="error" type="velocity">/templates/admin/admin.vm</view>
+      </action>
+      <action alias="pagerdutyMapping" name="com.dt.jira.pagerduty.intgt.plugin.webwork.MappingAction" roles-required="sysadmin">
+        <view name="success" type="velocity">/templates/admin/mapping.vm</view>
+        <view name="error" type="velocity">/templates/admin/mapping.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <ao key="ao-module-group">
+    <description>The module configuring the Active Objects service used by this plugin</description>
+    <entity>com.dt.jira.pagerduty.intgt.plugin.ao.JiraFieldDB</entity>
+    <entity>com.dt.jira.pagerduty.intgt.plugin.ao.ServiceDB</entity>
+  </ao>
+  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+    <description>Component to access Active Objects functionality from the plugin</description>
+  </component-import>
+
+  <web-section key="pagerduty-manage-top" name="pagerduty Section" location="view.issue.opsbar" weight="50"/>
+  <web-section key="pagerduty-manage-plan-top" name="pagerduty Section" location="pagerduty-manage-top" weight="50"/>
+  
+  <web-item key="pagerduty" i18n-name-key="pagerduty.name" name="pagerduty" section="pagerduty-manage-plan-top" weight="30">
+    <label key="add.pagerduty"/>
+    <styleClass>issueaction-pagerduty-issue</styleClass>
+    <link linkId="add-pagerduty">/secure/PagerDutyWebWork!default.jspa?id=${issueId}</link>
+    <conditions type="AND">
+       <condition class="com.atlassian.jira.plugin.webfragment.conditions.IsIssueEditableCondition"/>
+      <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasIssuePermissionCondition">
+        <param name="permission" value="edit"/>
+      </condition>
+      <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasProjectPermissionCondition">
+        <param name="permission">create</param>
+      </condition>
+      <condition class="com.dt.jira.pagerduty.intgt.plugin.condition.IssueTypeAndSolutionGroupCondition"/>
+    </conditions>
+  </web-item>
+
+  <web-item name="PDServiceDetup" i18n-name-key="pd-service-setup.name" key="pd-service-setup" section="atl.jira.proj.config/projectgroup4" weight="50">
+    <description key="pd-service-setup.description">PagerDuty Service Setup</description>
+    <conditions type="AND">
+      <condition class="com.dt.jira.pagerduty.intgt.plugin.condition.ProjectITIMCondition"/>
+    </conditions>
+    <label>PagerDuty Service Setup </label>
+    <tooltip>PagerDuty Service Setup</tooltip>
+    <link linkId="pd-service-setup-link">/plugins/servlet/incident/pdServiceSetup</link>
+  </web-item>
+  <servlet key="pd-service-setup-servlet" class="com.dt.jira.pagerduty.intgt.plugin.servlet.PagerDutyServiceServlet">
+    <url-pattern>/incident/pdServiceSetup</url-pattern>
+  </servlet>
+
+  <webwork1 key="PagerDutyWebWork" name="PagerDutyWebWork" i18n-name-key="pagerduty-web-work.name">
+    <description key="pagerduty-web-work.description">The PagerDutyWebWork Plugin</description>
+    <actions>
+      <action name="com.dt.jira.pagerduty.intgt.plugin.webwork.PagerDutyWebWork" alias="PagerDutyWebWork">
+        <view name="input">/templates/success.vm</view>
+        <view name="error">/templates/success.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <web-resource name="pagerduty Web Resource" i18n-name-key="pagerduty-web-resource.name" key="pagerduty-web-resource">
+    <description key="pagerduty-web-resource.description">The pagerduty Web Resource Plugin</description>
+    <context>jira.general</context>
+    <transformation extension="js">
+      <transformer key="jsI18n"/>
+    </transformation>
+    <resource type="download" name="pagerduty.js" location="js/pagerduty.js">
+      <property key="content-type" value="text/javascript"/>
+    </resource>
+  </web-resource>
+  <rest name="pagerduty Rest API" i18n-name-key="pagerduty-rest-api.name" key="pagerduty-rest-api" path="/pagerduty-integration" version="1.0">
+    <description key="pagerduty-rest-api.description">The PagerDuty Rest API Plugin</description>
+  </rest>
+
+
+  <!-- configuration for custom field-->
+  <customfield-type key="pagerduty-log" name="Textfield for PagerDuty Log" class="com.dt.jira.pagerduty.intgt.plugin.customfield.TableCustomField">
+    <description>A text field renders as Table for PagerDuty Log(not editable)</description>
+    <resource type="velocity" name="edit" location="templates/edit.vm"/>
+    <resource type="velocity" name="view" location="templates/view.vm"/>
+    <resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-basictext.vm"/>
+  </customfield-type>
+  <!-- publish our component -->
+  <component key="myPluginComponent" class="com.dt.jira.pagerduty.intgt.plugin.MyPluginComponentImpl" public="true">
+    <interface>com.dt.jira.pagerduty.intgt.plugin.MyPluginComponent</interface>
+  </component>
+  <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+  <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+  <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+  <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
+
+   <!-- Field mapping service  for ao object -->
+  <component key="field-mapping-service" name="field-mapping-service" class="com.dt.jira.pagerduty.intgt.plugin.service.FieldMapperServiceImpl" public="true">
+		<interface>com.dt.jira.pagerduty.intgt.plugin.service.FieldMapperService</interface>
+	</component>
+
+
+  <!-- Event Configuration Service to configure event attributes for ao object -->
+  <component key="event-config-service" name="event-config-service" class="com.dt.jira.pagerduty.intgt.plugin.service.PDServicesConfigServiceImpl" public="true">
+    <interface>com.dt.jira.pagerduty.intgt.plugin.service.PDServicesConfigService</interface>
+  </component>
+
+</atlassian-plugin>

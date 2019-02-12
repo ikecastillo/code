@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Up Time Report Gadget \ Export" directory_title="Up Time Report Gadget \ Export" description="Up Time Report Gadget \ Export" author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">JIRA</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="solutionGroup" datatype="hidden" default_value="CMS"/><UserPref name="product" datatype="hidden" default_value="All"/><UserPref name="startDate" datatype="hidden"/><UserPref name="endDate" datatype="hidden" default_value="All"/><UserPref name="primeHours" datatype="hidden" default_value="18"/><UserPref name="impacted" datatype="hidden" default_value="All"/><UserPref name="function" datatype="hidden" default_value="All"/><UserPref name="location" datatype="hidden" default_value="Alpharetta"/><UserPref name="type" datatype="hidden" default_value="Internal"/><Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugin.uptime.UpTimeReport:uptime-gadgets-common-js")
+	#requireResource("com.dt.jira.plugin.uptime.UpTimeReport:UpTimeReport-resources")
+	
+	
+	#includeResources()
+	<span id="typeSpan" style="display : none"><b> Clients Impacted: &nbsp;&nbsp;</b></span><select id="typeSelect" style="display : none"></select>
+	 <span id="solutionSpan" style="display : none"><b> Solution Group: &nbsp;&nbsp;</b></span><select id="solutionSelect" style="display : none"></select>
+	 <span id="productSpan" style="display : none"><b> Product: &nbsp;&nbsp;</b></span><select id="productSelect" style="display : none" ></select>
+	
+	<span id="locationProductSpan" style="display : none"><b> Location : &nbsp;&nbsp;</b></span><select id="locationProductSelect" style="display : none"></select>
+	<span id="locationSpan" style="display : none"><b> Impacted : &nbsp;&nbsp;</b></span><select id="locationSelect" style="display : none"></select>
+	<input type="button" class="aui-button" name="calculate" id="btn_calculate" value="Generate Report"  style="display : none"/>
+	<input type="button" class="aui-button" name="exportxsl" id="btn_xsl" value="Export Excel" style="display : none"/>
+	<table id="projectList"></table>
+	
+	
+	<style type="text/css">
+		div.pager span.active {
+    background: #c00;
+}
+
+	</style>
+		<script type="text/javascript">
+		
+	var solutionGadget = "";
+	var productGadget = "";
+	
+	var impactedArgs = "";
+	var solutionGroupArgs = "";
+	var locationArgs = "";
+	var typeArgs = "";
+	
+	var elementGadget = "";
+	var $pager = "";
+	 AJS.$("#solutionSpan").hide();
+    AJS.$("#solutionSelect").hide();
+     AJS.$("#productSpan").hide();
+    AJS.$("#productSelect").hide();
+    AJS.$("#btn_calculate").hide();
+    AJS.$("#btn_xsl").hide();
+	AJS.$('#projectList').empty();
+    AJS.$('br').remove();
+    AJS.$("#locationSpan").hide();
+     AJS.$("#locationSelect").hide();
+     AJS.$("#locationProductSelect").hide();
+     AJS.$("#locationProductSpan").hide();
+     AJS.$("#typeSpan").hide();
+             	  		AJS.$("#typeSelect").hide();
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var GROUP_BY_FIELD = "DT-Environment";
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+				 config: {
+                    descriptor: function(args)
+                    {
+						AJS.$('#projectList').empty();
+						if($pager != ""){
+							$pager.empty();
+						}
+					
+						AJS.$("#solutionSpan").hide();
+						AJS.$("#solutionSelect").hide();
+						AJS.$("#productSpan").hide();
+    					AJS.$("#productSelect").hide();
+    					AJS.$("#btn_xsl").hide();
+    					AJS.$("#typeSpan").hide();
+             	  		AJS.$("#typeSelect").hide();
+    					AJS.$("#locationSpan").hide();
+             	  		AJS.$("#locationSelect").hide();
+             	  		AJS.$("#locationProductSelect").hide();
+             	  		AJS.$("#locationProductSpan").hide();
+						AJS.$('br').remove();
+						AJS.$("#btn_calculate").hide();
+					
+                         var desc = DTGADGET.ITSMUptimeReportdescriptorSumary(this, args, "__ATLASSIAN_BASE_URL__");
+                        	 							
+						desc.fields.push ({
+							id: "start-date-picker",
+							userpref: "startDate",
+							label: "Start Date",
+							type: "date",
+							value: gadget.getPref("startDate")							
+							}
+						);
+						desc.fields.push ({						
+							id: "end-date-picker",
+							userpref: "endDate",
+							label: "End Date",
+							type: "date",
+							value: gadget.getPref("endDate")		
+							}
+						);
+						desc.fields.push ({						
+							id: "prime-hours",
+							userpref: "primeHours",
+							label: "Prime Hours",
+							type: "textfield",
+							value: gadget.getPref("primeHours")		
+							}
+						);
+                    	return desc;
+                    },
+                    
+                    args: DTGADGET.descriptorArgsSummary("__ATLASSIAN_BASE_URL__")
+                },
+			 
+				view: {
+					  enableReload: true,
+					  onResizeReload: true,
+					  template: function(args) {
+						 var gadget = this;
+						impactedArgs = args.impacteds;
+						solutionGroupArgs = args.solutionGroups;
+						locationArgs = args.locations;
+						typeArgs = args.types;
+                    	 if(solutionGadget != ""){
+							solutionGadget.getView().empty();
+						}
+						
+						if($pager != ""){
+							$pager.empty();
+						}
+						AJS.$('#projectList').empty();	 
+						AJS.$('br').remove();
+						AJS.$("#productSelect").empty();
+            		    populateTable(gadget,args.products);
+            		    populateIncidentReportData(gadget,args);
+						gadget.resize();
+						},
+						args: [ 
+							{
+                    	key: "solutionGroups",          
+						ajaxOptions: function ()
+						{			
+							return {
+								url: "/rest/exportrest/1.0/getSolutiionGroups.json?projectkey=ITIM",
+								contentType: "application/json" 
+							}
+						}
+                        },
+                        {
+                    	key: "products",          
+						ajaxOptions: function ()
+						{			
+							return {								
+								url: "/rest/exportrest/1.0/getSolutiionGroups/getProductValues",
+								data:{solutionGroup:this.getPref("solutionGroup")},
+								contentType: "application/json" 
+							}
+						}
+                        },
+                        {
+                    	key: "types",          
+						ajaxOptions: function ()
+						{
+			
+							return {
+								url: "/rest/exportrest/1.0/getType.json?projectkey=ITIM",
+								contentType: "application/json" 
+							}
+						}
+                        },
+                         {
+                    	key: "impacteds",          
+						ajaxOptions: function ()
+						{
+			
+							return {
+								url: "/rest/exportrest/1.0/getLocation.json?projectkey=ITIM",
+								contentType: "application/json" 
+							}
+						}
+                        },
+                         {
+                    	key: "locations",          
+						ajaxOptions: function ()
+						{
+			
+							return {
+								url: "/rest/exportrest/1.0/getType/getLocationProductValues?type=Internal",
+								contentType: "application/json" 
+							}
+						}
+                        },
+                        {
+            			key: "uptimeReport",
+          
+						ajaxOptions: function (){			
+			  				 return {
+			    				url: "/rest/exportrest/1.0/incidentuptimesummary.json",
+			    				contentType: "application/json",
+			    				data:  { 
+											startDate : gadgets.util.unescapeString(this.getPref("startDate")),
+											endDate : gadgets.util.unescapeString(this.getPref("endDate")),
+											primeHours: gadgets.util.unescapeString(this.getPref("primeHours")),
+											solutionGroup: gadgets.util.unescapeString(this.getPref("solutionGroup")),
+											product: gadgets.util.unescapeString(this.getPref("product")),
+											type:gadgets.util.unescapeString(this.getPref("type")),
+											impacted:gadgets.util.unescapeString(this.getPref("impacted")),
+											location:gadgets.util.unescapeString(this.getPref("location")),
+										} 
+			    			 };
+			            }
+			
+                   }
+                    
+				]
+			}
+			});
+		})();
+		function populateIncidentReportData(gadget,args){
+			var gadgetWidth = (gadget.getView().parent().width()-20);
+						if(gadgetWidth == 970){
+						
+							gadgetWidth = 530;
+						}
+						AJS.$('#projectList').css("width",gadgetWidth);
+						
+                    	AJS.$(args.uptimeReport).each(function() {
+                    	 		var header = this.dataType;
+                    	 		var childTableHeader= this.headers;                    	 		
+								   
+                    	 		if(header == "header"){
+                    	 		var size = this.monthly.length
+								var requiredsize = size+1;
+									var width = (gadgetWidth/requiredsize);
+                    	 			var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("border","1px solid #B3B8B9");
+									sevTR.append(AJS.$("<td/>").text("Calculations ").css("border-right","1px solid #B3B8B9").css("background-color", "#D2D2D2").css("font-weight","bold"))
+									sevTR.append(AJS.$("<td/>").text("").css("border-right","1px solid #B3B8B9").css("background-color", "#D2D2D2").css("font-weight","bold"));
+									AJS.$(this.monthly).each(function() {
+										sevTR.append(AJS.$("<td/>").text(this.month).css("border-right","1px solid #B3B8B9").css("background-color", "#D2D2D2").css("font-weight","bold"))
+									});
+									AJS.$('#projectList').append(sevTR);
+                    	 		}
+                    	 		else {
+                    	 		  if(header == "tableData"){
+                    	 			var sevTR =  AJS.$("<tr/>").css("border","1px solid #B3B8B9");
+                    	 			sevTR.append(AJS.$("<td/>").text("Days ").css("border-right","1px solid #B3B8B9"))
+                    	 			sevTR.append(AJS.$("<td/>").text("").css("border-right","1px solid #B3B8B9"));
+                    	 			AJS.$(this.monthly).each(function() {	
+										sevTR.append(AJS.$("<td/>").text(this.days).css("border-right","1px solid #B3B8B9"))
+								     });
+								    AJS.$('#projectList').append(sevTR);
+								     
+								    sevTR =  AJS.$("<tr/>").css("border","1px solid #B3B8B9");
+								    sevTR.append(AJS.$("<td/>").text("Prime Hours ").css("border-right","1px solid #B3B8B9"))
+								    sevTR.append(AJS.$("<td/>").text("").css("border-right","1px solid #B3B8B9"));
+                    	 			AJS.$(this.monthly).each(function() {	
+										sevTR.append(AJS.$("<td/>").text(this.hours).css("border-right","1px solid #B3B8B9"))
+								     });
+								    AJS.$('#projectList').append(sevTR);
+								     
+								    sevTR =  AJS.$("<tr/>").css("border","1px solid #B3B8B9");
+								    sevTR.append(AJS.$("<td/>").text("Prime Minutes ").css("border-right","1px solid #B3B8B9"))
+								    sevTR.append(AJS.$("<td/>").text("").css("border-right","1px solid #B3B8B9"));
+                    	 			AJS.$(this.monthly).each(function() {	
+										sevTR.append(AJS.$("<td/>").text(this.minutes).css("border-right","1px solid #B3B8B9"))
+								     });
+								   AJS.$('#projectList').append(sevTR);
+								   
+								    if((gadget.getPref("type") == "External" && gadget.getPref("product")=="All")||(gadget.getPref("type") == "Internal" && gadget.getPref("impacted")=="All")){
+								  	   var twoDimDataRow =  AJS.$("<tr/>").css("border","1px solid #B3B8B9");
+									   twoDimDataRow.append(AJS.$("<td/>").text("Products/Impacted").css("border-right","1px solid #B3B8B9").css("font-weight","bold"));
+									   twoDimDataRow.append(AJS.$("<td/>").text("").css("border-right","1px solid #B3B8B9"));
+									   AJS.$(this.monthly).each(function() {	
+											twoDimDataRow.append(AJS.$("<td/>").text(" ").css("border-right","1px solid #B3B8B9"))
+									     });
+								   	  AJS.$('#projectList').append(twoDimDataRow);
+								      AJS.$(args.uptimeReport).each(function() {
+								      if(this.products!="undefined" && this.products!="" && this.products!=null){
+								      
+									      var twoDimDataRow1 =  AJS.$("<tr/>");
+									      var twoDimDataRow2 =  AJS.$("<tr/>");
+									     
+									      twoDimDataRow1.append(AJS.$("<td/>").text(this.products).attr("rowspan","2").css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9"));
+									      twoDimDataRow1.append(AJS.$("<td/>").text("Minutes").css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9"));
+									      twoDimDataRow2.append(AJS.$("<td/>").text("UpTime").css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9"));
+											
+											AJS.$(this.months).each(function() {
+												twoDimDataRow1.append(AJS.$("<td/>").text(this.incidentcount).css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9"));
+												twoDimDataRow2.append(AJS.$("<td/>").text(this.uptime+"%").css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9"));											 															
+											});	
+																				
+										AJS.$('#projectList').append(twoDimDataRow1);
+								   		AJS.$('#projectList').append(twoDimDataRow2);
+								   		
+										}
+								     });
+								   	}	
+								   						   
+								    sevTR =  AJS.$("<tr/>").css("border","1px solid #B3B8B9");
+								    sevTR.append(AJS.$("<td/>").text("Downtime ").css("border-right","1px solid #B3B8B9").css("font-weight","bold"));								    
+								    sevTR.append(AJS.$("<td/>").text(" ").css("border-right","1px solid #B3B8B9"));
+                    	 			AJS.$(this.monthly).each(function() {	
+										sevTR.append(AJS.$("<td/>").text(" ").css("border-right","1px solid #B3B8B9"));
+								     });
+								     AJS.$('#projectList').append(sevTR);
+								      
+								    sevTR =  AJS.$("<tr/>").css("border","1px solid #B3B8B9");
+								    sevTR.append(AJS.$("<td/>").text("Total").attr("rowspan","2").css("font-weight","bold").css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9"));
+								    sevTR.append(AJS.$("<td/>").text("Minutes ").css("border-right","1px solid #B3B8B9"))
+                    	 			AJS.$(this.monthly).each(function() {	
+										sevTR.append(AJS.$("<td/>").text(this.incidentDurationMinutes).css("border-right","1px solid #B3B8B9"))
+								     });
+								     AJS.$('#projectList').append(sevTR);
+								      
+								    sevTR =  AJS.$("<tr/>").css("border","1px solid #B3B8B9");
+								    sevTR.append(AJS.$("<td/>").text("Uptime ").css("border-right","1px solid #B3B8B9"));
+                    	 			AJS.$(this.monthly).each(function() {	
+										sevTR.append(AJS.$("<td/>").text(this.upTime+"%").css("border-right","1px solid #B3B8B9"));
+								     });
+								     AJS.$('#projectList').append(sevTR);
+								     
+								     }
+                    	 		}
+                    	 });
+		}
+		 function populateTable(gadget,productValue)
+		 {				 
+		 				elementGadget = gadget;
+		 				AJS.$("#typeSpan").show();
+		 				AJS.$("#typeSelect").show();
+             	  		AJS.$("#solutionSelect").empty();
+             	  		AJS.$("#productSelect").empty();
+             	  		AJS.$("#typeSelect").empty();
+             	  		AJS.$("#locationProductSelect").empty();
+             	  		AJS.$("#locationSelect").empty();
+             	  		AJS.$(typeArgs).each(function(){
+					    var typeOption = AJS.$("<option/>").attr("value", this.value).text(this.value);						
+						
+						AJS.$("#typeSelect").append(typeOption);
+						
+						var projectUserPrefTypeValue = gadget.getPref("type");
+			            var pType = projectUserPrefTypeValue.split("|");
+							if(AJS.$.inArray(this.value,pType)>-1)
+							{
+								typeOption.attr({selected: "selected"});
+						    } 
+						});
+						AJS.$("#typeSelect").change(function(event)
+            		    {	
+            		    	 AJS.$("#productSelect").empty();
+            		    	 AJS.$("#locationProductSelect").empty();            		    	 
+							 populateType(AJS.$('#typeSelect').val(),gadget)
+            		    });
+             	  		var typeValue = AJS.$('#typeSelect').val()
+             	  	
+             	  if(typeValue == "External"){
+             	  		AJS.$("#solutionSpan").show();
+             	  		AJS.$("#solutionSelect").show();
+             	  	 	
+					  	AJS.$("#productSpan").show();
+             	  		AJS.$("#productSelect").show();
+             	  		
+             	  		AJS.$("#locationSpan").hide();
+             	  		AJS.$("#locationSelect").hide();
+             	  		AJS.$("#locationProductSelect").hide();
+             	  		AJS.$("#locationProductSpan").hide();
+             	  		
+						AJS.$(solutionGroupArgs).each(function(){
+					    var solutionOption = AJS.$("<option/>").attr("value", this.value).text(this.value);						
+						
+						AJS.$("#solutionSelect").append(solutionOption);
+						
+						var projectUserPrefValue = gadget.getPref("solutionGroup");
+			            var p = projectUserPrefValue.split("|");
+							if(AJS.$.inArray(this.value,p)>-1)
+							{
+								solutionOption.attr({selected: "selected"});
+						    } 
+						});
+						AJS.$("#solutionSelect").change(function(event)
+            		    {	
+							console.log("Sol Grp"+ AJS.$('#solutionSelect').val());
+            		    	gadget.savePref("solutionGroup", AJS.$('#solutionSelect').val());
+            		    	AJS.$("#productSelect").empty();
+							populateSolutionGroupTable(AJS.$('#solutionSelect').val(),AJS.$('#productSelect').val(),gadget,typeValue);							
+            		    });
+            		     gadget.savePref("product", "All");
+            		     var productOption1 = AJS.$("<option/>").attr("value", "All").text("All");
+            		     AJS.$("#productSelect").append(productOption1);
+						 AJS.$(productValue).each(function(){
+					
+					    var productOption = AJS.$("<option/>").attr("value", this.value).text(this.value);
+						
+						AJS.$("#productSelect").append(productOption);
+						var productUserPrefValue = gadget.getPref("product");
+			            var product = productUserPrefValue.split("|");
+							if(AJS.$.inArray(this.value,product)>-1)
+							{
+								productOption.attr({selected: "selected"});
+						    } 
+						});
+					
+						AJS.$("#productSelect").change(function(event)
+            		    {
+            		    	gadget.savePref("solutionGroup", AJS.$('#solutionSelect').val());
+            		    	gadget.savePref("product", AJS.$('#productSelect').val());
+            		    	if($pager != ""){
+							$pager.empty();
+						}
+            		    	 AJS.$('#projectList').empty();
+            		    	 AJS.$('br').remove();
+            		    	 gadget.resize();
+            		    });
+            		   }
+            		   else{
+            		    AJS.$("#solutionSpan").hide();
+             	  		AJS.$("#solutionSelect").hide();
+             	  	 	
+					  	AJS.$("#productSpan").hide();
+             	  		AJS.$("#productSelect").hide();
+             	  		
+            		   	AJS.$("#locationSpan").show();
+             	  		AJS.$("#locationSelect").show();
+             	  	 	
+					  	AJS.$("#locationProductSpan").show();
+             	  		AJS.$("#locationProductSelect").show();
+             	  		 
+             	  		var productOption1 = AJS.$("<option/>").attr("value", "All").text("All");
+            		    AJS.$("#locationSelect").append(productOption1);	
+             	  		AJS.$(impactedArgs).each(function(){
+					    var impactedOption = AJS.$("<option/>").attr("value", this.value).text(this.value);						
+						
+						AJS.$("#locationSelect").append(impactedOption);
+						
+						var projectUserPrefValue = gadget.getPref("impacted");
+			            var p = projectUserPrefValue.split("|");
+							if(AJS.$.inArray(this.value,p)>-1)
+							{
+								impactedOption.attr({selected: "selected"});
+						    } 
+						});
+						AJS.$("#locationSelect").change(function(event)
+            		    {	
+            		    	 gadget.savePref("location", AJS.$('#locationProductSelect').val());
+            		    	 gadget.savePref("impacted", AJS.$('#locationSelect').val());
+            		    	 if($pager != ""){
+							$pager.empty();
+						}
+            		    	 AJS.$('#projectList').empty();
+            		    	 AJS.$('br').remove();
+            		    	 gadget.resize();	
+						
+            		    });
+            		    var productOptions = AJS.$("<option/>").attr("value", "All").text("All");
+            		
+						AJS.$(locationArgs).each(function(){
+						
+					    var functionOption = AJS.$("<option/>").attr("value", this.value).text(this.value);
+						
+						AJS.$("#locationProductSelect").append(functionOption);
+						var productUserPrefValue = gadget.getPref("location");
+			            var product = productUserPrefValue.split("|");
+							if(AJS.$.inArray(this.value,product)>-1)
+							{
+								functionOption.attr({selected: "selected"});
+						    } 
+						});
+					
+						AJS.$("#locationProductSelect").change(function(event)
+            		    {
+            		    	 gadget.savePref("impacted", AJS.$('#locationSelect').val());
+            		    	 gadget.savePref("location", AJS.$('#locationProductSelect').val());
+            		    	 if($pager != ""){
+							$pager.empty();
+						}
+            		    	 AJS.$('#projectList').empty();
+            		    	 AJS.$('br').remove();
+            		    	 gadget.resize();
+            		    });
+            		   }
+            		   	AJS.$("#btn_xsl").show();
+            		   	AJS.$("#btn_calculate").show();
+						var emptyLabel = '<br><br>';
+						
+						var emptySpace ="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+						
+            		    AJS.$("#btn_xsl").after(emptyLabel);
+            		 
+            }
+                
+         	AJS.$("#btn_xsl").click(function(e) {		         
+		    e.preventDefault();	
+		    var primeHr = elementGadget.getPref("primeHours");
+		    var startDate  = elementGadget.getPref("startDate");
+		    var endDate = elementGadget.getPref("endDate");
+			window.open('/rest/exportrest/1.0/incidentuptimesummary/exportdowntimesummaryxsl?startDate='+startDate+'&endDate='+endDate+'&primeHours='+primeHr+'&solutionGroup='+AJS.$('#solutionSelect').val()+'&product='+ AJS.$("#productSelect").val()+'&type='+ AJS.$("#typeSelect").val()+'&impacted='+ AJS.$("#locationSelect").val()+'&location='+ AJS.$("#locationProductSelect").val());			
+		   	 
+			});
+			
+			AJS.$("#btn_calculate").click(function() {	
+				AJS.$('#projectList').empty();	         
+		  		populateData();
+			});
+			function populateData(){
+	 			  var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+				view: { 
+					onResizeAdjustHeight: true,
+					onResizeReload: true,
+                    enableReload: true,
+                    template: function(args) {
+                        var gadget = this;
+						populateIncidentReportData(gadget,args);
+						gadget.resize();				
+                      },
+					args:
+						[
+							{
+								key: "uptimeReport",
+								ajaxOptions: function (){
+									return {
+										url: "/rest/exportrest/1.0/incidentuptimesummary.json",
+										contentType: "application/json",
+										data:  { 
+													startDate : this.getPref("startDate"),
+													endDate : this.getPref("endDate"),
+													primeHours: this.getPref("primeHours"),
+													solutionGroup: this.getPref("solutionGroup"),
+													product: this.getPref("product"),
+													type:this.getPref("type"),
+													impacted:this.getPref("impacted"),
+													location:this.getPref("location"),
+												} 
+									 };
+								}
+						   }
+					   ]
+                    }
+                });
+	 		}
+	 		function populateType(typeValue,gadgets){
+	 			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+				view: { 
+					onResizeAdjustHeight: true,
+					onResizeReload: true,
+                    enableReload: true,
+                    template: function(args) {
+                        gadgets.getView().empty();
+                        var gadget = this;
+                        AJS.$('br').remove();
+                     	gadgets.savePref("type", typeValue);
+                     	AJS.$('#projectList').empty();
+						solutionGadget = gadget;
+						populateTable(gadget,args.products);
+						gadget.resize();				
+                      },
+					args:
+					[
+					 {
+                    	key: "products",          
+						ajaxOptions: function ()
+						{
+							return {
+								url: "/rest/exportrest/1.0/getSolutiionGroups/getProductValues",
+								data:{solutionGroup:this.getPref("solutionGroup")},
+								contentType: "application/json" 
+							}
+						}
+                     }        
+                   ]
+                   }
+                   });
+	 		}
+         	function populateSolutionGroupTable(solutionList,productList,gadgets,typeValue){
+       
+           	    var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+				view: { 
+					onResizeAdjustHeight: true,
+					onResizeReload: true,
+                    enableReload: true,
+                    template: function(args) {
+                        var gadget = this;
+                       
+                         var solutionValue = solutionList;
+                        gadgets.savePref("solutionGroup", solutionValue);
+                        var productValue = productList;
+						
+						AJS.$('#projectList').empty();
+						if($pager != ""){
+							$pager.empty();
+						}
+						
+						solutionGadget = gadget;
+						
+						AJS.$("#productSelect").empty();
+						var productOption1 = AJS.$("<option/>").attr("value", "All").text("All");
+            		    AJS.$("#productSelect").append(productOption1);
+						AJS.$(args.products).each(function(){
+					
+					    var productOption = AJS.$("<option/>").attr("value", this.value).text(this.value);
+						
+						AJS.$("#productSelect").append(productOption);
+						var productUserPrefValue = gadget.getPref("product");
+			            var product = productUserPrefValue.split("|");
+							if(AJS.$.inArray(this.value,product)>-1)
+							{
+								productOption.attr({selected: "selected"});
+						    } 
+						});
+						 gadgets.savePref("product", "All");
+						AJS.$("#productSelect").change(function(event)
+            		    {
+            		    	 gadgets.savePref("solutionGroup", AJS.$('#solutionSelect').val());
+            		    	 gadgets.savePref("product", AJS.$('#productSelect').val());
+            		    });
+						gadget.resize();				
+                      },
+					args:
+					[
+					 {
+                    	key: "products",          
+						ajaxOptions: function ()
+						{
+							return {
+								url: "/rest/exportrest/1.0/getSolutiionGroups/getProductValues",
+								data:{solutionGroup:this.getPref("solutionGroup")},
+								contentType: "application/json" 
+							}
+						}
+                     }
+                   ]
+                   }
+                   });
+                   }
+                   
+                   function populateProductTable(impactedList,locationList,gadgets,typeValue){
+         
+       
+           	    var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+				view: { 
+					  onResizeAdjustHeight: true,
+					  onResizeReload: true,
+                    enableReload: true,
+                    template: function(args) {
+                        gadgets.getView().empty();
+                        var gadget = this;
+                        
+                       
+            		   var impactedValue = impactedList;
+                        gadgets.savePref("impacted", impactedValue);
+                        var functionValue = locationList;
+                        gadgets.savePref("location", functionValue);
+                        
+                       
+						AJS.$('#projectList').empty();
+						if($pager != ""){
+							$pager.empty();
+						}
+						AJS.$('br').remove();
+						
+						populateTable(gadget,null);
+										
+                      },
+					args:
+					[
+					
+                   
+				
+                   ]
+                   }
+                   });
+                   }
+ </script>
+  ]]>
+  </Content></Module>

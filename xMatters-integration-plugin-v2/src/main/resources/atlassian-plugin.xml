@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="xMatters-integration-plugin-v2"/>
+  <!-- add our web resources -->
+  <web-resource key="xMatters-integration-plugin-v2-resources1.0" name="xMatters-integration-plugin-v2 Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:aui-messages</dependency>
+    <dependency>com.atlassian.auiplugin:dialog2</dependency>
+    <transformation extension="js">
+          <transformer key="jsI18n"/>
+    </transformation>
+    <resource type="download" name="xMatters-integration-plugin-v2.css" location="/css/xMatters-integration-plugin-v2.css"/>
+    <resource type="download" name="xMatters-integration-plugin-v2.js" location="/js/xMatters-integration-plugin-v2.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <resource type="download" name="admin.js" location="/js/admin.js"/>
+    <resource type="download" name="configureMapping.js" location="/js/configureMapping.js"/>
+    <resource type="download" name="tableFormatter.js" location="/js/tableFormatter.js"/>
+    <resource type="download" name="configureXMattersEvent.js" location="/js/configureXMattersEvent.js"/>
+    <!--<resource type="download" name="configureHipChat.js" location="/js/configureHipChat.js"/>-->
+    <context>atl.admin</context>
+  </web-resource>
+
+  <!-- Related to admin section - all the views with their associated actions -->
+  <web-section key="xmatters-admin-section" name="XMatters Plugin Section" location="admin_plugins_menu" i18n-name-key="xmatters-admin-section.name" weight="900">
+    <label key="xmatters-admin-section.label"/>
+    <description>xmatters Admin Section</description>
+    <tooltip>xmatters Admin Section</tooltip>
+  </web-section>
+  <web-item key="xmatters-admin-web-item-1" section="admin_plugins_menu/xmatters-admin-section" i18n-name-key="xmatters-admin-web-item.name-1" name="xmatters Plugin Initial Setup" weight="1000">
+    <description>Initial Setup</description>
+    <label key="xmatters-admin-web-item.initialsetup"/>
+    <link linkId="xmatters-admin-web-item-link-1">/secure/plugins/xmatters/xmattersConfigure.jspa</link>
+  </web-item>
+  <web-item key="xmatters-admin-web-item-2" section="admin_plugins_menu/xmatters-admin-section" i18n-name-key="xmatters-admin-web-item.name-2" name="JIRA to xMatters Field Mappings" weight="1010">
+    <description>JIRA/xMatters Field Mappings</description>
+    <label key="xmatters-admin-web-item.fieldmappings"/>
+    <link linkId="xmatters-admin-web-item-link-2">/secure/plugins/xmatters/xmattersMapping.jspa</link>
+  </web-item>
+  <web-item key="xmatters-admin-web-item-3" section="admin_plugins_menu/xmatters-admin-section" i18n-name-key="xmatters-admin-web-item.name-3" name="xMatters Event Settings" weight="1020">
+    <description>xMatters Event Settings</description>
+    <label key="xmatters-admin-web-item.eventsettings"/>
+    <link linkId="xmatters-admin-web-item-link-3">/secure/plugins/xmatters/xmattersEventsSetting.jspa</link>
+  </web-item>
+  <!--<web-item key="xmatters-admin-web-item-4" section="admin_plugins_menu/xmatters-admin-section" i18n-name-key="xmatters-admin-web-item.name-4" name="Management HipChat Room Settings" weight="1030">
+    <description>Management HipChat Room Settings</description>
+    <label key="xmatters-admin-web-item.mgthcroomsettings"/>
+    <link linkId="xmatters-admin-web-item-link-4">/secure/plugins/xmatters/managementHCRSetting.jspa</link>
+  </web-item>-->
+
+  <webwork1 name="xmattersadminwebwork" key="xmatters-admin-webwork" class="java.lang.Object">
+    <description key="xmatters-webwork.description">The Admin Page input webwork</description>
+    <actions>
+      <action alias="xmattersConfigure" name="com.dt.jira.xmatters.intgt.plugin.webwork.ConfigureAction" roles-required="sysadmin">
+        <view name="success" type="velocity">/templates/admin/admin.vm</view>
+        <view name="error" type="velocity">/templates/admin/admin.vm</view>
+      </action>
+      <action alias="xmattersMapping" name="com.dt.jira.xmatters.intgt.plugin.webwork.MappingAction" roles-required="sysadmin">
+        <view name="success" type="velocity">/templates/admin/mapping.vm</view>
+        <view name="error" type="velocity">/templates/admin/mapping.vm</view>
+      </action>
+      <action alias="xmattersEventsSetting" name="com.dt.jira.xmatters.intgt.plugin.webwork.EventSettingAction" roles-required="sysadmin">
+        <view name="success" type="velocity">/templates/admin/eventsetting.vm</view>
+        <view name="error" type="velocity">/templates/admin/eventsetting.vm</view>
+      </action>
+      <action alias="managementHCRSetting" name="com.dt.jira.xmatters.intgt.plugin.webwork.ManagementHCRSettingAction" roles-required="sysadmin">
+        <view name="success" type="velocity">/templates/admin/managementHCRSetting.vm</view>
+        <view name="error" type="velocity">/templates/admin/managementHCRSetting.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <ao key="ao-module-group">
+    <description>The module configuring the Active Objects service used by this plugin</description>
+    <entity>com.dt.jira.xmatters.intgt.plugin.ao.FieldDB</entity>
+    <entity>com.dt.jira.xmatters.intgt.plugin.ao.EventDB</entity>
+    <!--<entity>com.dt.jira.xmatters.intgt.plugin.ao.MgtHipChatDB</entity>-->
+   <!-- <entity>com.dt.jira.xmatters.intgt.plugin.ao.SendHipChatDB</entity>-->
+  </ao>
+  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+    <description>Component to access Active Objects functionality from the plugin</description>
+  </component-import>
+
+  <web-section key="xMatters-manage-top" name="xMatters Section" location="view.issue.opsbar" weight="50"/>
+  <web-section key="xMatters-manage-plan-top" name="xMatters Section" location="xMatters-manage-top" weight="50"/>
+  <servlet key="callback-servlet" class="com.dt.jira.xmatters.intgt.plugin.webwork.CallbackServlet">
+    <url-pattern>/xmatterscallback</url-pattern>
+  </servlet>
+  <web-item key="XMatters" i18n-name-key="XMatters.name" name="XMatters" section="xMatters-manage-plan-top" weight="30">
+    <label key="add.XMatters"/>
+    <styleClass>issueaction-xMatters-issue</styleClass>
+    <link linkId="add-XMatters">/secure/XMattersWebWork!default.jspa?id=${issueId}</link>
+    <conditions type="AND">
+       <condition class="com.atlassian.jira.plugin.webfragment.conditions.IsIssueEditableCondition"/>
+      <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasIssuePermissionCondition">
+        <param name="permission" value="edit"/>
+      </condition>
+      <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasProjectPermissionCondition">
+        <param name="permission">create</param>
+      </condition>
+      <condition class="com.dt.jira.xmatters.intgt.plugin.condition.IssueTypeCondition"/>
+    </conditions>
+  </web-item>
+  <webwork1 key="XMattersWebWork" name="XMattersWebWork" i18n-name-key="x-matters-web-work.name">
+    <description key="x-matters-web-work.description">The XMattersWebWork Plugin</description>
+    <actions>
+      <action name="com.dt.jira.xmatters.intgt.plugin.webwork.XMattersWebWork" alias="XMattersWebWork">
+        <view name="input">/templates/success.vm</view>
+        <view name="error">/templates/success.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <web-resource name="xMatters Web Resource" i18n-name-key="xMatters-web-resource.name" key="xMatters-web-resource">
+    <description key="xMatters-web-resource.description">The xMatters Web Resource Plugin</description>
+    <context>jira.general</context>
+    <transformation extension="js">
+      <transformer key="jsI18n"/>
+    </transformation>
+    <resource type="download" name="xMatters.js" location="js/xMatters.js">
+      <property key="content-type" value="text/javascript"/>
+    </resource>
+  </web-resource>
+  <rest name="x Matter Rest API" i18n-name-key="x-matter-rest-api.name" key="x-matter-rest-api" path="/xmatter-integration" version="1.0">
+    <description key="x-matter-rest-api.description">The xMatter Rest API Plugin</description>
+  </rest>
+
+
+  <!-- configuration for custom field-->
+  <customfield-type key="xmatter-log" name="Textfield for xMatters Log" class="com.dt.jira.xmatters.intgt.plugin.customfield.TableCustomField">
+    <description>A text field renders as Table for xMatters Log(not editable)</description>
+    <resource type="velocity" name="edit" location="templates/edit.vm"/>
+    <resource type="velocity" name="view" location="templates/view.vm"/>
+    <resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-basictext.vm"/>
+  </customfield-type>
+  <!-- publish our component -->
+  <component key="myPluginComponent" class="com.dt.jira.xmatters.intgt.plugin.MyPluginComponentImpl" public="true">
+    <interface>com.dt.jira.xmatters.intgt.plugin.MyPluginComponent</interface>
+  </component>
+  <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+  <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+  <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+  <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
+
+   <!-- Field mapping service  for ao object -->
+  <component key="field-mapping-service" name="field-mapping-service" class="com.dt.jira.xmatters.intgt.plugin.service.FieldMapperServiceImpl" public="true">
+		<interface>com.dt.jira.xmatters.intgt.plugin.service.FieldMapperService</interface>
+	</component>
+
+
+  <!-- Event Configuration Service to configure event attributes for ao object -->
+  <component key="event-config-service" name="event-config-service" class="com.dt.jira.xmatters.intgt.plugin.service.EventConfigServiceImpl" public="true">
+    <interface>com.dt.jira.xmatters.intgt.plugin.service.EventConfigService</interface>
+  </component>
+
+  <!--<component key="mgt-hipchat-service" name="mgt-hipchat-service" class="com.dt.jira.xmatters.intgt.plugin.service.MgtHipChatServiceImpl" public="true">
+    <interface>com.dt.jira.xmatters.intgt.plugin.service.MgtHipChatService</interface>
+  </component>
+
+  <component key="send-hipchat-info-service" name="send-hipchat-info-service" class="com.dt.jira.xmatters.intgt.plugin.service.SendHipChatRoomInfoServiceImpl" public="true">
+    <interface>com.dt.jira.xmatters.intgt.plugin.service.SendHipChatRoomInfoService</interface>
+  </component>-->
+  
+  <!-- Hip chat Configuration  -->
+ <!--<web-panel name="hipchatroomcreator" i18n-name-key="hipchatroomcreator.name" key="hipchatroomcreator"
+               location="atl.jira.view.issue.right.context"
+               weight="1000">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <resource name="view" type="velocity" location="/templates/hipchatroomcreator.vm"/>
+       <label key=""/>
+        <conditions type="AND">
+            <condition class="com.atlassian.jira.plugin.webfragment.conditions.IsIssueEditableCondition"/>
+            <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasIssuePermissionCondition">
+                <param name="permission" value="edit"/>
+            </condition>
+            <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasProjectPermissionCondition">
+                <param name="permission">create</param>
+            </condition>
+            <condition class="com.dt.jira.hipchatroomcreator.condition.IssueTypeAndSeverityCondition"/>
+    </conditions>
+    </web-panel>-->
+	 <!-- Hip chat room creation event listener  -->
+	<!--<component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher" />
+	 <component key="listenerforhipchatroom" class="com.dt.jira.hipchatroomcreator.event.IncidentCreationListener">
+        <description>Listener class that listens to incident creation of type high or critical</description>
+    </component>-->
+  
+</atlassian-plugin>

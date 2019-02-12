@@ -1,0 +1,1 @@
+define("jira/mail/entities/projects",["backbone"],function(a){return a.Collection.extend({model:a.Model.extend()})});

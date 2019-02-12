@@ -1,0 +1,145 @@
+<html>
+<head>
+    <title>$i18n.getText("pisdtoreltktadmin.admin.mapping.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jira.plugin.pisdtojirarelease.PISDToJIRARelease:PISDToJIRARelease-admin-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+</head>
+<body>
+<div class="header">
+    <h3 class="formtitle">$i18n.getText("pisdtoreltkt.admin.mappingform.label")</h3>
+</div>
+<p/>
+<button id="pisdtorel-mapping-button" class="aui-button">$i18n.getText("pisdtoreltkt.admin.mappingform.addmapping")</button>
+<p/>
+
+<!-- Render the dialog to add project mappings -->
+<section role="dialog" id="pisdtoreltktmapping-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">$i18n.getText("pisdtoreltkt.admin.mappingform.dialog.header")</h2>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content">
+        <form action="#" method="post" id="addpisdrelmappingform" class="aui">
+            <fieldset>
+                <div class="field-group">
+                    <label for="serviceDeskProject">
+                        Service Desk Project
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <select class="select mandatoryevtField" id="serviceDeskProject" name="serviceDeskProject" 
+                            title="Select Service Desk Project">
+                        <option>Select</option>
+                        #foreach($project in $projectManager.getProjectObjects())
+                            #if($project == $selectedProject)
+                                <option value="${project.key}" selected>$project.getName()</option>
+                            #else
+                                <option value="${project.key}" >$project.getName()</option>
+                            #end
+                        #end
+                    </select>
+                    <div class="error" id="sdProjError"></div>
+                </div>
+                <div class="field-group">
+                    <label for="otherJIRAInstProject">
+                        JIRA Release Project
+                    </label>
+                    <select class="select mandatoryevtField" id="otherJIRAInstProject" name="otherJIRAInstProject"
+                            title="Select JIRA Release Project">
+                        <option>Select</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label for="otherJIRAInstProjectIssueType">
+                        JIRA Release Project Issue Type
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <select class="select mandatoryevtField" id="otherJIRAInstProjectIssueType"
+                            name="otherJIRAInstProjectIssueType"
+                            title="Select JIRA Release Project Issue Type">
+                        <option>Select</option>
+                    </select>
+                    <div class="error" id="sdProjIssueTypeError"></div>
+                </div>
+            <fieldset>
+        </form>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="pisdtorelmapping-dialog-add-button" class="aui-button">
+                $i18n.getText("pisdtoreltkt.admin.eventform.dialog.addbutton")
+            </button>
+            <button id="pisdtorelmapping-dialog-cancel-link" class="aui-button aui-button-link">
+                $i18n.getText("pisdtoreltkt.admin.eventform.dialog.cancellink")
+            </button>
+        </div>
+    </footer>
+</section>
+<!-- this finishes the add mapping dialog-->
+
+<!-- Render the confirmation dialog to delete a field mapping -->
+<section role="dialog" id="pisdtoreltktdelete-mapping-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">$i18n.getText("pisdtoreltkt.admin.deletemappingform.dialog.header")</h2>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content" id="deletemappingconfirmationtext">
+        <strong>$i18n.getText("pisdtoreltkt.admin.deletemappingform.dialog.message.areyousure")</strong>
+        <p/>
+        <table class="aui">
+            <thead>
+            <tr>
+                <th>Service Desk Project Name</th>
+                <th>Service Desk Project Key</th>
+                <th>JIRA Release Project Name</th>
+                <th>JIRA Release Project Key</th>
+                <th>JIRA Release Project Issue Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td id="serviceDeskProjectNameconf"></td>
+                <td id="serviceDeskProjectKeyconf"></td>
+                <td id="otherJIRAInstProjectNameconf"></td>
+                <td id="otherJIRAInstProjectKeyconf"></td>
+                <td id="otherJIRAInstProjectKeyIssueTypeconf"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="pisdtorelmapping-dialog-delete-button" class="aui-button">
+                $i18n.getText("pisdtoreltkt.admin.deletemappingform.dialog.deletebutton")
+            </button>
+            <button id="pisdtorelmapping-dialog-delete-cancel-link" class="aui-button aui-button-link">
+                $i18n.getText("pisdtoreltkt.admin.deletemappingform.dialog.cancellink")
+            </button>
+        </div>
+    </footer>
+</section>
+<!-- this  finishes the delete mapping confirmation dialog -->
+
+    <table id="pisdtoreltktmappingstable" class="aui aui-table-sortable">
+        <thead>
+        <tr>
+            <th>Service Desk Project Name</th>
+            <th>Service Desk Project Key</th>
+            <th>JIRA Release Project Name</th>
+            <th>JIRA Release Project Key</th>
+            <th>JIRA Release Project Issue Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+ </body>
+</html>

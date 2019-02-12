@@ -1,0 +1,124 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/dtIcon.png</param>
+        <param name="plugin-logo">images/dtLogo.png</param>
+        <!-- <param name="configure.url">/secure/FieldMappingAction!default.jspa</param> -->
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="create-incident-report-subtask"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="create-incident-report-subtask-v2-resources" name="create-incident-report-subtask-v2 Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:dialog2</dependency>
+		<resource type="download" name="formatter.js" location="/js/formatter.js"/>
+		<resource type="download" name="configure.js" location="/js/configure.js"/>		  
+        <resource type="download" name="create-incident-report-subtask.css" location="/css/create-incident-report-subtask.css"/>
+        <resource type="download" name="create-incident-report-subtask.js" location="/js/create-incident-report-subtask.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <context>incident-management-create-incident-report-subtask-v2</context>
+    </web-resource>
+    	      
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+    <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>    
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/> 
+    <template-context-item key="applicationPropertiesContextItem" component-ref="applicationProperties" context-key="applicationProperties" name="Application Properties Context Item"/>
+ 
+	  <ao key="ao-module">
+	    <description>The module configuring the Active Objects service used by this plugin</description>
+	    <entity>com.dt.jira.create.incident.report.subtask.ao.IRSubtaskFieldMap</entity>
+	  </ao>
+	  
+	  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+	    <description>Component to access Active Objects functionality from the plugin</description>
+	  </component-import>
+	  
+	  <component key="tx-processor" name="Transactional Annotation Processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+	    <decription>Processes @Transactional annotations.</decription>
+	  </component>
+	  
+	  <component key="fieldmappingservice" name="fieldmapping Service" class="com.dt.jira.create.incident.report.subtask.service.FieldMappingServiceImpl" />
+ 	  <component key="db-config-service" name="DB Config Plug-In configuration" class="com.dt.jira.create.incident.report.subtask.config.FieldConfigServiceImpl"/>
+ 	 
+    <component key="issueFieldUtils"
+               class="com.dt.jira.create.incident.report.subtask.utils.IssueFieldUtils"
+               interface="com.dt.jira.create.incident.report.subtask.utils.IssueFieldUtils"
+               public="true"
+               i18n-name-key="component.issuefieldutils.name">
+        <description key="component.issuefieldutils.description">Issue Field utils component.</description>
+    </component>
+    
+    <component key="fieldCollectionsUtils"
+               class="com.dt.jira.create.incident.report.subtask.utils.FieldCollectionsUtils"
+               interface="com.dt.jira.create.incident.report.subtask.utils.FieldCollectionsUtils"
+               public="true"
+               i18n-name-key="component.fieldcollectionsutils.name">
+        <description key="component.fieldcollectionsutils.description">Issue Field utils component.</description>
+    </component>
+    
+	  <web-section key="incident-management-section" name="Incident Management Section" location="admin_plugins_menu" i18n-name-key="incident-management-section.name" weight="910">
+	    <label key="incident-management-section.label"/>
+	    <description>Incident Management Section</description>
+	    <tooltip>Incident Management Section</tooltip>
+	  </web-section>
+	  <web-item key="incident-management-field-mapping-web-item" section="admin_plugins_menu/incident-management-section" i18n-name-key="incident-management-field-mapping-web-item.name" name="Incident to Incident Report Subtask Field Mappings" weight="1010">
+	    <description key="incident-management-field-mapping-web-item.description">Issue Field Mappings</description>
+	    <label key="incident-management-field-mapping-web-item.label"/>
+	    <link linkId="incident-management-field-mapping-web-item-link">/secure/FieldMappingAction!default.jspa?pkey=ITIM</link>
+	  </web-item>
+      <!-- 
+    <web-item key="init-db-configuration" name="Init Configuration link on administrators page" section="atl.jira.proj.config/projectgroup2" weight="95">
+        <label key="generic.events.admin.title.init"/>
+      <condition class="com.atlassian.jira.plugin.webfragment.conditions.JiraGlobalPermissionCondition">
+            <param name="permission">admin</param>
+        </condition>
+        <link linkId="init-db-configuration">/secure/FieldMappingAction!default.jspa?pkey=$projectKeyEncoded</link>
+    </web-item> -->
+    	
+	<rest key="fieldmappingrest" name="fieldmappingrest" i18n-name-key="rest" path="/dealertracks/fieldmappingrest" version="1.0">
+		<description key="rest.description">FieldMapping rest Modules</description>
+	</rest>
+ 
+    <webwork1 key="DBConfigurationManagement" name="DB configuration management" class="java.lang.Object">
+        <actions>  
+            <action name="com.dt.jira.create.incident.report.subtask.action.IncidentReportSubtaskFieldConfigAction" alias="FieldMappingAction">
+                <view name="input">/templates/initialFieldSetup.vm</view>
+                <view name="success">/templates/initialFieldSetup.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+    
+     <web-item name="CreateAndLinkIncidentReportSubtaskWebItem" i18n-name-key="create-and-link-incident-report-subtask-web-item.name" key="create-and-link-incident-report-subtask-web-item" section="operations-subtasks" weight="1000">
+	    <description key="create-and-link-incident-report-subtask-web-item.description">The Create And Link Incident Report Subtask Web Item Plugin</description>
+	    <conditions type="AND">
+	      <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasIssuePermissionCondition">
+	        <param name="permission" value="create"/>
+	      </condition>
+	      <condition class="com.dt.jira.create.incident.report.subtask.condition.IssueTypeIncidentCondition"/>
+	    </conditions>
+	    <styleClass>trigger-dialog</styleClass>
+	    <label key="create-and-link-incident-report-subtask-web-item.label"/>
+		<tooltip key="create-and-link-incident-report-subtask-web-item.tooltip"/>
+	    <link linkId="create-and-link-incident-report-subtask-web-item-link">/secure/CreateAndLinkIncidentReportSubtaskAction!default.jspa?id=${issueId}</link>
+	  </web-item>
+	  
+	  <webwork1 key="create-and-link-incident-report-subtask-web-work" name="Incident Mgmt Create Problem Web Work" i18n-name-key="create-and-link-incident-report-subtask-web-work.name">
+	    <description key="create-and-link-incident-report-subtask-web-work.description">The Incident Mgmt Incident Report Subtask Plugin</description>
+	    <actions>
+	      <action name="com.dt.jira.create.incident.report.subtask.action.CreateAndLinkIncidentReportSubtaskAction" alias="CreateAndLinkIncidentReportSubtaskAction">
+	       <view name="error">/templates/createSubtaskError.vm</view>
+	       <view name="success">/templates/createSubtaskSuccess.vm</view>
+	      </action>
+	    </actions>	    
+	  </webwork1>
+    
+    <component key="incidentChangeEventListener" name="Issue Change Event Listener" class="com.dt.jira.create.incident.report.subtask.event.IncidentReportSubtaskEventListener"/>
+</atlassian-plugin>

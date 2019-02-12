@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Defect Distribution (Stage Contentment)" directory_title="Defect Distribution (Stage Contentment)" description="Defects grouped by Stage and Severity" author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">JIRA</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="version" datatype="hidden" default_value="All"/><UserPref name="sprintId" datatype="hidden" default_value="All"/><UserPref name="groupbyField" datatype="hidden" default_value="Severity"/><Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+	#includeResources()
+		<script type="text/javascript">
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var GROUP_BY_FIELD = "DT-Environment";
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        return DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				      view: {
+							template: function(args) {
+								var gadget = this;
+								 
+								var projectList = AJS.$("<table/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center");
+								var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+								sevTR.append(AJS.$("<td/>").css("width","30%").text('Stage').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('% of Defects').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('# of Defects').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Low'))
+								sevTR.append(AJS.$("<td/>").text('Medium'))
+								sevTR.append(AJS.$("<td/>").text('High'))
+								sevTR.append(AJS.$("<td/>").text('Critical'))
+								projectList.append(sevTR);
+								AJS.$(args.projectData).each(function() {	
+								 var dataTR =  AJS.$("<tr/>");			  	
+								 dataTR.append(AJS.$("<td/>").text(this.cause).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )	
+								 dataTR.append( AJS.$("<td/>").text(this.percentofdefects + '%').css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+								 dataTR.append( AJS.$("<td/>").text(this.noofdefects).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+								 dataTR.append(	AJS.$("<td/>").text(this.low) )
+								 dataTR.append( AJS.$("<td/>").text(this.medium) )
+								 dataTR.append( AJS.$("<td/>").text(this.high) )
+								 dataTR.append( AJS.$("<td/>").text(this.critical).css("border-right","1px solid #B3B8B9") )
+								 projectList.append(dataTR);
+								});
+								gadget.getView().html(projectList);
+							},
+							args: [{
+								key: "projectData",
+								ajaxOptions: function() {
+									return {
+										url: "/rest/dealertrack/1.0/causewisedistribution.json", 
+										contentType: "application/json",
+										data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprintId").split('|').toString()),
+												groupbyField: GROUP_BY_FIELD
+										}
+									};
+								}
+							}]
+						}
+			});
+		})();
+	
+ </script>
+  ]]>
+  </Content></Module>

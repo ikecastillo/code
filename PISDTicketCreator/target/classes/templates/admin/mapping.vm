@@ -1,0 +1,169 @@
+<html>
+<head>
+    <title>$i18n.getText("pisdtktadmin.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.remote.pisdtktcreator.PISDTicketCreator:PISDTicketCreator-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+</head>
+<body>
+<div class="header">
+    <h3 class="formtitle">$i18n.getText("pisdtkt.admin.mappingform.label")</h3>
+</div>
+<p/>
+<button id="pisd-mapping-button" class="aui-button">$i18n.getText("pisdtkt.admin.mappingform.addmapping")</button>
+<p/>
+
+<!-- Render the dialog to add field mappings -->
+<section role="dialog" id="pisdtktmapping-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">$i18n.getText("pisdtkt.admin.mappingform.dialog.header")</h2>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content">
+        <form action="#" method="post" id="addsdmappingform" class="aui">
+            <fieldset>
+                <div class="field-group">
+                    <!-- for Solution Group -->
+                    <label for="solngroupITIM">
+                        $i18n.getText("pisdtkt.admin.eventform.dialog.solngroup")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <select class="select mandatoryevtField" id="solngroupITIM" name="solngroupITIM" title="Select Solution Group">
+                        <option>Select</option>
+                    </select>
+                    <div class="error"></div>
+                </div>
+                <div class="field-group">
+                    <!-- for Product -->
+                    <label for="productITIM">
+                        $i18n.getText("pisdtkt.admin.eventform.dialog.product")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <select class="select mandatoryevtField" id="productITIM" name="productITIM" title="Select Product">
+                        <option>Select</option>
+                    </select>
+                    <div class="error"></div>
+                </div>
+                <div class="field-group">
+                    <!-- for Sub Product -->
+                    <label for="subproductITIM">
+                        $i18n.getText("pisdtkt.admin.eventform.dialog.subproduct")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <select class="select mandatoryevtField" id="subproductITIM" name="subproductITIM" title="Select Sub Product">
+                        <option>Select</option>
+                    </select>
+                    <div class="error"></div>
+                </div>
+                <div class="field-group">
+                    <!-- for Service Desk ID -->
+                    <label for="serviceDeskId">
+                        $i18n.getText("pisdtkt.admin.eventform.dialog.serviceDeskId")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <input class="text mandatoryevtField" type="text" id="serviceDeskId" name="serviceDeskId" title="Service Desk ID">
+                   #* <div class="description">$i18n.getText("xmatters.admin.eventform.descriptionformApiId")</div>*#
+                    <div class="error"></div>
+                </div>
+                <div class="field-group">
+                    <!-- for Request Type ID -->
+                    <label for="requestTypeId">
+                        $i18n.getText("pisdtkt.admin.eventform.dialog.requestTypeId")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <input class="text mandatoryevtField" type="text" id="requestTypeId" name="requestTypeId" title="Request Type ID">
+                    <div class="error"></div>
+                </div>
+                <div class="field-group">
+                    <!-- for custom fields with IDs-->
+                    <label for="custfieldWithId">
+                        $i18n.getText("pisdtkt.admin.eventform.dialog.custfieldWithId")
+                        #*<span class="aui-icon icon-required"> required</span>*#
+                    </label>
+                    <textarea class="textarea mandatoryevtField" id="custfieldWithId"
+                              name="custfieldWithId"
+                              title="Custom Fields With IDs" ></textarea>
+                    <div class="error"></div>
+                </div>
+            <fieldset>
+        </form>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="pisdmapping-dialog-add-button" class="aui-button">
+                $i18n.getText("pisdtkt.admin.eventform.dialog.addbutton")
+            </button>
+            <button id="pisdmapping-dialog-cancel-link" class="aui-button aui-button-link">
+                $i18n.getText("pisdtkt.admin.eventform.dialog.cancellink")
+            </button>
+        </div>
+    </footer>
+</section>
+<!-- this finishes the add mapping dialog-->
+
+<!-- Render the confirmation dialog to delete a field mapping -->
+<section role="dialog" id="pisdtktdelete-mapping-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">$i18n.getText("pisdtkt.admin.deletemappingform.dialog.header")</h2>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content" id="deleteconfirmationtext">
+        <strong>$i18n.getText("pisdtkt.admin.deletemappingform.dialog.message.areyousure")</strong>
+        <p/>
+        <table class="aui">
+            <thead>
+            <tr>
+                <th>Service Desk ID</th>
+                <th>Service Desk Name</th>
+                <th>Request Type ID </th>
+                <th>Request Type Name</th>
+                <th>Custom Fields with IDs</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td id="serviceDeskIdconf"></td>
+                <td id="serviceDeskNameconf"></td>
+                <td id="requestTypeIdIdconf"></td>
+                <td id="requestTypeNameconf"></td>
+                <td id="customfieldswithIdsconf"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="pisdmapping-dialog-delete-button" class="aui-button">
+                $i18n.getText("pisdtkt.admin.deletemappingform.dialog.deletebutton")
+            </button>
+            <button id="pisdmapping-dialog-delete-cancel-link" class="aui-button aui-button-link">
+                $i18n.getText("pisdtkt.admin.deletemappingform.dialog.cancellink")
+            </button>
+        </div>
+    </footer>
+</section>
+<!-- this  finishes the delete mapping confirmation dialog -->
+
+    <table id="pisdtktmappingstable" class="aui aui-table-sortable">
+        <thead>
+        <tr>
+            <th>Service Desk ID</th>
+            <th>Service Desk Name</th>
+            <th>Request Type ID </th>
+            <th>Request Type Name</th>
+            <th>Custom Fields with IDs</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+ </body>
+</html>

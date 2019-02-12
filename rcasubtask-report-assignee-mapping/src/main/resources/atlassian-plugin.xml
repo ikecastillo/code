@@ -1,0 +1,83 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/dtIcon.png</param>
+        <param name="plugin-logo">images/dtLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="rcasubtask-report-assignee-mapping"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="rcasubtask-report-assignee-mapping-resources" name="rcasubtask-report-assignee-mapping Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="rcasubtask-report-assignee-mapping.css" location="/css/rcasubtask-report-assignee-mapping.css"/>
+        <resource type="download" name="rcasubtask-report-assignee-mapping.js" location="/js/rcasubtask-report-assignee-mapping.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>rcasubtask-report-assignee-mapping</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.rcamap.plugin.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.rcamap.plugin.MyPluginComponent</interface>
+    </component>
+    
+      <web-resource key="rcasubtask-user-picker-js" name="javascript">
+        <dependency>jira.webresources:global-static</dependency>
+        <description>JavaScript</description>
+        <resource name="rcasubtask-user-picker.js" type="download" location="js/rcasubtask-user-picker.js" />	
+        <context>atl.general</context>
+         <context>atl.admin</context>
+  	</web-resource>
+    
+     <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />     
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+    <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider"/>
+  	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+  	<component-import key="velocity-renderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+  	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
+  	<template-context-item key="applicationPropertiesContextItem" component-ref="applicationProperties" context-key="applicationProperties" name="Application Properties Context Item"/>
+ 
+	 <!-- Incident Report Assignee Mapping AO Modules -->
+	  <ao key="ao-module">
+	    <description>The module configuring the Active Objects service used by this plugin</description>
+	    <entity>com.dt.jira.rcamap.plugin.ao.RCASubtaskMap</entity>
+	  </ao>
+	  
+	  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+	    <description>Component to access Active Objects functionality from the plugin</description>
+	  </component-import>
+	  
+	  <component key="tx-processor" name="Transactional Annotation Processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+	    <decription>Processes @Transactional annotations.</decription>
+	  </component>
+	  
+	  <component key="rcasubtask-service" name="Incident Map Service" class="com.dt.jira.rcamap.plugin.ao.RCASubtaskMapServiceImpl"/>
+	  
+  	<servlet key="rcasubtask-mapping-servlet" class="com.dt.jira.rcamap.plugin.ui.RCASubtaskMapServlet"> <url-pattern>/rcasubtask/mapping</url-pattern></servlet>
+  
+   	<web-item name="IncidentMappingWebItem" i18n-name-key="rcasubtask-mapping.name" key="rcasubtask-mapping" section="admin_plugins_menu/problem-management-section" weight="1010">
+    	<description key="rcasubtask-mapping.description">The RCA Subtask Report Assignee Mappings Plugin</description>
+    	<!-- conditions type="AND">
+	      <condition class="com.dt.jira.rcamap.plugin.condition.IssueTypeProblemCondition"/>
+	    </conditions-->
+    	<label>RCA Report Subtask Assignee Mapping</label>
+		<tooltip>RCA Report Subtask Assignee Mapping</tooltip>
+    	<link linkId="rcasubtask-mapping-link">/plugins/servlet/rcasubtask/mapping?pkey=PRB</link>
+  	</web-item>
+  	
+  	<!-- Incident Report Assignee Mapping REST Modules -->
+  <rest name="rcasubtaskmaprest" i18n-name-key="rcasubtask.rest.name" key="rcasubtaskmaprest" path="/rcasubtask-approval-mapping" version="1.0">
+    <description key="rcasubtask.rest.description">Dealertrack RCA Subtask Report Assignee Mapping REST Modules</description>
+  </rest>
+  	
+  <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+  <component key="eventListener" class="com.dt.jira.rcamap.plugin.event.RCASubtaskRolesMappingEventListener">
+		<description>Class that processes the incoming JIRA issue events.</description>
+  </component>
+</atlassian-plugin>

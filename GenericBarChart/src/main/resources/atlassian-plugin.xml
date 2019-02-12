@@ -1,0 +1,72 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="GenericBarChart"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="GenericBarChart-resources" name="GenericBarChart Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="GenericBarChart.css" location="/css/GenericBarChart.css"/>
+        <resource type="download" name="GenericBarChart.js" location="/js/GenericBarChart.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>GenericBarChart</context>
+    </web-resource>
+
+
+    <web-resource name="itsmjqplotRes" key="itsmjqplot">
+        <!-- Javascript -->
+        <!-- <resource name="jquery.min.js" type="download" location="jqplot/jquery.min.js"/> -->
+        <resource name="excanvas.min.js" type="download" location="jqplot/excanvas.min.js">
+            <param name="conditionalComment" value="lt IE 9"/>
+        </resource>
+        <resource name="jquery.jqplot.min.js" type="download" location="jqplot/jquery.jqplot.min.js"/>
+        <resource name="jqplot.barRenderer.min.js" type="download" location="jqplot/plugins/jqplot.barRenderer.min.js"/>
+        <resource name="jqplot.categoryAxisRenderer.min.js" type="download" location="jqplot/plugins/jqplot.categoryAxisRenderer.min.js"/>
+        <resource name="jqplot.pointLabels.js" type="download" location="jqplot/plugins/jqplot.pointLabels.js"/>
+        <resource name="jqplot.trendline.min.js" type="download" location="jqplot/plugins/jqplot.trendline.min.js"/>
+        <resource name="jqplot.canvasTextRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasTextRenderer.min.js"/>
+        <resource name="jqplot.canvasAxisTickRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"/>
+        <resource name="jqplot.dateAxisRenderer.min.js" type="download" location="jqplot/plugins/jqplot.dateAxisRenderer.min.js"/>
+        <resource name="jqplot.pieRenderer.min.js" type="download" location="jqplot/plugins/jqplot.pieRenderer.min.js"/>
+        <resource name="jqplot.cursor.min.js" type="download" location="jqplot/plugins/jqplot.cursor.min.js"/>
+        <resource name="jqplot.canvasOverlay.min.js" type="download" location="jqplot/plugins/jqplot.canvasOverlay.min.js"/>
+        <resource name="jqplot.canvasAxisLabelRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js"/>
+        <!-- CSS -->
+        <resource name="jquery.jqplot.min.css" type="download" location="jqplot/jquery.jqplot.min.css">
+            <property key="content-type" value="text/css"/>
+        </resource>
+        <resource name="excanvas.min.css" type="download" location="jqplot/excanvas.css">
+            <param name="conditionalComment" value="lt IE 9"/>
+        </resource>
+
+        <resource name="highcharts.js" type="download" location="highcharts/highcharts.js"/>
+        <resource name="exporting.js" type="download" location="highcharts/exporting.js"/>
+        <resource name="highcharts-3d.js" type="download" location="highcharts/highcharts-3d.js"/>
+        <context>atl.general</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.genericbarchart.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.genericbarchart.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+
+    <!-- rest resource for ITSMDashboard  -->
+    <rest key="im-executesummary" path="/incident" version="1.0">
+        <description>REST Resources related to the Generic Bar Chart</description>
+    </rest>
+
+    <gadget key="genericbarchart" location="gadgets/genericbarchart.xml"/>
+    
+</atlassian-plugin>

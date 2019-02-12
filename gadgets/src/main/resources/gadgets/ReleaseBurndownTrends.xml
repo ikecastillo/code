@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Release Burndown - Optimistic/Pessimistic"
+                 directory_title="Release Burndown (Optimistic/Pessimitic) Chart"
+                 description="Burndown of Story points over a given release"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">Charts</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="auto"/>
+    <Content type="html">
+<![CDATA[
+	#requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+
+	#includeResources()
+	<style type="text/css">
+		table.jqplot-table-legend { border: none; }
+		div.jqplot-table-legend-swatch-outline { border: none; }	
+	</style>
+	<style type="text/css">
+		#container {
+			padding: 15px;
+		}
+
+		#no-versions-warning {
+			line-height: 1.4;
+			font-size: 12px;
+		}
+
+		#days-box {
+			text-align: center;
+		}
+
+		#days-value {
+			text-align: center;
+			font-size: 5em;
+		}
+
+		#days-text {
+			padding-bottom: 15px;
+		}
+
+		#version-link {
+			text-align: center;
+		}
+
+		#no-future-versions-warning {
+			padding: 15px;
+		}
+
+		.view {
+			padding: 0.5em 1em;
+		}
+
+		.overdue {
+			color: #cc0000;
+		}
+
+		.future-release {
+			color: #00cc00;
+		}
+
+		.today {
+			color: #cc0000;
+		}
+
+		#days-text .today {
+			font-weight: bold;
+		}
+
+		.icon {
+			padding-top: 3px;
+			padding-right: 3px;
+		}
+
+		.disabled {
+			color: #C0C0C0;
+		}
+		
+
+	</style>
+	<script language="javascript" type="text/javascript">
+	var plot1;
+
+	var getAllIssues = function(versionId, startAt){
+		var resp, allIssues;
+		do {
+			var startAtParam = 'startAt=' + startAt;
+			var urlStr = '/rest/api/2/search?jql=issuetype in (Story,"Technical Story") and fixVersion=' + versionId;
+			//var urlStr = '/rest/api/2/search?jql=issuetype=Story and fixVersion=' + versionId;
+			urlStr += '&expand=changelog&fields=id,customfield_10006,customfield_10003,status';
+			urlStr += '&' + startAtParam;
+			console.log(versionId + '---' + startAt + '---' +urlStr);
+			resp = AJS.$.ajax({
+				type: "GET",
+				url: urlStr,
+				contentType: "application/json",
+				async: false
+				}).responseText;
+				issueObj = JSON.parse(resp);
+			hasIssues = issueObj.issues.length > 0;
+			if(hasIssues) {
+				if (allIssues==null) allIssues = issueObj;			 
+				else Array.prototype.push.apply(allIssues.issues, issueObj.issues); //allIssues.issues.concat(issueObj.issues);
+				startAt+=issueObj.maxResults;
+			}
+		} while(hasIssues);
+		return allIssues;
+	}
+	var getbacklogSP = function(allIssues) {
+		for (var _i=0, _len=allIssues.issues.length, backlog=0; _i<_len; _i++){
+			issue = allIssues.issues[_i];
+			backlog+=getSP(issue);
+		}
+		return backlog;
+	}
+
+	var drawChart = function(versionId) {
+		var allIssuesObj = getAllIssues(versionId, 0);
+		var burndownSP = getbacklogSP(allIssuesObj);
+		var chartData = getChartObj(allIssuesObj);
+		console.log(allIssuesObj);
+		console.log(chartData);
+		AJS.$.jqplot.config.enablePlugins = true;
+		
+		var committed = [];
+		var completed = [];
+		var ticks = ['Backlog'];
+		var SP = [burndownSP];
+		var optimistic = [null];
+		var pessimistic = [null];
+		var planned = [null];
+		
+		for (var _i=0, _len1=chartData.length; _i<_len1; _i++) {
+			burndownSP = burndownSP - chartData[_i]['completed'];
+			ticks.push(chartData[_i]['name']);
+			var end_dt = dateFormat(new Date(chartData[_i]['enddate']),'mm/dd/yy');
+			//ticks.push(end_dt);
+			SP.push(burndownSP);
+			optimistic.push((_i==_len1-1)?burndownSP:null);
+			pessimistic.push((_i==_len1-1)?burndownSP:null);
+			planned.push((_i==_len1-1)?burndownSP:null);
+		};
+		var team = 4, velperwk = 12, numOfwks = 2;
+		var capacity=velperwk*numOfwks*team;
+		var optimisticpercent=1.4, pessimisticpercent=0.5;
+		var optimisticBurndown = burndownSP, pessimisticBurndown = burndownSP, plannedBurndown=burndownSP;
+		var optimisticburndownrate = capacity*optimisticpercent;
+		var pessimisticburndownrate = capacity*pessimisticpercent;
+		var plannedburndownrate = capacity;
+		var dt = new Date(end_dt);
+		while(1) {		
+			optimisticBurndown = optimisticBurndown -  optimisticburndownrate;
+			pessimisticBurndown = pessimisticBurndown -  pessimisticburndownrate;
+			plannedBurndown = plannedBurndown -  plannedburndownrate;
+			dt.setDate(dt.getDate()+14);
+			ticks.push(dateFormat(dt,"mm/dd/yy"));
+	/*
+			optimistic.push((optimisticBurndown<0)?0:optimisticBurndown);
+			pessimistic.push((pessimisticBurndown<0)?null:pessimisticBurndown);
+			planned.push((plannedBurndown<0)?null:plannedBurndown);
+	*/
+			optimistic.push(optimisticBurndown);
+			pessimistic.push(pessimisticBurndown);
+			planned.push(plannedBurndown);
+
+			if (optimisticBurndown < 0 && pessimisticBurndown < 0 && plannedBurndown < 0) break;
+		};
+		console.log(optimistic); console.log(pessimistic); console.log(SP);
+		//var committed = [10, 22, 64, 75, 100, 10];
+		//var completed = [15, 20, 50, 40, 80, 5];
+		// Can specify a custom tick Array.
+		// Ticks should match up one for each y value (category) in the series.
+		//var ticks = ['Sprint1', 'Sprint 2', 'Sprint 3', 'Sprint 4', 'Sprint 5', 'Sprint 6'];
+		plot1 = AJS.$.jqplot('chart_div', [SP,optimistic,pessimistic, planned], {
+			// The "seriesDefaults" option is an options object that will
+			// be applied to all series in the chart.
+			seriesDefaults:{
+				lineWidth:1.2,
+				pointLabels: {show: true, edgeTolerance: 5, ypadding:3},
+				trendline: {show: false, color: 'darkgray'},
+				markerRenderer: AJS.$.jqplot.MarkerRenderer, 
+				markerOptions: {
+					size: 5
+				},
+				
+			},
+			grid:{drawGridLines: false,background: 'white'},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series:[
+				{label:'Burndown', trendline: {show: true, color: 'darkgray', lineWidth:0.75 }},
+				{label:'Optimistic'},	
+				{label:'Pessimistic'},
+				{label:'Planned'}			
+			],
+			// Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+			  show: true,
+			  location: 'e'
+			} ,
+			axesDefaults:{
+				tickOptions: {
+					showGridline: false
+				}
+			},
+			axes: {
+				// Use a category axis on the x axis and use our custom ticks.
+				xaxis: {
+					renderer: AJS.$.jqplot.CategoryAxisRenderer,
+					ticks: ticks, 
+					tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer,
+					tickOptions: {
+					  angle: -30
+					}
+				},
+				// Pad the y axis just a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					min:0,
+					pad: 0,
+					tickOptions: {formatString: '%d'}
+				}
+			},
+			seriesColors: ['blue', 'green', 'red', 'black']
+		});
+		
+		plot1.redraw();
+
+		plot1.replot( {resetAxes: false } );
+		//gadgets.window.setTitle("Release Burndown Chart");	
+	}
+	</script>
+	<script type="text/javascript">
+        (function ()
+        {
+            var gadget = AJS.Gadget({
+                baseUrl: "__ATLASSIAN_BASE_URL__",
+                useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var gadget = this;
+                        gadgets.window.setTitle("__MSG_gadget.days.left.configTitle__");
+                        var projectPicker = AJS.gadget.fields.projectPicker(gadget, "projectId", args.projectOptions);
+
+                        return {
+
+                            theme : function()
+                            {
+                                if (gadgets.window.getViewportDimensions().width < 450)
+                                {
+                                    return "gdt top-label";
+                                }
+                                else
+                                {
+                                    return "gdt";
+                                }
+                            }(),
+                            fields: [
+                                projectPicker,
+                                AJS.gadget.fields.nowConfigured()
+                            ]
+                        };
+                    },
+                    args: function()
+                    {
+                        return [
+                            {
+                                key: "projectOptions",
+                                ajaxOptions:  "/rest/gadget/1.0/filtersAndProjects?showFilters=false"
+
+                            }
+
+
+                        ];
+                    }()
+                },
+                view: {
+                    onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args)
+                    {
+                        var versionData = args.versions;
+                        var currentVersion;
+                        var gadget = this;
+                        var baseUrl = AJS.$.ajaxSettings.baseUrl;
+                        var optionSelected = false;
+                        var projectVersionList;
+						var issuesLocalList;
+
+                        if (!versionData)
+                        {
+                            projectVersionList = null;
+                        }
+                        else
+                        {
+                            projectVersionList = AJS.$(args.versions.versionsForProject);
+                        }
+
+
+                        var getContainer = function()
+                        {
+                            var container = AJS.$("<div/>").attr('id', 'container').appendTo(gadget.getView().empty());
+                            return function()
+                            {
+                                return container;
+                            }
+                        }();
+                        var hasVersionWithReleaseDate = function(projectVersionList)
+                        {
+                            var hasReleaseDate = false;
+                            projectVersionList.each(function()
+                            {
+                                if (this.releaseDate != "")
+                                {
+                                    hasReleaseDate = true;
+                                }
+                            });
+                            return hasReleaseDate;
+                        };
+                        var setTitle = function(projectVersionList)
+                        {
+                            if (!projectVersionList || !hasVersionWithReleaseDate(projectVersionList))
+                            {
+                                gadgets.window.setTitle(gadget.getMsg("gadget.days.left.title"));
+                            }
+                            else
+                            {
+                                gadgets.window.setTitle(AJS.format("__MSG_gadget.days.left.subtitle__", currentVersion.owningProject.name, currentVersion.name));
+
+                            }
+                        };
+
+                        var versionSelector = function(projectVersionList)
+                        {
+                            var control = AJS.$("<select/>");
+                            //AJS.$("<option/>").attr({id:'next-release-option', value:'auto'}).text(gadget.getMsg('gadget.days.left.autoOption')).appendTo(control);
+
+                            projectVersionList.each(function()
+                            {
+                                var option = AJS.$("<option/>").attr({ value:  this.id});
+								if (this.releaseDate == "")
+                                {
+                                    option.append(this.name);
+									//option.attr("disabled", "true");
+                                    //option.addClass('disabled');
+                                    //option.append(this.name + ' - ' + gadget.getMsg('gadget.days.left.noReleaseDate'));
+                                }
+                                else
+                                {
+                                    option.append(this.name + ' - ' + this.releaseDate);
+                                }
+
+                                if (this.id == gadget.getPref("version"))
+                                {
+                                    option.attr({selected: "selected"});
+                                    currentVersion = this;
+                                    optionSelected = true;
+
+                                }
+                                control.append(option);
+								
+								
+								
+								
+							
+								
+								
+                            });
+                            control.change(function(event)
+                            {
+                                gadget.savePref("version", AJS.$(this).val());
+                                gadget.showView(true);
+                            });
+                            //generate image on side of select bar
+                            AJS.$("#selection").append(AJS.$("<img/>").attr({
+                                src: baseUrl + "/images/icons/box_16.gif",
+                                height: 16,
+                                width: 16,
+                                title: gadget.getMsg("gadget.roadmap.status.unreleased"),
+                                alt: gadget.getMsg("gadget.roadmap.status.unreleased"),
+                                "class": "icon"
+                            }));
+                            AJS.$("#selection").append(control);
+                            //try auto select option if no option is selected
+                            if (!optionSelected)
+                            {
+                                AJS.$('#next-release-option').attr({selected: "selected"});
+                                currentVersion = projectVersionList[0];
+                            }
+                        };
+                        var daysLeftDisplay = function(projectVersionList, container)
+                        {
+                            var projectLink = baseUrl + "/browse/" + currentVersion.owningProject.key
+                            var versionLink = projectLink + "/fixforversion/" + currentVersion.id
+
+                            /* commenting out days left section 
+							container.append("<div id ='days-box'/>");
+                            AJS.$("<div/>").attr("id", "days-value").appendTo("#days-box");
+                            AJS.$("<div/>").attr("id", "days-text").appendTo("#days-box");
+                            AJS.$("<div/>").attr("id", "version-link").appendTo("#days-box");
+
+                            AJS.$("<a/>").attr({
+                                href: projectLink,
+                                id:"projectLink"})
+                                    .appendTo('#version-link');
+
+                            AJS.$("#version-link").append(" : ");
+
+
+                            AJS.$("<a/>").attr({
+                                href: versionLink,
+                                id: "versionLink"})
+                                    .appendTo("#version-link");
+
+                            if (hasVersionWithReleaseDate(projectVersionList))
+                            {
+                                //if the currentVersion has no release date find the next version due
+
+                                AJS.$("<div/>").attr("id", "days-text").appendTo("#days-box");
+                                AJS.$("<div/>").attr("id", "version-link").appendTo("#days-box");
+
+                                AJS.$("#days-value").append(Math.abs(currentVersion.daysRemaining));
+
+                                AJS.$('#projectLink').text(currentVersion.owningProject.name);
+                                AJS.$('#versionLink').text(currentVersion.name);
+
+                                AJS.$('<div/ >').attr('id', 'release-date').text(gadget.getMsg("gadget.days.left.releaseDate") + " : " + currentVersion.releaseDate).appendTo('#version-link')
+
+                                if (currentVersion.daysRemaining < 0)
+                                {
+                                    AJS.$('#days-value').addClass('overdue');
+                                    AJS.$('#release-date').addClass('overdue');
+
+                                    AJS.$('#days-text').text(gadget.getMsg("gadget.days.left.daysAgo"))
+
+                                }
+                                else if (currentVersion.daysRemaining == 0)
+                                {
+                                    AJS.$('#days-value').addClass('today');
+                                    AJS.$('#release-date').addClass('today');
+                                    AJS.$('#days-text').addClass('today').text(gadget.getMsg("gadget.days.left.today"))
+                                }
+                                else
+                                {
+                                    AJS.$('#days-value').addClass('future-release');
+                                    AJS.$('#release-date').addClass('future-release');
+
+                                    AJS.$('#days-text').text(gadget.getMsg("gadget.days.left.daysRemaining"));
+
+                                }
+								
+								
+								//***************Satya********************
+								
+								
+								container.append('Issue &nbsp;&nbsp;&nbsp;&nbsp; | Status  |  Priority');
+								container.append(' <br />');
+								var currentIssuesList =  currentVersion.issuesList;
+								
+								var map = new Object();
+								var issuesArray = [];
+								var len =0;
+								
+								
+									while(len < currentIssuesList.length ){
+										var issueName1 = currentIssuesList[len].issueName;
+										var status1 = currentIssuesList[len].status;
+										var priority1 = currentIssuesList[len].priority;										
+										
+										if( map[status1] != ''  && map[status1] != null) {
+											var newArr =  map[status1];
+											var len1 = newArr.length;												
+											newArr[len1] = issueName1;
+											map[status1] = newArr;											
+										}else{											
+											var issuesArray1 =[]; 
+											issuesArray1[0] = issueName1
+											map[status1] = issuesArray1;											
+										}
+										container.append(issueName1);
+										container.append(' &nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;');
+										container.append(status1);
+										container.append(' &nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;');
+										container.append(priority1);
+										container.append(' <br />');
+										len++;
+									}
+									
+									container.append(' <br /><br /><br />');
+									
+									
+									
+									
+									
+								container.append('<div class="divTable">');
+								container.append('<div class="headRow">');
+								container.append('<div class="divCell">  Issues   </div>');
+								container.append('<div  class="divCell">  Issue Status  </div>');
+								container.append('<div  class="divCell">  Issue Count  </div>');
+								container.append('</div>');
+									 
+							for (var key in map){
+								var  obj =  map[key];		
+								container.append('<div class="divRow">');
+								container.append('<div class="divCell">' + obj + '</div>');
+								container.append('<div class="divCell">' + key + '</div>');
+								container.append('<div class="divCell">' + obj.length + '</div>');
+							}
+								container.append('</div>');
+								container.append('</div>');
+															
+								//***************Satya********************
+
+                            }
+                            else
+                            {
+                                AJS.$('#days-box').empty();
+
+                                var futureVersionsWarning = AJS.$("<div />")
+                                        .attr('id', 'no-future-versions-warning')
+                                        .text(" - " + gadget.getMsg("gadget.days.left.noReleaseDatesWarning"))
+                                        .appendTo('#days-box');
+
+                                AJS.$("<a/>")
+                                        .attr({
+                                    href: projectLink,
+                                    id:"projectLink"})
+                                        .text(currentVersion.owningProject.name)
+                                        .prependTo(futureVersionsWarning)
+
+
+                            } */
+                        };
+
+                        if (!projectVersionList)
+                        {
+                            var noVersionMsg = gadget.getMsg("gadget.days.left.noVersionWarning");
+                            gadget.getView().empty().append((noVersionMsg));
+
+                        }
+                        else
+                        { 
+							/* comment this to remove drop down */
+                            var container = getContainer().append("<div id='selection'/>");
+                            versionSelector(projectVersionList);
+                            daysLeftDisplay(projectVersionList, container);
+							drawChart(currentVersion.id);
+							console.log("selected version " + currentVersion.id); 
+
+                            //setTitle(projectVersionList);
+						}
+
+                    },
+				  args: [
+                        {
+                            key: "versions",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dt/1.0/days-left-in-iteration/getVersions",
+                                    data:  {
+                                        projectId : gadgets.util.unescapeString(this.getPref("projectId"))
+                                    }
+                                };
+                            }
+                        }
+                    ]
+
+                }
+            });
+        })();
+	</script>
+	<div id="chart_div"></div>
+  ]]>
+
+  </Content>
+</Module>

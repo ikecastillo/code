@@ -1,0 +1,42 @@
+<html>
+<head>
+$webResourceManager.requireResource("com.dt.jira.plugin.pisdtojirarelease.PISDToJIRARelease:PISDToJIRARelease-resources")
+    <title>Create Jira ticket from Service Desk</title>
+    #if (${action.issueObject})
+        <meta name="decorator" content="issueaction" />
+    #else
+        <meta name="decorator" content="message" />
+    #end
+    <script>
+            AJS.toInit(function () {
+            AJS.$("#select2-example").auiSelect2();
+                });
+    </script>
+</head>
+<body>
+#if(${action.issueObject})
+<div class="aui">
+    <h2 class="dialog-title">Create Jira ticket from Service Desk</h2>
+        <label>Selct Project: </label>
+
+            <form class = "aui">
+                 <select id="select2-example">
+                     <option value = "DT">DT </option>
+                     <option Value = "DMS">DMS </option>
+                 </select>
+
+             </form>
+
+
+
+  </div>
+
+        <div class="buttons-container form-footer">
+        <div class="buttons"><span class="icon throbber"></span>
+             <input class="button submit" type="submit" name="add" value="Create" class="aui-button" accesskey="S" title="Press Alt+Shift+S to submit form" onclick="location.href='/browse/${action.issueObject}'"/>
+             <input class="button submit" type="submit" name="add" value="Close" class="aui-button" accesskey="S" title="Press Alt+Shift+S to submit form" onclick="location.href='/browse/${action.issueObject}'"/>
+		</div>
+        </div>
+#end
+</body>
+</html>

@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="POC Dashboard " directory_title="POC Dashboard " description="POC Dashboard " author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">Charts</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="versionUserPref" datatype="hidden" default_value="All"/><UserPref name="sprint" datatype="hidden" default_value="All"/><UserPref name="groupbyField" datatype="hidden" default_value="Severity"/><Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+		<script type="text/javascript">
+		
+		/*AJS.$(function() {
+				//alert( "ready!");
+		});*/
+
+		GROUP_BY_FIELD = "Defect Cause";
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+             
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+						//this.getView().empty();
+						//var intest='<input type=text id=testdd name=testdd />';
+						//this.getView().append(intest);
+						var gadget = this;
+						this.getView().empty();
+						
+						this.getView().append('<br>');
+						
+						var selectT = '<label><b> Project: &nbsp;&nbsp;</b>	</label>';
+						this.getView().append(selectT);
+						var $projectSelectList = AJS.$("<select/>").attr("id","projectSel");
+						 AJS.$(args.projectOptions).each(function()
+						{
+							//alert(this.key);							
+							var projectOption = AJS.$("<option/>").attr("value", this.key).text(this.name);
+							if (this.key == gadget.getPref("projectId"))
+							{
+								projectOption.attr({selected: "selected"});								
+							}
+							$projectSelectList.append(projectOption);
+						});
+						this.getView().append($projectSelectList);						
+						
+						var versionLabel = '<label> <b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Version:</b>	</label>';
+						this.getView().append(versionLabel);
+						var $versionSelectList = AJS.$("<select/>").attr("id","versionSel").attr("multiple","multiple").attr("size","4");
+						this.getView().append($versionSelectList);
+						populateVersions(AJS.$('#versionSel'),gadget);
+						
+						var refreshGad = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button id="refGad" name="refGad" value="&nbsp;&nbsp;Save &nbsp;&nbsp;"/>';
+							this.getView().append(refreshGad);
+						drawchart(args.velocity);					drawchart_TR1(args.releaseburn);		
+						drawchart_dis(args.defectdistribution);
+						drawchart_F1(args.firsttimefix,gadget);
+					},
+					args: [
+						{
+							key: "projectOptions",
+							ajaxOptions:  function ()
+                            {
+                                return {
+										url: "/rest/api/2/project.json",
+										contentType: "application/json"
+										}
+							}
+			 
+						},
+						{
+                            key: "velocity",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/velocity.json",
+									//url: "/rest/dealertrack/1.0/defectdistribution.json",
+									contentType: "application/json",
+									data:  {
+											projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+											version: gadgets.util.unescapeString(this.getPref("versionUserPref").split('|').toString())
+									}
+                                };
+                            }
+                        },
+						{
+                            key: "defectdistribution",
+                            ajaxOptions: function ()
+                            {
+                                return {
+									url: "/rest/dealertrack/1.0/defectdistribution.json",
+									contentType: "application/json",
+									data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("versionUserPref").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprint").split('|').toString()),
+												groupbyField: gadgets.util.unescapeString(this.getPref("groupbyField"))
+									}
+                                };
+                            }
+                        },
+                        {
+                            key: "releaseburn",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/releaseversionburndown.json",
+									contentType: "application/json",
+									data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+											version: gadgets.util.unescapeString(this.getPref("versionUserPref").split('|').toString())
+									}
+                                };
+                            }
+                        },
+						{
+                            key: "firsttimefix",
+                            ajaxOptions: function ()
+                            {
+                                return {
+									url: "/rest/dealertrack/1.0/firsttimefix.json",
+									contentType: "application/json",
+									data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("versionUserPref").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprint").split('|').toString())
+												
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(_restdata) {
+			console.log(_restdata); 
+			var noofComitted = new Array();
+			var noofCompleted = new Array();
+			var sprint = new Array();
+			if (_restdata.length < 1) {
+				noofCompleted.push(0);
+				noofComitted.push(0);
+				sprint.push('');
+			}
+			 var s1 = [5, 57,68, 48,28, 55];     
+			// var ticks = ['1.1.1 R', '1.1.1 P', 'AHFC1.2', '1.1.1 R','1.1.1 p','1.2.1 R'];
+			if (_restdata.length > 0) {
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {
+				  if(_restdata[_i].sprint == 'Total' || _restdata[_i].sprint == 'Average'){
+						
+				  } else {
+						sprint.push((_restdata[_i].release == '')?'None':_restdata[_i].sprint);
+						noofComitted.push((_restdata[_i].comitted == '')? 0 : parseInt(_restdata[_i].comitted));
+						noofCompleted.push((_restdata[_i].completed == '')? 0 : parseInt(_restdata[_i].completed));
+					}
+				}
+			}
+			console.log('noofComitted: '+noofComitted);
+			console.log('noofCompleted: '+noofCompleted);
+			console.log(sprint);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			plot1 = AJS.$.jqplot('velocityChart', [noofComitted, noofCompleted], {
+            // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+            //animate: !AJS.$.jqplot.use_excanvas,
+			seriesColors: ['darkgray', 'green'],
+            seriesDefaults:{
+				renderer:AJS.$.jqplot.BarRenderer,
+				rendererOptions: {
+					fillToZero: false, 
+					barWidth:9,
+					barPadding:2,
+					barMargin:3
+				},
+				pointLabels: {show: true},
+				trendline: {show: false, color: 'gray'}
+			},
+			 grid:{ background: 'white'},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series:[
+				{label:'Committed'},
+				{label:'Completed', trendline: {show: true}} 
+			],
+			 // Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+			  show: true,
+			  location: 'e'
+			},
+			axesDefaults:{
+				tickOptions: {
+					showGridline: false
+				}
+			},
+            axes: {
+                xaxis: {
+                    renderer: AJS.$.jqplot.CategoryAxisRenderer,
+                    ticks: sprint,
+					tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer,
+					tickOptions: {
+					  angle: -30,
+					  fontSize:'8pt',
+					  fontFamily: 'Helvetica',
+					  fontWeight: 'normal',
+					  textColor : '#211717'
+					},
+					label:'Sprint',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'						
+					},
+					pad:1	
+                },
+				 // Pad the y axis just a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					min:0,
+					pad:1.2,
+					tickOptions: {formatString: '%d'},
+					label:'Story Points',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'
+					}
+				}
+            },
+            highlighter: { show: false }
+        });
+     plot1.redraw();
+
+	plot1.replot( {axes: {
+					xaxis: {
+						renderer: AJS.$.jqplot.CategoryAxisRenderer,
+						pad:1	
+						}
+					},
+					yaxis: {
+						min:0,
+						pad:1.2					
+					}
+				}
+			);
+	AJS.$('#velocityChart').on('jqplotDataHighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+		});
+		AJS.$('#velocityChart').on('jqplotDataUnhighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+		});
+         AJS.$('#velocityChart').bind('jqplotDataClick', 
+            function (ev, seriesIndex, pointIndex, data) {
+                //$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+				var lnk='';				
+				var  index = data.toString().split(',')[0];
+				var  committed = _restdata[index-1].committedurl;
+				var  completed = _restdata[index-1].completedurl;
+				if(seriesIndex==0)
+					lnk =committed;
+				else 
+					lnk =completed;
+				console.log( 'url: ' + lnk );
+				top.location.href = lnk;
+				//console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+            }
+        );
+			console.log(plot1);
+			
+		}	
+		drawchart_TR1=function(_restdata) {
+		//var allIssuesObj = getAllIssues(versionId, 0);
+		//var burndownSP = getbacklogSP(allIssuesObj);
+		//var chartData = getChartObj(allIssuesObj);
+		//console.log(allIssuesObj);
+		console.log(_restdata);
+		AJS.$.jqplot.config.enablePlugins = true;
+		
+		//var committed = [];
+		//var completed = [];
+		var ticks = [];
+		var SP = [];
+		var optimistic = [];
+		var pessimistic = [];
+		var planned = [];
+		if (_restdata.length < 1) {
+				SP.push(0);
+				optimistic.push(0);
+				pessimistic.push(0);
+				planned.push(0);
+				ticks.push('');
+			}
+		if (_restdata.length > 0) {
+		for (var _i=0; _i<_restdata.length; _i++) {
+			if (_restdata[_i]['backlog']!='') SP.push(parseInt(_restdata[_i]['backlog']));
+			ticks.push(_restdata[_i]['name']);			
+			var opt = (_restdata[_i]['optimistic']);
+			var pst = (_restdata[_i]['pesimistic']);
+			var plan = (_restdata[_i]['planned']);
+			optimistic.push(parseInt(opt));
+			pessimistic.push(parseInt(pst));
+			planned.push(parseInt(plan));
+		}
+		}
+			console.log(SP);
+			console.log(optimistic);
+			console.log(pessimistic);
+			console.log(planned);
+		//var committed = [10, 22, 64, 75, 100, 10];
+		//var completed = [15, 20, 50, 40, 80, 5];
+		// Can specify a custom tick Array.
+		// Ticks should match up one for each y value (category) in the series.
+		//var ticks = ['Sprint1', 'Sprint 2', 'Sprint 3', 'Sprint 4', 'Sprint 5', 'Sprint 6'];
+		plot1 = AJS.$.jqplot('chart_div', [SP,optimistic,pessimistic, planned], {
+			// The "seriesDefaults" option is an options object that will
+			// be applied to all series in the chart.
+			seriesDefaults:{
+				lineWidth:1.2,
+				pointLabels: {show: false},
+				trendline: {show: false, color: 'gray'},
+				markerRenderer: AJS.$.jqplot.MarkerRenderer, 
+				markerOptions: {
+					size: 0
+				}			
+			},
+			grid:{ background: 'white'},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series:[
+				{label:'Burndown', pointLabels: {show: true}, markerOptions: {size: 5}},
+				{label:'Optimistic'},	
+				{label:'Pessimistic'},
+				{label:'Planned'}			
+			],
+			// Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+			  show: true,
+			  location: 'e'
+			},
+			axesDefaults:{
+				tickOptions: {
+					showGridline: false
+				}
+			},
+			
+			axes: {
+				// Use a category axis on the x axis and use our custom ticks.
+				xaxis: {
+					renderer: AJS.$.jqplot.CategoryAxisRenderer,
+					ticks: ticks, 
+					tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer,
+					tickOptions: {
+					  angle: -30,
+					  fontSize:'6pt',
+					  fontFamily: 'Helvetica',
+					  fontWeight: 'normal'
+					},
+					label:'Sprint',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'
+					},
+					min:0
+				},
+				// Pad the y axis just a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					min:0,
+					pad: 1.2,	
+					tickOptions: {formatString: '%d'},
+					label:'Story Points',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'
+					}
+				}
+			},
+			seriesColors: ['blue', 'green', 'red', 'black']
+		});
+		
+		//plot1.redraw();
+		plot1.replot( {resetAxes: false } );
+		//gadgets.window.setTitle("Release Burndown (Optimistic\Pessimistic)");	
+	}
+	drawchart_dis=function(_restdata) {
+			_restdata.sort(sortBy('data'));
+			//console.log(_restdata); 
+			var _data = [{"severity": "None","data": "412"},{"severity": "Medium","data": "39"},{"severity": "Low","data": "99"},{"severity": "High","data": "21"}];
+			//_restdata = _data;
+			var pidata = new Array();
+			var other;
+			switch((new gadgets.Prefs()).getString('groupbyField')) {
+				case 'Severity':
+				  other = 'None'
+				  break;
+				case 'Assignee':
+				  other = 'Not Assigned'
+				  break;
+				case 'Sprint':
+				  other = 'Backlog'
+				  break;
+				default:
+				  other = 'Other';
+			};
+			for (var _i=0, _len=_restdata.length; _i<_len; _i++) {
+				var isEmptyOrOther = (_restdata[_i].severity == '' || _restdata[_i].severity == 'Other' );
+				pidata.push([isEmptyOrOther?other:_restdata[_i].severity, +_restdata[_i].data, _restdata[_i].url]);
+			}
+			//console.log(pidata);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			var plot1 = AJS.$.jqplot('defectdistChart', [pidata], 
+				{ 
+					animate: !AJS.$.jqplot.use_excanvas,
+					grid: {
+						drawBorder: false, 
+						drawGridlines: false,
+						background: '#ffffff',
+						shadow:false
+					},
+					//seriesColors: [ "#ADB8D6", "#BFD482", "#CC6600", "#FFFF99", "#20B2AA", "#FFA500","#6A5ACD", "#8dcd5a", "#ff0000" ],
+					seriesColors: [ "#5193C8", "#D7561F", "#769810", "#DEE439", "#61BE43", "#00367A","#F58530", "#ECEE00", "#30B5AA", "#ff0000" ],
+					seriesDefaults: {
+						renderer: AJS.$.jqplot.PieRenderer, 
+						rendererOptions: {
+						  showDataLabels: true,
+						  padding: 5
+						}
+					},
+					highlighter: {
+						show: true,
+						formatString:'%s', 
+						tooltipLocation:'sw', 
+						useAxesFormatters:false
+					},	  				  
+					cursor:{
+						style: 'pointer',
+						show:true,
+						showTooltip: true
+					},
+					legend:{
+						show:true, 
+						//placement: 'outside', 
+						fontSize: '11px',
+						rendererOptions: {
+							numberRows: 2
+						}, 
+						location:'s',
+						marginTop: '0px', 
+						marginBottom: '0px',
+						padding:0
+					}
+				}
+			);
+			AJS.$('#defectdistChart').on('jqplotDataHighlight', function () {
+				AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+			});
+			AJS.$('#defectdistChart').on('jqplotDataUnhighlight', function () {
+				AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+			});
+			
+			AJS.$('#defectdistChart').on('jqplotDataClick', 
+				function (ev, seriesIndex, pointIndex, data) {
+					//console.log(data.toString().split(',')[2]);
+					top.location.href = data.toString().split(',')[2];
+					console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+				}
+			);
+//			console.log(plot1);			
+		}
+		drawchart_F1=function(_restdata,gadget) {
+			//_restdata.sort(sortBy('data'));
+			//console.log(_restdata); 
+			//var _data = [{"Severity":"Critical","FistTimeFix":"2","Rework":"1","TotalDef":"3"},{"Severity":"Total","FistTimeFix":"2","Rework":"1","TotalDef":"3"},{"Severity":"FTF","FistTimeFix":"66.0","Rework":"33.0%","TotalDef":"100%"}];
+			//_restdata = _data;
+			var pidata = new Array();
+			if(_restdata.length<1){
+				pidata.push(['None', 0]);
+			}
+			if(_restdata.length>0){
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {
+					if(_restdata[_i].Severity=='FTF'){
+					pidata.push(['First Time Fix', +_restdata[_i].FistTimeFix,_restdata[_i].URLForFF ]);
+					pidata.push(['Reworked', +_restdata[_i].Rework,_restdata[_i].URLForRework]);
+					}
+				}
+			}
+			console.log(pidata);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			var plot1 = AJS.$.jqplot('firsttimefixChart', [pidata], 
+				{ 
+					animate: !AJS.$.jqplot.use_excanvas,
+					grid: {
+						drawBorder: false, 
+						drawGridlines: false,
+						background: '#ffffff',
+						shadow:false
+					},
+					//seriesColors: [ "#ADB8D6", "#BFD482", "#CC6600", "#FFFF99", "#20B2AA", "#FFA500","#6A5ACD", "#8dcd5a", "#ff0000" ],
+					seriesColors: [ "#5193C8", "#D7561F", "#769810", "#DEE439", "#61BE43", "#00367A","#F58530", "#ECEE00", "#30B5AA", "#ff0000" ],
+					seriesDefaults: {
+						renderer: AJS.$.jqplot.PieRenderer, 
+						rendererOptions: {
+						  showDataLabels: true,
+						  padding: 5
+						}
+					},
+					highlighter: {
+						show: true,
+						formatString:'%s', 
+						tooltipLocation:'sw', 
+						useAxesFormatters:false
+					},	  				  
+					cursor:{
+						style: 'pointer',
+						show:true,
+						showTooltip: true
+					},
+					legend:{
+						show:true, 
+						//placement: 'outside', 
+						fontSize: '11px',
+						rendererOptions: {
+							numberRows: 2
+						}, 
+						location:'s',
+						marginTop: '0px', 
+						marginBottom: '0px',
+						padding:0
+					}
+				}
+			);
+			AJS.$('#firsttimefixChart').on('jqplotDataHighlight', function () {
+				AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+			});
+			AJS.$('#firsttimefixChart').on('jqplotDataUnhighlight', function () {
+				AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+			});
+			
+			AJS.$('#firsttimefixChart').on('jqplotDataClick', 
+				function (ev, seriesIndex, pointIndex, data) {
+					console.log(pidata[pointIndex][2]);
+					top.location.href = pidata[pointIndex][2];
+					//console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+				}
+			);
+			AJS.$('select').on('change', function () {
+				gadget.savePref("projectId",AJS.$('#projectSel').val());
+				gadget.savePref("versionUserPref",AJS.$('#versionSel').val());								
+				populateVersions(AJS.$('#versionSel'),gadget);
+			});
+			AJS.$('input').on('click', function () {
+				//alert("Project id  "+ gadget.getPref("projectId"));
+				//alert("versionUserPref id  "+gadget.getPref("versionUserPref"));							
+				gadget.showView("true");
+				//window.location.reload(true);
+			});
+//			console.log(plot1);			
+		}
+		function populateVersions(versionMultiSelectList,gadget){
+			//alert('on change '+gadget.getPref("projectId"));
+			versionMultiSelectList.empty();
+			var versions = AJS.$.ajax({
+				key: "versions",
+				url: "/rest/api/2/project/" + gadget.getPref("projectId")+ "/versions",
+				contentType: "application/json",
+				// data: {
+					// jql : selectedProjectId,
+					// returnIds: true
+				// },
+				success: function (response)
+				{
+					var selectedVersions = gadget.getPref("versionUserPref").split("|");
+					console.log('Selected Versions: ' + selectedVersions.toString());
+					versions = response;
+					//if (includeAllOption) {
+						versions.unshift({id:"All", name:"All Versions"});
+					//}
+					AJS.$(versions).each(function()
+					{
+						var versionOption = AJS.$("<option/>").attr("value", this.id).text(this.name);
+						for(var i = 0, l = selectedVersions.length; i < l; i++) {
+							if(selectedVersions[i] == this.id){
+								versionOption.attr("selected", "selected");
+							}
+						}
+							
+						versionMultiSelectList.append(versionOption);
+					   
+					});
+
+				}
+			});
+			
+		}
+		function sortBy(prop){
+		   return function(a,b){
+			  return (a[prop] > b[prop])?-1:(a[prop] < b[prop])?1:0;
+		   }
+		};
+		</script>		
+		
+		
+		<br>
+		<br>
+		<table border=1 width="100%">
+		<tr> <th align='left' bgcolor='#120A2A'> <font color='#FFFFFF'> &nbsp;&nbsp; Velocity Chart </font></th> <th align='left' bgcolor='#120A2A'> <font color='#FFFFFF'> &nbsp;&nbsp; First Time Fix </font> </th></tr>
+		 <tr>
+			<td><div id="velocityChart"> </div>	</td> 
+			<td> <div id="firsttimefixChart"> </div>  </td>
+			
+		 </tr>
+		 <tr> <th align='left' bgcolor='#120A2A'> <font color='#FFFFFF'> &nbsp;&nbsp;Release Burndown </font></th> <th align='left' bgcolor='#120A2A'> <font color='#FFFFFF'> &nbsp;&nbsp; Defect Distribution </font> </th></tr>
+		  <tr>
+			<td><div id="chart_div"> </div>	</td> 
+			<td> <div id="defectdistChart"> </div>  </td>
+			
+		 </tr>
+		</table>
+		
+	
+		
+		<div id="info1"> </div>
+	]]>
+
+  </Content></Module>

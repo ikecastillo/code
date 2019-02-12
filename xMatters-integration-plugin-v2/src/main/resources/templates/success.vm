@@ -1,0 +1,192 @@
+<html>
+<head>
+    <title>$action.getText('xMatters-webwork-module.integration.issue')</title>
+    #if (${action.issueObject})
+        <meta name="decorator" content="issueaction" />
+    #else
+        <meta name="decorator" content="message" />
+    #end
+</head>
+<body>
+
+
+#if(${action.issueObject})
+    <form action="XMattersWebWork.jspa" class="aui" id="schedule-issue">
+        <div class="form-body">
+            <div class="hidden">
+                <input name="atl_token" type="hidden" value="${action.xsrfToken}">
+            </div>
+            <h2 class="dialog-title">
+			 <fieldset>
+               		<div class="aui-message warning">
+						<p class="title">
+							<span class="aui-icon icon-warning"></span>
+							<strong>Alert: $action.getText('xMatters-webwork-module.integration')</strong>
+						</p>						
+					</div>
+            </fieldset>
+			</h2>
+			<fieldset class="group">
+
+				#if( ${action.incidentType} == "External" )
+
+                    <div class="check-box" id="subbridgexmatters">
+						#if( $action.solutionGroup.contains("F&I") || $action.solutionGroup.contains("Honda") )
+							  ## Special case for product as null
+							  #*#if (!$action.productField)
+                                  <input type="checkbox" name="mgmtBridge" id="mgmtBridge" class="subconfbridge" value="Management"
+                                         checked="checked">
+                                  <label for="mgmtBridge">Management Bridge</label>
+                                  <input type="checkbox" name="techBridge" id="techBridge" class="subconfbridge" value="Technical"
+                                         checked="checked">
+                                  <label for="techBridge">Technical Bridge</label> <br/>
+                                  <legend><span>Options:</span></legend>
+                                  <div class="radio">
+                                      <input class="radio" type="radio" checked="checked"
+                                             name="radiobuttons" id="radioButtonOne">
+                                      <label for="radioButtonOne">External Incident - Conference Bridge </label>
+                                  </div>
+							  #end*#
+							  #if ($action.productField.toLowerCase().contains("partner"))
+								<input type="checkbox" name="mgmtBridge" id="mgmtBridge" class="subconfbridge" value="Management"
+									   checked="checked">
+								<label for="mgmtBridge">Management Bridge</label>
+								<input type="checkbox" name="techBridge" id="techBridge" class="subconfbridge" value="Technical">
+								<label for="techBridge">Technical Bridge</label> <br/>
+								<legend><span>Options:</span></legend>
+								<div class="radio">
+									<input class="radio" type="radio" checked="checked"
+										   name="radiobuttons" id="radioButtonOne">
+									<label for="radioButtonOne">External Incident - Conference Bridge </label>
+								</div>
+						      #else
+                                  <input type="checkbox" name="mgmtBridge" id="mgmtBridge" class="subconfbridge" value="Management"
+                                         checked="checked">
+                                  <label for="mgmtBridge">Management Bridge</label>
+                                  <input type="checkbox" name="techBridge" id="techBridge" class="subconfbridge" value="Technical"
+										  checked="checked">
+                                  <label for="techBridge">Technical Bridge</label> <br/>
+                                  <legend><span>Options:</span></legend>
+                                  <div class="radio">
+                                      <input class="radio" type="radio" checked="checked"
+                                             name="radiobuttons" id="radioButtonOne">
+                                      <label for="radioButtonOne">External Incident - Conference Bridge </label>
+                                  </div>
+							  #end
+						#elseif($action.solutionGroup.equals("DDC") || $action.solutionGroup.equals("DDC-xMatters-Test") )
+                            <input type="checkbox" name="mgmtBridge" id="mgmtBridge" class="subconfbridge" value="Management"
+                                   checked="checked">
+                            <label for="mgmtBridge">Management Bridge</label>
+                            <input type="checkbox" name="techBridge" id="techBridge" class="subconfbridge" value="Technical"
+                                   checked="checked">
+                            <label for="techBridge">Technical Bridge</label> <br/>
+                            <legend><span>Options:</span></legend>
+                            <div class="radio">
+                                <input class="radio" type="radio" checked="checked"
+                                       name="radiobuttons" id="radioButtonOne">
+                                <label for="radioButtonOne">External Incident - Conference Bridge </label>
+                            </div>
+                            <div class="radio">
+                                <input class="radio" type="radio"
+                                       name="radiobuttons" id="radioButtonTwo" checked="checked">
+                                <label for="radioButtonTwo">External Incident - No Conference Bridge </label>
+                            </div>
+						#else
+                            <input type="checkbox" name="mgmtBridge" id="mgmtBridge" class="subconfbridge" value="Management">
+                            <label for="mgmtBridge">Management Bridge</label>
+                            <input type="checkbox" name="techBridge" id="techBridge" class="subconfbridge" value="Technical"
+									checked="checked">
+                            <label for="techBridge">Technical Bridge</label> <br/>
+                            <legend><span>Options:</span></legend>
+                        	<div class="radio">
+								<input class="radio" type="radio" checked="checked"
+									   name="radiobuttons" id="radioButtonOne">
+								<label for="radioButtonOne">External Incident - Conference Bridge </label>
+							</div>
+						#end
+
+                    </div>
+				##</div>
+				#if(!$action.solutionGroup.equals("DDC") && !$action.solutionGroup.equals("DDC-xMatters-Test") )
+					<div class="radio">
+						<input class="radio" type="radio"
+							name="radiobuttons" id="radioButtonTwo">
+						<label for="radioButtonTwo">External Incident - No Conference Bridge </label>
+					</div>
+				#end
+				<div class="radio" style="display:none">
+					<input class="radio" type="radio"  
+						name="radiobuttons" id="radioButtonThree">
+					<label for="radioButtonOne">Internal Incident - Conference Bridge </label>
+				</div>
+				<div class="radio" style="display:none">
+					<input class="radio" type="radio" 
+						name="radiobuttons" id="radioButtonFour">
+					<label for="radioButtonTwo">Internal Incident - No Conference Bridge </label>	
+				</div>
+			#else 
+				<div class="radio" style="display:none">
+					<input class="radio" type="radio"  
+						name="radiobuttons" id="radioButtonOne">
+					<label for="radioButtonOne">External Incident - Conference Bridge </label>
+				</div>
+				<div class="radio" style="display:none">
+					<input class="radio" type="radio" 
+						name="radiobuttons" id="radioButtonTwo">
+					<label for="radioButtonTwo">External Incident - No Conference Bridge </label>	
+				</div>
+				<div class="radio">
+					<input class="radio" type="radio"  checked="checked"
+						name="radiobuttons" id="radioButtonThree">
+					<label for="radioButtonOne">Internal Incident - Conference Bridge </label>
+				</div>
+				<div class="radio">
+					<input class="radio" type="radio" 
+						name="radiobuttons" id="radioButtonFour">
+					<label for="radioButtonTwo">Internal Incident - No Conference Bridge </label>	
+				</div>
+				#end
+			</fieldset>
+            <div class="hidden">
+                <input name="id" type="hidden" value="${action.id}">
+                <input name="returnUrl" type="hidden" value="$!{action.returnUrl}">
+            </div>
+            <fieldset>
+                <legend><span>${action.getText('xMatters-webwork-module.integration.details')}</span></legend>
+                <div class="aui-field-versionspicker frother-control-renderer">
+                    $action.getText('xMatters-webwork-module.integration.message')
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="buttons-container form-footer">
+            <div class="buttons">
+                <input accesskey="s" class="button" id="schedule-issue-submit" name="Create" title="Press Ctrl+Alt+s to submit this form" type="submit" value="Create">
+                <a accesskey="`" class="button" href="/browse/${action.issue.key}" id="schedule-issue-cancel" title="Press Ctrl+Alt+` to cancel">Cancel</a>
+            </div>
+        </div>
+    </form>
+#else
+<div class="remove-me">
+    <h1>${action.getText('common.words.error')}</h1>
+    <div class="aui-message error"><span class="aui-icon icon-error"></span>
+        #foreach($message in $action.flushedErrorMessages)
+            <p>$message</p>
+        #end
+    </div>
+</div>
+
+#end
+
+<script>
+	//listener for External no Conf Bridge radio button
+   /* AJS.$("#radioButtonTwo").change(function() {
+        var ischecked= AJS.$(this).is(':checked');
+        if(ischecked) {
+            AJS.log('Checked No Conf');
+            AJS.$('.subconfbridge').attr('checked', false);
+        }
+    });*/
+</script>
+</body>
+</html>

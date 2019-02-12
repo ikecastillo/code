@@ -1,0 +1,160 @@
+<html>
+<head>
+    <title>$i18n.getText("xmatters.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jira.xmatters.intgt.plugin.xMatters-integration-plugin:xMatters-integration-plugin-v2-resources1.0")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+</head>
+<body>
+<div class="header">
+    <h3 class="formtitle">$i18n.getText("xmatters.admin.eventform.label")</h3>
+</div>
+<p/>
+<button id="event-config-button" class="aui-button">$i18n.getText("xmatters.admin.eventform.addeventconfig")</button>
+
+<!-- Render the dialog to add event configuration -->
+<section role="dialog" id="event-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">$i18n.getText("xmatters.admin.eventform.dialog.header")</h2>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content">
+        <form action="#" method="post" id="addeventconfigform" class="aui">
+            <fieldset>
+                <div class="field-group">
+                    <!-- for form API ID -->
+                    <label for="formAPIId">
+                        $i18n.getText("xmatters.admin.eventform.dialog.formAPIId")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <input class="text mandatoryevtField" type="text" id="formAPIId" name="formAPIId" title="Form API ID">
+                    <div class="description">$i18n.getText("xmatters.admin.eventform.descriptionformApiId")</div>
+                    <div class="error"></div>
+                </div>
+
+                <div class="field-group">
+                    <!-- for xMatters Form/Template Name -->
+                    <label for="formTemplateName">
+                        $i18n.getText("xmatters.admin.eventform.dialog.formTemplateName")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <input class="text mandatoryevtField" type="text" id="formTemplateName" name="formTemplateName" title="Form Template Name">
+                    <div class="description">$i18n.getText("xmatters.admin.eventform.descriptionformTemplateName")</div>
+                    <div class="error"></div>
+                </div>
+
+                <div class="field-group">
+                    <!-- for xMatters Form/Web Service URL -->
+                    <label for="formWebServiceURL">
+                        $i18n.getText("xmatters.admin.eventform.dialog.formWebServiceURL")
+                        <span class="aui-icon icon-required"> required</span>
+                    </label>
+                    <input class="text mandatoryevtField" type="text" id="formWebServiceURL" name="formWebServiceURL" title="Form Web Service URL">
+                    <div class="description">$i18n.getText("xmatters.admin.eventform.descriptionformWebServiceURL")</div>
+                    <div class="error"></div>
+                </div>
+
+                <div class="field-group">
+                    <!-- for Response Code Available UUID -->
+                    <label for="responseCodeAvailableUUID">
+                        $i18n.getText("xmatters.admin.eventform.dialog.responseCodeAvailableUUID")
+                    </label>
+                    <input class="text optionalFieldEvt" type="text" id="responseCodeAvailableUUID" name="responseCodeAvailableUUID"
+                           title="Response Code Available UUID">
+                    <div class="description">$i18n.getText("xmatters.admin.eventform.descriptionresponseCodeAvailableUUID")</div>
+                    <div class="error"></div>
+                </div>
+
+                <div class="field-group">
+                    <!-- for Response Code Not Available UUID -->
+                    <label for="responseCodeNotAvailableUUID">
+                        $i18n.getText("xmatters.admin.eventform.dialog.responseCodeNotAvailableUUID")
+                    </label>
+                    <input class="text optionalFieldEvt" type="text" id="responseCodeNotAvailableUUID" name="responseCodeNotAvailableUUID"
+                           title="Response Code Not Available UUID">
+                    <div class="description">$i18n.getText("xmatters.admin.eventform.descriptionresponseCodeNotAvailableUUID")</div>
+                    <div class="error"></div>
+                </div>
+            <fieldset>
+        </form>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="event-dialog-add-button" class="aui-button">
+                $i18n.getText("xmatters.admin.eventform.dialog.addbutton")
+            </button>
+            <button id="event-dialog-cancel-link" class="aui-button aui-button-link">
+                $i18n.getText("xmatters.admin.eventform.dialog.cancellink")
+            </button>
+        </div>
+    </footer>
+</section>
+<!-- this finishes the add event dialog-->
+
+<!-- Render the confirmation dialog to delete an xmatters event config -->
+<section role="dialog" id="delete-event-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">$i18n.getText("xmatters.admin.deleteeventform.dialog.header")</h2>
+    </header>
+    <!-- Main dialog content -->
+    <div class="aui-dialog2-content" id="deleteeventconfirmationtext">
+        <strong>$i18n.getText("xmatters.admin.deleteeventform.dialog.message.areyousure")</strong>
+        <p/>
+        <table class="aui">
+            <thead>
+            <tr>
+                <th>FORMAPI ID</th>
+                <th>xMatters Form / Template Name</th>
+                <th>xMatters Form WebService URL</th>
+                <th>Response Code/Available UUID</th>
+                <th>Response Code/Not Available UUID</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td id="formapiidconf"></td>
+                <td id="xmattersFormconf"></td>
+                <td id="xmattersformwsconf"></td>
+                <td id="responsecodeavconf"></td>
+                <td id="responsecodenotavconf"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+            <button id="event-dialog-delete-button" class="aui-button">
+                $i18n.getText("xmatters.admin.deleteeventform.dialog.deletebutton")
+            </button>
+            <button id="event-dialog-delete-cancel-link" class="aui-button aui-button-link">
+                $i18n.getText("xmatters.admin.deleteeventform.dialog.cancellink")
+            </button>
+        </div>
+    </footer>
+</section>
+<!-- this  finishes the delete event confirmation dialog -->
+
+<table id="eventstable" class="aui aui-table-sortable">
+    <thead>
+    <tr>
+        <th>FORMAPI ID</th>
+        <th>xMatters Form / Template Name</th>
+        <th>xMatters Form WebService URL</th>
+        <th>Response Code/Available UUID</th>
+        <th>Response Code/Not Available UUID</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+define("jira/mail/views/bulk-options-view",["jira/mail/views/options-view","jquery"],function(a,b){return a.extend({setSelectedId:function(d){var c=this.collection.find(function(e){return e.get("id")==d});this.model.set({bulk:c.get("id")})},render:function(){var c=this.model.get("bulk");if(c){b(this.el).val(c)}return this}})});

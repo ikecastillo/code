@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>$i18n.getText("pagerduty.admin.mappingform.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jira.pagerduty.intgt.plugin.PagerDuty-integration-plugin:PagerDuty-integration-plugin-resources1.0")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+  </head>
+  <body>
+    <div class="header">
+            <h3 class="formtitle">$i18n.getText("pagerduty.admin.mappingform.label")</h3>
+    </div>
+    <p/>
+    <button id="jirafieldaddbutton" class="aui-button">$i18n.getText("pagerduty.admin.mappingform.addmapping")</button>
+
+    <!-- Render the dialog to add field mappings -->
+    <section role="dialog" id="jirafieldadd-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+        <!-- Dialog header -->
+        <header class="aui-dialog2-header">
+            <!-- The dialog's title -->
+            <h2 class="aui-dialog2-header-main">$i18n.getText("pagerduty.admin.mappingform.dialog.header")</h2>
+        </header>
+        <!-- Main dialog content -->
+        <div class="aui-dialog2-content">
+            <form action="#" method="post" id="addmappingform" class="aui">
+                <fieldset>
+                    <div class="field-group">
+                        <!-- for JIRA field -->
+                        <label for="jiraField">
+                            $i18n.getText("pagerduty.admin.mappingform.dialog.jiraField")
+                            <span class="aui-icon icon-required"> required</span>
+                        </label>
+                        <select class="select" id="jiraField" name="jiraField" title="Select JIRA Field">
+                            <option>Select</option>
+                        </select>
+                        <div class="error"></div>
+                    </div>
+                <fieldset>
+            </form>
+        </div>
+        <!-- Dialog footer -->
+        <footer class="aui-dialog2-footer">
+            <!-- Actions to render on the right of the footer -->
+            <div class="aui-dialog2-footer-actions">
+                <button id="jiraField-dialog-add-button" class="aui-button">
+                    $i18n.getText("pagerduty.admin.mappingform.dialog.addbutton")
+                </button>
+                <button id="jiraField-dialog-cancel-link" class="aui-button aui-button-link">
+                    $i18n.getText("pagerduty.admin.mappingform.dialog.cancellink")
+                </button>
+            </div>
+        </footer>
+    </section>
+    <!-- this finishes the add mapping dialog-->
+
+    <!-- Render the confirmation dialog to delete a field mapping -->
+    <section role="dialog" id="delete-jirafield-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+        <!-- Dialog header -->
+        <header class="aui-dialog2-header">
+            <!-- The dialog's title -->
+            <h2 class="aui-dialog2-header-main">$i18n.getText("pagerduty.admin.deletemappingform.dialog.header")</h2>
+        </header>
+        <!-- Main dialog content -->
+        <div class="aui-dialog2-content" id="deleteconfirmationtext">
+            <strong>$i18n.getText("pagerduty.admin.deletemappingform.dialog.message.areyousure")</strong>
+            <p/>
+            <table class="aui">
+                <thead>
+                    <tr>
+                        <th>JIRA Field</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="jirafielddelconf"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Dialog footer -->
+        <footer class="aui-dialog2-footer">
+            <!-- Actions to render on the right of the footer -->
+            <div class="aui-dialog2-footer-actions">
+                <button id="dialog-delete-jirafield-button" class="aui-button">
+                    $i18n.getText("pagerduty.admin.deletemappingform.dialog.deletebutton")
+                </button>
+                <button id="dialog-delete-jirafield-cancel-link" class="aui-button aui-button-link">
+                    $i18n.getText("pagerduty.admin.deletemappingform.dialog.cancellink")
+                </button>
+            </div>
+        </footer>
+    </section>
+    <!-- this  finishes the delete mapping confirmation dialog -->
+
+    <table id="pagerdutymappingstable" class="aui aui-table-sortable">
+        <thead>
+        <tr>
+            <th>JIRA Field</th>
+            <th>Delete?</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+  </body>
+</html>

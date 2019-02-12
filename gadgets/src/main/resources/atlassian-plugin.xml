@@ -1,0 +1,110 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+
+    </plugin-info>
+	<!-- Iteration 1 - QAMetrics -->
+	<!--<gadget key="configscreentest" location="gadgets/darRefactor.xml"/>-->
+    <gadget key="dar" location="gadgets/dar.xml"/> <!-- Defect Acceptance Ratio --> 
+	<!-- <gadget key="releaseburndown" location="gadgets/releaseburndown.xml"/> -->
+    <!--<gadget key="releasevelocity" location="gadgets/releasevelocity.xml"/> -->
+	<!--  <gadget key="ReleaseBurndownTrends" location="gadgets/ReleaseBurndownTrends.xml"/> -->
+	<!-- <gadget key="ProjectBurndownTrends" location="gadgets/ProjectBurndownTrends.xml"/>-->
+	<!-- <gadget key="HitRatio" location="gadgets/hitratio.xml"/> --> <!-- Hit Ratio -->
+	<!--<gadget key="RickDashboard" location="gadgets/RickDashboard.xml"/>-->
+	<gadget key="POCkDashboard" location="gadgets/POCDashboard.xml"/>
+	<gadget key="DefectDistPie" location="gadgets/DefectDistPie.xml"/> <!-- Defect Distribution --> 
+	<gadget key="DefectDistTableView" location="gadgets/DefectDistTable.xml"/><!-- Defect Distribution Table View--> 
+	<gadget key="DefectDistBar" location="gadgets/DefectDistBar.xml"/> <!-- Emergency tickets per Release -->
+	<!-- Iteration2 QAMetrics gadgets -->
+	<gadget key="Velocity" location="gadgets/Velocity.xml"/>
+	<gadget key="releaseburndownv2" location="gadgets/releaseburndown_v2.xml"/>
+	<gadget key="projectburndownv2" location="gadgets/projectburndown_v2.xml"/>
+	<gadget key="FirstTimeFixPieChart" location="gadgets/firsttimefix.xml"/>
+	<gadget key="FirstTimeFixTableView" location="gadgets/firsttimefixtableview.xml"/>
+	<gadget key="FirstTimeFixReworkView" location="gadgets/firsttimefix_reworkpie.xml"/>
+	<gadget key="DefectDensityAgile" location="gadgets/DefectDensityAgile.xml"/>
+	<gadget key="DefectTurnAroundTime" location="gadgets/defectturnaround.xml"/>
+	<gadget key="ProjectDLRTableView" location="gadgets/ProjectDLRTableView.xml"/>
+	<gadget key="ProjectDLRPie" location="gadgets/ProjectDLRPie.xml"/>
+	<gadget key="ProjectDLRAgile" location="gadgets/ProjectDLRPerSize.xml"/>
+	<gadget key="DefectDensity_V1" location="gadgets/DefectDensity.xml"/>
+	<gadget key="DefectDensity_V2" location="gadgets/DefectDensityTable.xml"/>
+	<gadget key="DefectDensity_V3" location="gadgets/DefectDensityPie.xml"/>
+<!-- 	commented for prod upload on 11/20/2013
+<gadget key="JiraInnotasProjectMapPie" location="gadgets/JiraInnotasProjectMapPie.xml"/>
+	<gadget key="JiraInnotasProjectMapTable" location="gadgets/JiraInnotasProjectMapTable.xml"/>
+ -->	
+	<!-- 	Qmetry gadgets 12/26/2013 commented for prod
+     <gadget key="TestCaseExecutionStatus" location="gadgets/TestCaseExecutionStatusTableView.xml"/>
+	 <gadget key="TestCaseExecutionStatusBar" location="gadgets/TestCaseExecutionStatusBarView.xml"/>
+	 -->
+	 <!-- 	Iteration-3 gadgets 06/06/2014 -->	 
+	 <gadget key="OpenVsClosedMetrics" location="gadgets/OpenClosedMetrics.xml"/>
+	 <gadget key="BacklogElaboration" location="gadgets/BacklogElaboration.xml"/>	
+	 <gadget key="BacklogCumulativeFlow" location="gadgets/BacklogCumulative.xml"/>
+	 <gadget key="VelocityTablerView" location="gadgets/VelocityTablerView.xml"/>
+	
+	  
+	 <!-- 	Iteration-3 gadgets 01/17/2014	not for production
+	 <gadget key="BacklogComposition" location="gadgets/BacklogComposition.xml"/>
+	  -->
+    <resource type="i18n" location="i18n/i18n" name="i18n" />
+
+    <rest key="dt-rest-resources" path="/dt" version="1.0">
+        <description>Provides the REST resource for the project list.</description>
+
+    </rest>
+<!--  	<component key="configurationService" class="com.atlassian.greenhopper.service.configuration.ConfigurationServiceImpl" public="true">
+        <interface>com.atlassian.greenhopper.service.configuration.ConfigurationService</interface>
+    </component> -->
+	<web-resource name="chosen" key="chosen">
+		<resource name="chosen.js" type="download" location="js/chosen_v1.0.0/chosen.jquery.min.js"/>
+		<resource name="chosen.css" type="download" location="js/chosen_v1.0.0/chosen.min.css"/>
+		<resource type="download" name="chosen/chosen-sprite.png" location="js/chosen_v1.0.0/chosen-sprite.png">
+            <param name="content-type" value="image/png"/>
+        </resource>
+		<resource type="download" name="chosen/chosen-sprite@2x.png" location="js/chosen_v1.0.0/chosen-sprite@2x.png">
+            <param name="content-type" value="image/png"/>
+        </resource>		
+       <context>atl.general</context>
+	</web-resource>
+	
+	<web-resource name="dt-gadgets-common-js" key="dt-gadgets-common-js">
+		<resource name="userpref.js" type="download" location="js/userpref.js"/>
+		<resource name="dt-common.js" type="download" location="js/dt-common.js"/>
+       <context>atl.general</context>
+	</web-resource>
+	
+	<web-resource name="jqplotRes" key="jqplot">
+		<!-- Javascript -->
+		<!-- <resource name="jquery.min.js" type="download" location="jqplot/jquery.min.js"/> -->
+		<resource name="excanvas.min.js" type="download" location="jqplot/excanvas.min.js">
+			<param name="conditionalComment" value="lt IE 9"/>
+		</resource>
+		<resource name="vchart.js" type="download" location="vchart.js"/>		
+		<resource name="jquery.jqplot.min.js" type="download" location="jqplot/jquery.jqplot.min.js"/>
+		<resource name="jqplot.barRenderer.min.js" type="download" location="jqplot/plugins/jqplot.barRenderer.min.js"/>
+		<resource name="jqplot.categoryAxisRenderer.min.js" type="download" location="jqplot/plugins/jqplot.categoryAxisRenderer.min.js"/>
+		<resource name="jqplot.pointLabels.js" type="download" location="jqplot/plugins/jqplot.pointLabels.js"/>
+		<resource name="jqplot.trendline.min.js" type="download" location="jqplot/plugins/jqplot.trendline.min.js"/>
+		<resource name="jqplot.canvasTextRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasTextRenderer.min.js"/>
+		<resource name="jqplot.canvasAxisTickRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"/>
+		<resource name="jqplot.dateAxisRenderer.min.js" type="download" location="jqplot/plugins/jqplot.dateAxisRenderer.min.js"/>
+		<resource name="jqplot.pieRenderer.min.js" type="download" location="jqplot/plugins/jqplot.pieRenderer.min.js"/>
+		<resource name="jqplot.cursor.min.js" type="download" location="jqplot/plugins/jqplot.cursor.min.js"/>
+		<resource name="jqplot.canvasOverlay.min.js" type="download" location="jqplot/plugins/jqplot.canvasOverlay.min.js"/>
+		<resource name="jqplot.canvasAxisLabelRenderer.min.js" type="download" location="jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js"/>
+		<!-- CSS -->
+		<resource name="jquery.jqplot.min.css" type="download" location="jqplot/jquery.jqplot.min.css">
+			<property key="content-type" value="text/css"/>
+		</resource>
+		<resource name="excanvas.min.css" type="download" location="jqplot/excanvas.css">
+			<param name="conditionalComment" value="lt IE 9"/>
+		</resource>		
+       <context>atl.general</context>
+</web-resource>
+
+</atlassian-plugin>

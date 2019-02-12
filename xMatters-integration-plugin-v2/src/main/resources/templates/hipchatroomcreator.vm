@@ -1,0 +1,38 @@
+<script>
+    AJS.$(function() {
+            var issuekey = AJS.Meta.get("issue-key");
+            AJS.log("Trying to create hipchat room for the issue " + issuekey);
+            var url = "/rest/hipchat/compatibility/1.0/dedicatedroom";
+            var postData = JSON.stringify( {
+                "hipChatConfigured": true,
+                    "projectKey": "ITIM",
+                    "issueKey": issuekey,
+                    "dedicatedRoom": {
+                        "name": issuekey,
+                        "apiUrl": "https://cm.hipchat.com",
+                        "privateRoom": false
+                    },
+                "hipChatUserName": {},
+                "canCreateRoom": true,
+                    "canAssignRoom": true,
+                    "connectionStatus": "CONNECTED",
+                    "userCanAccessPrivateRoom": false,
+                    "hipChatLoginUrl": "https://api.hipchat.com/sign_in",
+                    "privateRoom": false,
+                    "personalToken": true,
+                    "jirauser": true
+            });
+
+            jQuery.ajax({
+                url: url,
+                type: "POST",
+                data: postData,
+                dataType: "json",
+                contentType: "application/json",
+                success:function(data) {
+                    //Return the room id from the response JSON
+                    AJS.log("Hipchat room with id " + data.roomId + " is for this incident " + issuekey);
+                }
+            });
+    });
+</script>

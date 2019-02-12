@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="com.dt.jira.plugin.salesforce-integration-tests" name="Jira-Salesforce Project-Release Sync up Plugin" plugins-version="2">
+  <plugin-info>
+    <description>This is the com.dt.jira.plugin:salesforce-integration plugin for Atlassian JIRA.</description>
+    <version>1.1</version>
+    <vendor name="Dealertrack Inc." url="http://www.dealertrack.com/"/>
+  </plugin-info>
+  <!-- from our base plugin -->
+  <component-import key="myComponent" interface="com.dt.jira.plugin.scheduler.MyPluginComponent"/>
+  <!-- from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <component key="my-component-wired-test" class="it.com.dt.jira.plugin.scheduler.MyComponentWiredTest" public="true">
+    <interface>it.com.dt.jira.plugin.scheduler.MyComponentWiredTest</interface>
+    <service-properties>
+      <entry key="inProductTest" value="true"/>
+    </service-properties>
+  </component>
+</atlassian-plugin>

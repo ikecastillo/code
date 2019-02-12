@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Pie Chart - % of Innotas\Jira Project mappings "
+                 directory_title="Pie Chart - % of Innotas\Jira Project mappings"
+                 description="Pie Chart - % of Innotas\Jira Project mappings"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">Charts</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="sprint" datatype="hidden" default_value="All"/>
+	<UserPref name="groupbyField" datatype="hidden" default_value="Severity"/>
+	
+    <Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+		<style type="text/css">
+		.jqplot-point-label {
+		  border: 1.5px solid #aaaaaa;
+		  padding: 1px 3px;
+		  background-color: #eeccdd;
+		}
+		</style>
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		prj='';ver='';spr='';grp=''; 
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+						//var grpBy = gadget.getPref("groupbyField");
+						//gadgets.window.setTitle("Defect Distribution - " + grpBy);
+						//this.getView().empty();
+						//this.getView().append(AJS.$('<div id="defectdistChart"> </div>'));
+						drawchart(args.projects);
+					},
+					args: [
+                        {
+                            key: "projects",
+                            ajaxOptions: function ()
+                            {
+                                return {
+									url: "/rest/dealertrack1/1.0/innotasmapping.json",
+									contentType: "application/json",
+									data:  { 
+												
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});			
+		})();
+		function sortBy(prop){
+		   return function(a,b){
+			  return (a[prop] > b[prop])?-1:(a[prop] < b[prop])?1:0;
+		   }
+		};
+		drawchart=function(_restdata) {
+			//_restdata.sort(sortBy('data'));
+			console.log(_restdata); 
+			//var _data = {"mapped":3,"notMapped":32};
+			//_restdata = _data;
+			var pidata = new Array();
+			
+			pidata.push(['Mapped', +_restdata.mapped]);
+			pidata.push(['Not Mapped', +_restdata.notMapped]);
+			
+			console.log(pidata);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			var plot1 = AJS.$.jqplot('defectdistChart', [pidata], 
+				{ 
+					animate: !AJS.$.jqplot.use_excanvas,
+					grid: {
+						drawBorder: false, 
+						drawGridlines: false,
+						background: '#ffffff',
+						shadow:false
+					},
+					//seriesColors: [ "#ADB8D6", "#BFD482", "#CC6600", "#FFFF99", "#20B2AA", "#FFA500","#6A5ACD", "#8dcd5a", "#ff0000" ],
+					seriesColors: [ "#80FF00", "#D7561F", "#769810", "#DEE439", "#61BE43", "#00367A","#F58530", "#ECEE00", "#30B5AA", "#ff0000" ],
+					seriesDefaults: {
+						renderer: AJS.$.jqplot.PieRenderer, 
+						rendererOptions: {
+						  showDataLabels: true,
+						  padding: 5
+						}
+					},
+					highlighter: {
+						show: true,
+						formatString:'%s', 
+						tooltipLocation:'sw', 
+						useAxesFormatters:false
+					},	  				  
+					cursor:{
+						style: 'pointer',
+						show:true,
+						showTooltip: true
+					},
+					legend:{
+						show:true, 
+						//placement: 'outside', 
+						fontSize: '11px',
+						rendererOptions: {
+							numberRows: 2
+						}, 
+						location:'s',
+						marginTop: '0px', 
+						marginBottom: '0px',
+						padding:0
+					}
+				}
+			);
+			
+//			console.log(plot1);			
+		};
+		</script>		
+		<div id="defectdistChart"> </div>
+		<div id="info1"> </div>
+	]]>
+
+  </Content>
+</Module>

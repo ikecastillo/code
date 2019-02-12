@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>$i18n.getText("jirasdfm.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jirasdfieldmapper.JIRASDFieldMapper:JIRASDFieldMapper-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+  </head>
+  <body>
+    <div class="header">
+            <h3 class="formtitle">$i18n.getText("jirasdfm.admin.mappingform.label")</h3>
+    </div>
+    <p/>
+    <button id="jirasdfm-mapping-button" class="aui-button">$i18n.getText("jirasdfm.admin.mappingform.addmapping")</button>
+
+    <!-- Render the dialog to add field mappings -->
+    <section role="dialog" id="jirasdfm-mapping-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+        <!-- Dialog header -->
+        <header class="aui-dialog2-header">
+            <!-- The dialog's title -->
+            <h2 class="aui-dialog2-header-main">$i18n.getText("jirasdfm.admin.mappingform.dialog.header")</h2>
+        </header>
+        <!-- Main dialog content -->
+        <div class="aui-dialog2-content">
+            <form action="#" method="post" id="jirasdfm-addmappingform" class="aui">
+                <fieldset>
+                    <div class="field-group">
+                        <!-- for JIRA field -->
+                        <label for="jiracustField">
+                            $i18n.getText("jirasdfm.admin.mappingform.dialog.jiracustField")
+                            <span class="aui-icon icon-required"> required</span>
+                        </label>
+                        <select class="select" id="jiracustField" name="jiracustField" title="Select JIRA Field">
+                            <option>Select</option>
+                        </select>
+                        <div class="error" id="jiracustFielderror"></div>
+                    </div>
+                    <div class="field-group">
+                        <!-- for jirasdfm field -->
+                        <label for="sdcustField">
+                            $i18n.getText("jirasdfm.admin.mappingform.dialog.jirasdfmField")
+                            <span class="aui-icon icon-required"> required</span>
+                        </label>
+                        <select class="select" id="sdcustField" name="sdcustField" title="Select JIRA Service Desk Field">
+                            <option>Select</option>
+                        </select>
+                        <div class="error" id="sdcustFielderror"></div>
+                    </div>
+                <fieldset>
+            </form>
+        </div>
+        <!-- Dialog footer -->
+        <footer class="aui-dialog2-footer">
+            <!-- Actions to render on the right of the footer -->
+            <div class="aui-dialog2-footer-actions">
+                <button id="jirasdfmmapping-dialog-add-button" class="aui-button">
+                    $i18n.getText("jirasdfm.admin.mappingform.dialog.addbutton")
+                </button>
+                <button id="jirasdfmmapping-dialog-cancel-link" class="aui-button aui-button-link">
+                    $i18n.getText("jirasdfm.admin.mappingform.dialog.cancellink")
+                </button>
+            </div>
+        </footer>
+    </section>
+    <!-- this finishes the add mapping dialog-->
+
+    <!-- Render the confirmation dialog to delete a field mapping -->
+    <section role="dialog" id="jirasdfm-delete-mapping-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+        <!-- Dialog header -->
+        <header class="aui-dialog2-header">
+            <!-- The dialog's title -->
+            <h2 class="aui-dialog2-header-main">$i18n.getText("jirasdfm.admin.deletemappingform.dialog.header")</h2>
+        </header>
+        <!-- Main dialog content -->
+        <div class="aui-dialog2-content" id="deleteconfirmationtext">
+            <strong>$i18n.getText("jirasdfm.admin.deletemappingform.dialog.message.areyousure")</strong>
+            <p/>
+            <table class="aui">
+                <thead>
+                    <tr>
+                        <th>JIRA Field</th>
+                        <th>Service Desk Field</th>
+                        <th>Service Desk Custom Field ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="jirafieldconf"></td>
+                        <td id="jirasdfmfieldconf"></td>
+                        <td id="jirasdfmfieldidconf"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Dialog footer -->
+        <footer class="aui-dialog2-footer">
+            <!-- Actions to render on the right of the footer -->
+            <div class="aui-dialog2-footer-actions">
+                <button id="jirasdfmmapping-dialog-delete-button" class="aui-button">
+                    $i18n.getText("jirasdfm.admin.deletemappingform.dialog.deletebutton")
+                </button>
+                <button id="jirasdfmmapping-dialog-delete-cancel-link" class="aui-button aui-button-link">
+                    $i18n.getText("jirasdfm.admin.deletemappingform.dialog.cancellink")
+                </button>
+            </div>
+        </footer>
+    </section>
+    <!-- this  finishes the delete mapping confirmation dialog -->
+
+    <table id="jirasdfmmappingstable" class="aui aui-table-sortable">
+        <thead>
+        <tr>
+            <th>JIRA Field</th>
+            <th>Service Desk Field</th>
+            <th>Service Desk Custom Field ID</th>
+            <th>Delete Mapping?</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+  </body>
+</html>

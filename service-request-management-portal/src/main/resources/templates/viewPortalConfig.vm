@@ -1,0 +1,61 @@
+<html>
+<head>
+    <title>$action.getText("menu.config.form.title.view")</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="admin.active.tab" content="wi-service-desk-admin-custmenu-link"/>
+    <meta name="admin.active.section" content="service-desk-admin"/> 
+</head>
+<body class="page-type-admin">
+<div class="content-container">
+
+    <div class="content-body">
+        <h1> #if($customerPortals.size()==0)<span style="color:red">No</span>#end Service Desk Portal Catalog </h1>
+        #parse("templates/errorPage.vm")
+		<form method="post" action="ViewCustomerPortalAction!select.jspa" class="aui">
+        	Search
+        	By Name: <input type="text" name="name" value="">
+        	<!--By Url: <input type="text" name="url" value="">
+        	By Description: <input type="text" name="description" value="">-->
+        	<input class="aui-button" type="submit" name="Search" value="Search" />
+        </form><br>
+		
+        #if ($customerPortals && $customerPortals.size() > 0)
+        <div class="issues">
+            <table class="aui">
+                <thead>
+                <tr>
+                    <th>$action.getText("menu.config.form.title.id")</th>
+                    <th>$action.getText("menu.config.form.title.name")</th>
+                    <th>$action.getText("menu.config.form.title.url")</th>
+                    <th>$action.getText("menu.config.form.title.icon")</th>
+                    <th>$action.getText("menu.config.form.title.description")</th>
+                    <th>$action.getText("menu.config.form.title.parentid")</th>
+                    <th>$action.getText("menu.config.form.title.operation")</th>
+                </tr>
+                </thead>
+                <tbody>
+                    #foreach( $customerPortal in $customerPortals )
+                    <tr>
+                        <td>$customerPortal.ID</td>
+                        <td>$customerPortal.name</td>
+                        <td>$customerPortal.url</td>
+                        <td>$customerPortal.icon</td>
+                        <td>$customerPortal.description</td>
+                        <td>$customerPortal.parentId</td>
+                        <td>
+                            <a href="EditCustomerPortalAction!edit.jspa?key=$customerPortal.ID">$action.getText("menu.config.form.button.edit")</a> &nbsp;
+                            <a href="DeleteCustomerPortalAction.jspa?key=$customerPortal.ID">$action.getText("menu.config.form.button.delete")</a>
+                        </td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+		#end
+       <form method="get" action="AddCustomerPortalAction!add.jspa" class="aui">
+	    	<input type="submit" class="aui-button" value="$action.getText("menu.config.form.button.add")">
+		</form>
+    </div>
+</div>
+</body>
+</html>

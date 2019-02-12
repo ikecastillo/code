@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Number Of Deployments" directory_title="Number Of Deployments" description="Number of Deployments Gadget plots the bar chart of the number of deployments done in change management." author="DT" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature='auth-refresh'/><Optional feature="gadget-directory"><Param name="categories">JIRA</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.filter.results,gadget.issuetable.common")
+        #supportLocales
+    </ModulePrefs><UserPref name="show_date" display_name="Show Dates?" datatype="bool" default_value="true"/><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="headertxt" datatype="hidden" default_value="Number Of Deployments"/><UserPref name="filterId" datatype="hidden" default_value=""/><UserPref name="isPopup" datatype="hidden" default_value="false"/><UserPref name="xaxislabel" datatype="hidden" default_value="Months"/><UserPref name="yaxislabel" datatype="hidden" default_value="Number Of Deployments"/><Content type="html" view="profile,canvas,home,default">
+        <![CDATA[
+        #requireResource("com.atlassian.jira.gadgets:common")
+        #requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:itsm-gadgets-common-js")
+        #requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:ITSMDashboard-resources")
+        #requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:itsmjqplot")
+        #requireContext("com.atlassian.jira.gadgets:autocomplete")
+        #includeResources()
+        <script type="text/javascript">
+            GROUP_BY_FIELD = "Defect Cause";
+            var viewGadget = "";
+            (function () {
+                /* (1) Construct and initialise the gadget */
+                var gadget = AJS.Gadget({
+                    baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+                    useOauth: "/rest/gadget/1.0/currentUser",
+                    config: {
+                        descriptor: function(args)
+                        {
+                            var gadget = this;
+
+                            return  {
+                                fields: [
+                                    {
+                                        userpref: "headertxt",
+                                        label: "Header",
+                                        type: "text",
+                                        value: gadget.getPref("headertxt")
+                                    },
+                                    AJS.gadget.fields.filterPicker(gadget, "filterId"),
+                                    {
+                                        userpref: "xaxislabel",
+                                        label: "X-Axis Label",
+                                        type: "text",
+                                        value: gadget.getPref("xaxislabel")
+                                    },
+                                    {
+                                        userpref: "yaxislabel",
+                                        label: "Y-Axis Label",
+                                        type: "text",
+                                        value: gadget.getPref("yaxislabel")
+                                    },
+                                    AJS.gadget.fields.nowConfigured()
+                                ]
+                            };
+                        },
+
+                        args: []
+                    },
+                    view: {
+                        /* (2) Define the view logic */
+                        onResizeAdjustHeight: true,
+                        enableReload: true,
+                        template: function (args){
+                            var gadget = this;
+                            // reset view
+                            gadget.getView().empty();
+                            gadget.getView().addClass("g-two-d-stats");
+
+                            var gadgetHeader = gadget.getPref("headertxt");
+                            console.log("gadgetHeader"+gadgetHeader);
+                            if(gadgetHeader!= "" && gadgetHeader!=null){
+                                gadgets.window.setTitle(gadgetHeader);
+                            }else{
+                                gadgets.window.setTitle("Number Of Deployments");
+                            }
+
+                            console.log("args.getfiltername.filterName"+args.getfiltername.filterName);
+
+                            gadget.projectOrFilterName = args.getfiltername.filterName;
+
+                            console.log("gadget.projectOrFilterName"+gadget.projectOrFilterName);
+                            drawchart(gadget,args.incidentData);
+                            //gadget.projectOrFilterName = args.getfiltername.filterName;
+
+                        },
+                        args: [{
+                            key: "incidentData",
+                            ajaxOptions: function() {
+                                return {
+                                    url: "/rest/incident/1.0/numberofdeployments.json",
+                                    contentType: "application/json",
+                                    data:  {
+                                        searchFilter : gadgets.util.unescapeString(this.getPref("filterId")),
+                                        groupBy: "Change Type",
+                                        legenddepth: "Does Not Apply",
+                                        sigmavalues: "Count",
+                                        xaxis: "Implementation Start Date",
+                                        yaxis: "Implementation Start Date"
+                                    }
+                                };
+                            }
+                            },
+                            {
+                                key: "getfiltername",
+                                ajaxOptions: function ()
+                                {
+                                    var gadget = this;
+                                    return {
+                                        url: "/rest/incident/1.0/enhancedincidentexecsummary/getFilterName.json",
+                                        contentType: "application/json",
+                                        data:  {
+                                            filterId : gadgets.util.unescapeString(this.getPref("filterId"))
+                                        }
+                                    };
+                                }
+                            }
+                        ]
+                    }
+                });
+            })();
+            drawchart=function(gadget,_restdata) {
+                var monthslables = new Array();
+                if (_restdata.length > 0) {
+                    var months = _restdata[0].graphCoordinates;
+                    for (var _i=0, _len=months.length; _i<_len; _i++){
+                        monthslables.push(months[_i].xAxis);
+                    }
+                }
+                console.log('Labels: '+monthslables);
+                var _ymax = 0;
+                var sg = new Array();
+                var sgLabels = new Array();
+                //Create dynamically array obj for all solution groups
+                if (_restdata.length > 0) {
+                    for(var i=1;i<_restdata.length;i++){
+                        if(_restdata[i].legend=='Total'   || _restdata[i].legend=='3 Month Average' ){
+                        } else {
+                            var arr = new Array();
+                            var months = _restdata[i].graphCoordinates;
+                            for (var _i=0, _len=months.length; _i<_len; _i++){
+                                var incidentcount = months[_i].countOrSum;
+                                incidentcount = incidentcount.replace(',','');
+                                var _sg_data = { y: parseInt(incidentcount), url: months[_i].drillDown};
+                                arr.push(_sg_data);
+                            }
+                            sgLabels.push(_restdata[i].legend);
+                            sg.push(arr);
+                        }
+                    }
+                }
+                _ymax=_ymax+10;
+                console.log('solution groups Labels: '+sgLabels);
+                console.log('_ymax: '+_ymax);
+                if (_restdata.length < 1) {
+                    var arr = new Array();
+                    sg.push(arr);
+                }
+                console.log('solution group: '+sg);
+                var ticks = monthslables;
+                var dataArr = new Array();
+                for(var j=0;j<sgLabels.length;j++){
+                    var dataset = { name: 	sgLabels[j], data: sg[j] };
+                    dataArr.push(dataset);
+                }
+                /*AJS.log("customFields in the chart is " + gadget.getPref("customFields"));
+                 AJS.log("sigmavalues in the chart is " + gadget.getPref("sigmavalues"));
+                 AJS.log("xAxis in the chart is " + gadget.getPref("xaxis"));
+                 AJS.log("yAxis in the chart is " + gadget.getPref("yaxis"));*/
+                //var yAxisName = ReportTypeGenerator.generateYAxisColumnName(reportType);
+                var yAxisLabel = gadget.getPref("yaxislabel");
+                var xAxisLabel = gadget.getPref("xaxislabel");
+
+                AJS.$('#IncidentCountBarChartView').highcharts({
+                    chart: {
+                        type: 'column',
+                        //options3d: {
+                        //	enabled: true,
+                        //	alpha: 5,
+                        //	beta: 20,
+                        //	viewDistance: 25,
+                        //	depth: 300
+                        //},
+                        marginTop: 40,
+                        marginRight: 40
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    colors: ['#F7A35C', '#8085E9','#F15C80', '#E4D354','#8D4653', '#91E8E1','#E5F497', '#00AF52','#A9BCF5','#2E9AFE','#F5A9E1','#2EFEF7','#58FA82','#F5BCA9','#F3E2A9','#2ECCFA','#F4FA58','#DBA901','#FE642E'],
+                    xAxis: {
+                        categories: ticks,
+                        title: {
+                            text: xAxisLabel
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: yAxisLabel
+                        }
+                    },
+                    tooltip: {
+                        //pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+                        formatter: function() {
+                            return '<b>'+ this.series.name+'</b><br/>'+
+                                    this.point.y + '<br/>' +
+                                    '('+Highcharts.numberFormat(this.percentage, 0) + '%)<br/>';
+                        }
+                        //shared: true
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                            dataLabels: {
+                                enabled: false,
+                                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
+                                style: {
+                                    //textShadow: '0 0 3px black'
+                                },
+                                formatter: function() {
+                                    if (this.y != 0) {
+                                        return this.y +'';
+                                    } else {
+                                        return null;
+                                    }
+                                }
+                            }
+                        },
+                        series: {
+                            cursor: 'pointer'
+                            /*point: {
+                             events: {
+                             click: function () {
+                             //top.location.href = this.options.url;
+                             }
+                             }
+                             }*/
+                        }
+                    },
+                    series: dataArr
+                });
+            };
+        </script>
+        <div id="IncidentCountBarChartView"> </div>
+        ]]>
+    </Content></Module>

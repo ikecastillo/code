@@ -1,0 +1,37 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="GetJIRAUserFromEmail"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="GetJIRAUserFromEmail-resources" name="GetJIRAUserFromEmail Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="GetJIRAUserFromEmail.css" location="/css/GetJIRAUserFromEmail.css"/>
+        <resource type="download" name="GetJIRAUserFromEmail.js" location="/js/GetJIRAUserFromEmail.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>GetJIRAUserFromEmail</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.userfromemail.MyPluginComponentImpl" public="true">
+        <interface>com.dt.userfromemail.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+
+    <rest name="Get JIRA User from Email" i18n-name-key="get-jira-user-from-email-api.name" key="get-jira-user-from-email-api"
+          path="/get-jira-user-from-email" version="1.0">
+        <description key="get-jira-user-from-email-api.description">Get JIRA User From Email Rest API Plugin</description>
+    </rest>
+    
+</atlassian-plugin>

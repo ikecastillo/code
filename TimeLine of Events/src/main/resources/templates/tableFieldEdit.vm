@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+$webResourceManager.requireResource("com.atlassian.auiplugin:ajs")
+$webResourceManager.requireResource("com.atlassian.jira.plugin.tables.TimelineofEvents:tablemapping-js3.0")
+</head>
+<body>
+#set($customFieldType = $customField.getCustomFieldType()) 
+#set($fieldConfig = $customField.getRelevantConfig($issue))
+#set($defaultValue = $customFieldType.getDefaultValue($fieldConfig))
+<table id="dummytable"> </table>
+#customControlHeader ($action $customField.id $customField.name $fieldLayoutItem.required $displayParameters $auiparams)  
+<table  id="tbl1" border="1" width="100%" style="border-collapse:collapse;" cellpadding="0" cellspacing="0" BORDERCOLOR="D7D7D7">
+<thead>	
+       <colgroup>
+       <col span="1" style="width: 15%;height=5%">
+       <col span="1" style="width: 15%;height=5%">
+       <col span="1" style="width: 39%;height=5%">
+	   <col span="1" style="width: 1%;height=5%">
+       </colgroup>
+        <tr> 
+            <th bgcolor="#E7E7E7">Date</th>
+			<th bgcolor="#E7E7E7">Time</th>
+            <th bgcolor="#E7E7E7">Description</th>
+		    <td bgcolor ="#E7E7E7">
+			<table>
+			<tr>
+				<td><input  type="button" title="Add Row" value=" + " style="font-weight:bold;font-size:1em;color:#33CC33;background-color:#E7E7E7;border:none;height=5%" id="add" onclick ="onAddClick(this)"/></td>
+				<td>
+		        	<input type="text" style="width:2%;height=5%;display: none;" id="custome" name="$customField.id" value="$!value"/>
+				</td>  
+				<td>		 
+					<input type="text" style="width:2%;height=5%;display: none;" id="sample" name="sample" value=""/>                    
+				</td>
+		    </tr>
+			</table>				
+		    </td>
+           </tr>
+ </thead>
+ <tbody>
+ <tr id="row_1" style="display: none;">
+ <td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="date_text" id="date_1"  value="" onchange="TextChange(this)"></td>
+ <td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="time_text" id="time_1"  value="" onchange="TextChange(this)"></td>
+ <td ><textarea style="background-color:transparent;border:0px solid white;height: 20px; width: 100%;" name="desc_text" id="desc_1" onchange="TextChange(this)"></textarea></td>
+ <td><input  type="button" title="Remove Row" value=" - "  style="font-weight:bold;font-size:1em;color:#FF3300;background-color:#FFFFFF;border:none;" id="remove_1"  onclick ="onRemoveClick(this)">
+ </input>
+ </td>
+ </tr> 
+ </tbody>
+ </table>
+ #customControlFooter ($action $customField.id $fieldLayoutItem.fieldDescription $displayParameters $auiparams)
+  
+ <script>
+ var dataList = new Array();
+ var dateItem = "";
+ var descItem = "";
+ var timeItem = "";
+ var index = "";
+ var itemIndex ="";
+ var itemType ="";
+ var newList = new Array();
+ var cnt = 0;
+ var indexcnt = 0; 
+ 
+ //Render existing table data in edit page
+ var temp = AJS.$('#' + "custome").val();
+ AJS.log("Existing values are " + temp);
+ //split table tags
+ var tableend =  temp.split("</table>");
+ AJS.log("Table end is " + tableend);
+ var table= tableend[0].split("<table style=border-style:none;width:100%>");
+ AJS.log("Table Length is " + table.length);
+
+ //For older issues using the older custom field
+ if (table.length == 1) {
+     table= tableend[0].split("<table border=1>");
+ }
+ AJS.$('#dummytable').show();
+ AJS.$('#dummytable').html(table[1]);
+ var table13 = AJS.$("#dummytable").tableToJSON(); 
+ var tempVal = JSON.stringify(table13); 
+ console.log('tempVal '+ tempVal);
+ var obj = jQuery.parseJSON(tempVal);
+ AJS.$('#dummytable').hide();
+ if(obj.length > 0){
+ var tempLen = 1;
+ jQuery.each(obj, function() 
+ {
+	var tempIndex = this['Index'];
+	
+	if( parseInt(tempIndex) >= parseInt(tempLen) ) {
+	  // console.log('tempIndex '+ tempIndex);
+	   tempLen = tempIndex;
+	}
+	// console.log('tempLen '+ tempLen);
+	var mapdata = new Array();
+	mapdata.push(this['Date']);
+	mapdata.push(this['Time']);
+	mapdata.push(this['Description']);
+	mapdata.push(this['Index']);
+	var datVal = mapdata +":";
+	dataList.push(datVal);
+   	AJS.$('#' + "sample").val(dataList);
+	AJS.$('#tbl1').append('<tr id="row_'+ tempIndex +'"><td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="date_text" id="date_'+ tempIndex +'" value="" onchange="TextChange(this)"></td><td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="time_text" id="time_'+ tempIndex +'" value="" onchange="TextChange(this)"></td><td><textarea style="background-color:transparent;border:0px solid white;height:20px;width:100%;" name="desc_text" id="desc_'+ tempIndex +'" onchange="TextChange(this)"></textarea></td><td><input  type="button" title="Remove Row" value=" - " style="font-weight:bold;font-size:1em;color:#FF3300;background-color:#FFFFFF;border:none;" id="remove_'+ tempIndex +'" onclick ="onRemoveClick(this)" /></td></tr>');
+	var idDateAtt1 = "date_"+tempIndex;
+	var idTimeAtt1 = "time_"+tempIndex;
+	AJS.$("#"+idDateAtt1).val(this['Date']);
+	AJS.$("#"+idTimeAtt1).val(this['Time']);
+	var idDescAtt1 = "desc_"+tempIndex;
+	AJS.$("#"+idDescAtt1).val(this['Description']);
+ });
+ var length = obj.length;
+ cnt = tempLen;
+ console.log('cnt '+ cnt);
+ }
+ 
+ //Remove Row
+ function onRemoveClick(tButton)
+ {
+ 
+    var buttonId = AJS.$(tButton).attr('id');
+    var idAttribute = buttonId.split("_");   
+    //var indexToRemove = parseInt(idAttribute[1]);
+    if(idAttribute[1] == 1){
+		AJS.$("#row_1").hide();
+    }
+    else{
+    	AJS.$(tButton).closest('tr').remove();
+    }
+   console.log('before remove '+dataList);
+    for ( var i = 0, l = dataList.length; i < l; i++ ) 
+    {
+     var index1;
+     var index2;
+	// console.log('row '+dataList[i]);
+       var dataSplit = dataList[i].split(",");
+       console.log('dataSplit '+dataSplit.length);
+       if(dataSplit.length>5){
+		  index1= dataList[i].substr(dataList[i].lastIndexOf(',')+1,dataList[i].lastIndexOf(':'));
+		  console.log('index1 '+index1);
+		  index2 = index1.split(":");
+		   console.log('index2 '+index2);
+
+       } else {
+		index1 = dataSplit[4];
+		index2 = index1.split(":");
+	}
+	if(index2[0] == idAttribute[1])  {
+			dataList.splice(i, 1);	
+			break;
+	 }	
+    } 
+    
+    console.log('after remove '+dataList);
+    AJS.$('#' + "sample").val(dataList); 
+ }
+ 
+ //Add Row
+ function onAddClick(tAdd)
+ {
+    //alert(tAdd.title);
+    ++cnt;	
+    //console.log('Add row count '+cnt);
+    if(cnt !=1)
+    {
+ 		AJS.$('#tbl1 tr').last().after('<tr id="row_'+ cnt +'"><td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="date_text" id="date_'+ cnt +'" value="" onchange="TextChange(this)"></td><td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="time_text" id="time_'+ cnt +'" value="" onchange="TextChange(this)"></td><td><textarea style="background-color:transparent;border:0px solid white;height:20px;width:100%;" name="desc_text" id="desc_'+ cnt +'" onchange="TextChange(this)"></textarea></td><td><input  type="button" title="Remove Row" value=" - " style="font-weight:bold;font-size:1em;color:#FF3300;background-color:#FFFFFF;border:none;" id="remove_'+ cnt +'" onclick ="onRemoveClick(this)" /></td></tr>');
+  	    var idDateAtt1 = "date_"+cnt;
+		var idTimeAtt1 = "time_"+cnt;
+		var output = populateDate();
+		AJS.$("#"+idDateAtt1).val(output);
+		var time = populateTime();
+	    AJS.$("#"+idTimeAtt1).val(time);
+		var mapdata = new Array();
+		mapdata.push(output);
+		mapdata.push(time);
+		mapdata.push(" ");
+		mapdata.push(cnt);
+		var datVal = mapdata +":";
+	    dataList.push(datVal);	
+	    AJS.$('#' + "sample").val(dataList);
+  }
+  else
+  {
+    	AJS.$("#row_1").show();
+   		var idDateAtt1 = "date_1";
+		var idTimeAtt1 = "time_1";
+		var output = populateDate();
+		AJS.$("#"+idDateAtt1).val(output);
+		var time = populateTime();
+	    AJS.$("#"+idTimeAtt1).val(time);
+		var mapdata = new Array();
+		mapdata.push(output);
+		mapdata.push(time);
+		mapdata.push(" ");
+		mapdata.push(1);
+		var datVal = mapdata +":";
+	    dataList.push(datVal);	
+    	AJS.$('#' + "sample").val(dataList);
+  
+   }   
+ }
+ 
+ //Date Validation
+ function dateValidation(tBoxData)
+ {
+     var months = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+     "Jul", "Aug","Sep","Oct","Nov","Dec");
+     var split = tBoxData.split(" ");
+     if(split.length != 3)
+     {
+	     alert("Date is not proper");
+		 return false;
+	 }
+	 if(split[0].length == 3)
+	 {
+		 var monthExist = false;
+	     for(var i = 0, l = months.length; i < l; i++){
+		 	if(split[0] == months[i]){
+			   monthExist = true;
+			   break;
+			}
+		  }
+		  if(monthExist == false){
+		    alert("Month is not proper");
+			return false;
+		  }
+      }
+	  else
+	  {
+		  alert("Month is not proper");
+		  return;
+	  }	  
+	  if(split[1].length == 3 || split[1].length == 2)
+	  {
+		  var split1 = split[1].split(",");
+		  var iNum = parseInt(split1[0]);
+		  var convLength = iNum.toString().length;
+		  var stringLen = split1[0].length; 
+		  if(stringLen != convLength)
+		  {
+			  alert("Date is not proper");
+			  return false;
+		  }
+		  if(iNum == NaN){
+			  alert("Date is not proper");
+			  return false;
+		  }
+		  if(iNum < 1 || iNum  > 31)
+		  {
+			 alert("Date is not proper");
+			 return false;
+		  }
+	   }
+	   else
+	   {
+			alert("Date is not proper");
+			return false;
+	   }
+	   var iNum1 = parseInt(split[2]);
+	   var convLength1 = iNum1.toString().length;
+	   var stringLen1 = split[2].length;
+	   if(stringLen1 != convLength1)
+	   {
+		   alert("Year is not proper");
+		   return false;
+	    }
+	    if(stringLen1 != 4)
+	    {
+			alert("Year is not proper");
+			return false;
+		}
+		if(iNum1 == NaN)
+		{
+			alert("Year is not proper");
+			return false;
+		}
+		if(split[2].length != 4)
+		{
+		    alert("Year is not proper");
+			return false;
+		 }
+
+ }
+ 
+ //Event for changing the text
+ function TextChange(tBox)
+  { 
+ 	var duplicateRow = false;
+    var mapdata = new Array();
+	var item;
+    var data = AJS.$(tBox).attr('id');
+	
+	var idAttribute = data.split("_");
+	var tBoxData = AJS.$(tBox).val();	
+	var months = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug","Sep","Oct","Nov","Dec");
+    
+    // for date text field
+	if(idAttribute[0] == "date")
+	{
+		var resultDate = dateValidation(tBoxData);
+		dateItem = tBoxData;
+	    for ( var i = 0, l = dataList.length; i < l; i++ ) 
+	    {
+	        var dataSplit = dataList[i].split(",");
+	        var index1 = dataSplit[4];
+	        var index2 = index1.split(":");
+	        if(index2[0] == idAttribute[1]){
+	  		mapdata.push(dateItem);
+			mapdata.push(dataSplit[2]);
+    			mapdata.push(dataSplit[3]);
+    			mapdata.push(index2[0]);	
+			var datVal = mapdata +":";
+			dataList[i] = datVal;	
+    			AJS.$('#' + "sample").val(dataList);
+	     		duplicateRow = true;
+			dateItem = "";
+			timeItem = "";
+			descItem = "";
+			index= "";
+		}  
+	  }	
+	}
+    //for description text field
+	else if(idAttribute[0] == "desc")
+	{
+
+	    var idDateAtt1 = "date_"+idAttribute[1];
+		var idTimeAtt1 = "time_"+idAttribute[1];
+		descItem = tBoxData;
+		var d = new Date();
+        var month = d.getMonth();
+        var day = d.getDate();
+        var monthString = ""; 
+		dateItem = AJS.$("#"+idDateAtt1).val();
+		timeItem = AJS.$("#"+idTimeAtt1).val();		
+		for ( var i = 0, l = dataList.length; i < l; i++ )
+		{	
+			var dataSplit = dataList[i].split(",");
+	        var index1 = dataSplit[4];
+	        var index2 = index1.split(":");
+	        if(index2[0] == idAttribute[1])
+	        {
+	  			mapdata.push(dateItem);
+				mapdata.push(timeItem);
+    			mapdata.push(descItem);
+    			mapdata.push(index2[0]);
+				var datVal = mapdata +":";
+				dataList[i] = datVal;	
+    			AJS.$('#' + "sample").val(dataList);
+				//alert("timeLine"+AJS.$('#' + "sample"));
+	     		duplicateRow = true;
+				dateItem = "";
+				timeItem = "";
+				descItem = "";
+				index= "";
+	  		}  
+	  }		 
+		
+	}
+	//for time text field
+	else
+	{	
+		timeItem = tBoxData;
+		for ( var i = 0, l = dataList.length; i < l; i++ )
+	    {
+			var dataSplit = dataList[i].split(",");
+	  		var index1 = dataSplit[4];
+	 		var index2 = index1.split(":");
+	  		if(index2[0] == idAttribute[1])
+	  		{	
+	 			var dateForm = dataSplit[0] +","+dataSplit[1];
+	  			mapdata.push(dateForm);
+				mapdata.push(timeItem);
+   			    mapdata.push(dataSplit[3]);
+    			mapdata.push(index2[0]);
+				var datVal = mapdata +":";
+				dataList[i] = datVal;	
+    			AJS.$('#' + "sample").val(dataList);
+	     		duplicateRow = true;
+				dateItem = "";
+				timeItem = "";
+				descItem = "";
+				index= "";	
+	  		}  
+	  	}	
+	}
+	itemType= idAttribute[0];
+	itemIndex = idAttribute[1];
+	index = idAttribute[1];
+	if(duplicateRow  == false)
+	{
+    mapdata.push(dateItem);
+	mapdata.push(timeItem);
+    mapdata.push(descItem);
+    mapdata.push(index);
+	var datVal = mapdata +":";
+	dataList.push(datVal);	
+    AJS.$('#' + "sample").val(dataList);
+	var len = dataList.length -1;
+	newList[index] = len;
+	dateItem = "";
+	timeItem = "";
+	descItem = "";
+	index= "";
+	}
+	duplicateRow = false;
+ }
+ 
+ //Populate date in text field 
+function populateDate()
+{
+	var months = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	"Jul", "Aug","Sep","Oct","Nov","Dec");
+	var d = new Date();
+    var month = d.getMonth();
+    var day = d.getDate();
+    var monthString = ""; 
+	for(var i = 0, l = months.length; i < l; i++)
+	{
+		if(month == i){
+			monthString = months[i];
+		}
+	}
+	var output = monthString+" "+day+","+" "+d.getFullYear();	
+    return output;
+} 
+
+//Populate time in text field 
+function populateTime()
+{
+	var d = new Date();
+    var hours = d.getHours();
+	hours = (hours > 12 ? hours-12 : hours);	
+    if ( hours == 0 )
+    {
+		hours = 12;
+	}
+	var time = hours + ":"  
+               + d.getMinutes() + ":" 
+               + d.getSeconds() + " " +(d.getHours() < 12 ? "AM" : "PM");
+	
+	return time;
+}
+ </script>
+
+ </body>
+ </html>

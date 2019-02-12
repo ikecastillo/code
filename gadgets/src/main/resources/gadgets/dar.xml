@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Defect Acceptance Ratio"
+                 directory_title="Defect Acceptance Ratio"
+                 description="Defects that are accepted as valid ones vs the total number of defects"
+				 author="Ness"				 
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">Charts</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="auto"/>
+    <UserPref name="headertxt" datatype="hidden" default_value="Defect Acceptance Ratio"/>
+    <Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+
+        #requireResource("com.pyxis.greenhopper.jira:gh-gadget-common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:chosen")
+
+		#includeResources()
+		<script type="text/javascript">
+		        (function () {
+            var gadget = AJS.Gadget({
+                baseUrl: "__ATLASSIAN_BASE_URL__",
+                useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        return DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+/*                view: {
+                	onResizeReload: true,
+                    onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args) {
+                     var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                          if(header != "" && header != null ){
+                              gadgets.window.setTitle(header);
+                          }
+                          else{
+                              gadgets.window.setTitle("Defect Acceptance Ratio");
+                          }
+                        return DTGADGET.template(this, args, "__ATLASSIAN_BASE_URL__");
+                    },
+                    args: DTGADGET.templateArgs("__ATLASSIAN_BASE_URL__")
+					
+                }
+*/
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+                    var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                          if(header != "" && header != null ){
+                              gadgets.window.setTitle(header);
+                          }
+                          else{
+                              gadgets.window.setTitle("Defect Acceptance Ratio");
+                          }
+						drawchart(this, args.dar);
+					},
+					args: [
+                        {
+                            key: "dar",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    //url: "/rest/Metrics/1.0/daratio",
+									url: "/rest/dealertrack/1.0/daratio",
+									contentType: "application/json",
+									data:  { projectKey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprint").split('|').toString())
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(gadget, _restdata) {
+		var ratio = (_restdata.TotalDefects < 1)?0:(+_restdata.AcceptedDefects) / (+ _restdata.TotalDefects) * 100;
+		ratio = Math.round(ratio * 10) / 10;
+		console.log (ratio);
+		var bkcolor = (ratio>50)?'#32CD32':'#FFFF99';
+		var div = document.getElementById( 'darbar' );
+		div.style.backgroundColor = bkcolor;
+		div.innerHTML = ratio + ' %';
+		gadget.getView().empty();
+		gadget.getView().append(div);
+		};
+		</script>
+		<center><h1><div id="darbar" align="center" style="font-weight:bold;font-size:20pt;"></div></h1></Center>		
+	]]>
+
+  </Content>
+</Module>

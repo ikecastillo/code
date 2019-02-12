@@ -1,0 +1,65 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven Bundle Plugin
+Built-By: Manutzu
+Build-Jdk: 1.8.0_60
+Atlassian-Build-Date: 2015-10-11T12:52:56+0300
+Bnd-LastModified: 1444557176727
+Bundle-Activator: ro.agrade.jira.qanda.plugin.PluginBundleActivator
+Bundle-Description: The Questions and Answers plugin
+Bundle-ManifestVersion: 2
+Bundle-Name: QandA PRO
+Bundle-SymbolicName: ro.agrade.jira.qanda-pro
+Bundle-Vendor: AGRADE
+Bundle-Version: 1.0.6
+Import-Package: com.atlassian.crowd.embedded.api;resolution:=optional,
+ com.atlassian.jira;resolution:=optional,com.atlassian.jira.avatar;res
+ olution:=optional,com.atlassian.jira.bc;resolution:=optional,com.atla
+ ssian.jira.bc.filter;resolution:=optional,com.atlassian.jira.bc.proje
+ ct.component;resolution:=optional,com.atlassian.jira.bc.user.search;r
+ esolution:=optional,com.atlassian.jira.component;resolution:=optional
+ ,com.atlassian.jira.config.properties;resolution:=optional,com.atlass
+ ian.jira.config.util;resolution:=optional,com.atlassian.jira.event.ty
+ pe;resolution:=optional,com.atlassian.jira.i18n;resolution:=optional,
+ com.atlassian.jira.issue;resolution:=optional,com.atlassian.jira.issu
+ e.fields.renderer;resolution:=optional,com.atlassian.jira.issue.field
+ s.rest.json.beans;resolution:=optional,com.atlassian.jira.issue.index
+ ;resolution:=optional,com.atlassian.jira.issue.search;resolution:=opt
+ ional,com.atlassian.jira.issue.watchers;resolution:=optional,com.atla
+ ssian.jira.jql.builder;resolution:=optional,com.atlassian.jira.mail;r
+ esolution:=optional,com.atlassian.jira.plugin.issuetabpanel;resolutio
+ n:=optional,com.atlassian.jira.plugin.projectpanel.impl;resolution:=o
+ ptional,com.atlassian.jira.plugin.workflow;resolution:=optional,com.a
+ tlassian.jira.project;resolution:=optional,com.atlassian.jira.project
+ .browse;resolution:=optional,com.atlassian.jira.rest.api.http;resolut
+ ion:=optional,com.atlassian.jira.rest.api.util;resolution:=optional,c
+ om.atlassian.jira.rest.v2.issue;resolution:=optional,com.atlassian.ji
+ ra.security;resolution:=optional,com.atlassian.jira.security.groups;r
+ esolution:=optional,com.atlassian.jira.timezone;resolution:=optional,
+ com.atlassian.jira.user;resolution:=optional,com.atlassian.jira.user.
+ util;resolution:=optional,com.atlassian.jira.util;resolution:=optiona
+ l,com.atlassian.jira.web.action;resolution:=optional,com.atlassian.ji
+ ra.web.bean;resolution:=optional,com.atlassian.mail;resolution:=optio
+ nal,com.atlassian.mail.queue;resolution:=optional,com.atlassian.mail.
+ server;resolution:=optional,com.atlassian.plugin.webresource;resoluti
+ on:=optional,com.atlassian.query;resolution:=optional,com.atlassian.s
+ al.api.message;resolution:=optional,com.atlassian.sal.api.upgrade;res
+ olution:=optional,com.atlassian.templaterenderer;resolution:=optional
+ ,com.atlassian.velocity.htmlsafe;resolution:=optional,com.opensymphon
+ y.module.propertyset;resolution:=optional,com.opensymphony.workflow;r
+ esolution:=optional,com.opensymphony.workflow.loader;resolution:=opti
+ onal,javax.mail;resolution:=optional,javax.mail.internet;resolution:=
+ optional,javax.ws.rs;resolution:=optional,javax.ws.rs.core;resolution
+ :=optional,javax.xml.bind.annotation;resolution:=optional,javax.xml.p
+ arsers;resolution:=optional,org.apache.commons.lang;resolution:=optio
+ nal,org.apache.commons.logging;resolution:=optional,org.ofbiz.core.co
+ nfig;resolution:=optional,org.ofbiz.core.entity;resolution:=optional,
+ org.ofbiz.core.entity.model;resolution:=optional,org.ofbiz.core.util;
+ resolution:=optional,org.osgi.framework;resolution:=optional,org.spri
+ ngframework.beans;resolution:=optional,org.springframework.context;re
+ solution:=optional,org.w3c.dom;resolution:=optional,org.xml.sax;resol
+ ution:=optional
+Originally-Created-By: Apache Maven Bundle Plugin
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-2.4.1.201501161923
+

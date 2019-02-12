@@ -1,0 +1,337 @@
+<html>
+    <head>
+        <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+        <meta name="decorator" content="atl.admin" />
+        <meta name="projectKey" content="$projectKey"/>
+        <meta name="admin.active.tab" content="pd-service-setup-link"/>
+        <meta name="admin.active.section" content="atl.jira.proj.config"/>
+        $webResourceManager.requireResource("com.dt.jira.pagerduty.intgt.plugin.PagerDuty-integration-plugin:PagerDuty-integration-plugin-services")
+        $webResourceManager.requireResource("com.atlassian.auiplugin:aui-select2")
+        <title>PagerDuty Service Setup</title>
+    </head>
+    <body>
+        <div class="header">
+            <h3 class="formtitle">$i18n.getText("pagerduty.projadmin.addservice.form.label")</h3>
+            <p/>
+            <button id="pd-service-add-button" class="aui-button">$i18n.getText("pagerduty.projadmin.addservice.button")</button>
+        </div>
+
+        <h3>Search PagerDuty Service Configuration(s)</h3>
+        <br/>
+
+        <div>
+            <label for="pdsearchServiceName">
+                $i18n.getText("pagerduty.projadmin.searchservice.ServiceName.label")
+            </label> &nbsp;
+            <select class="select" id="pdsearchServiceName" name="pdsearchServiceName" title="Select Service Name">
+                <option value="All">All</option>
+            </select>
+            &nbsp;&nbsp;
+            <label for="pdSearchDDCProduct">
+                $i18n.getText("pagerduty.projadmin.searchservice.DDCProduct.label")
+            </label> &nbsp;
+            <select class="select" id="pdSearchDDCProduct" name="pdSearchDDCProduct" title="Select DDC Product">
+                <option value="All">All</option>
+            </select>
+        </div>
+
+
+
+        <!-- Render the dialog to add pager duty service -->
+        <section role="dialog" id="pd-service-add-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+            <!-- Dialog header -->
+            <header class="aui-dialog2-header">
+                <!-- The dialog's title -->
+                <h2 class="aui-dialog2-header-main">
+                    $i18n.getText("pagerduty.projadmin.addserviceform.dialog.header")
+                </h2>
+            </header>
+            <!-- Main dialog content -->
+            <div class="aui-dialog2-content">
+                <form action="#" method="post" id="add-pdservice-form" class="aui">
+                    <fieldset>
+                        <div class="field-group">
+                            <!-- for PagerDuty Service -->
+                            <label for="pdService">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.pdServiceField")
+                                <span class="aui-icon icon-required"> required</span>
+                            </label>
+                            <select class="select" id="pdService" name="pdService" title="Select PagerDuty Service">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for Clients Impacted -->
+                            <label for="pdClientsImpacted">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.clientsImpacted")
+                                <span class="aui-icon icon-required"> required</span>
+                            </label>
+                            <select class="select" id="pdClientsImpacted" name="pdClientsImpacted"
+                                    title="Select Clients Impacted">
+                                <option value="">Select</option>
+                                <option value="Internal">Internal (Burlington)</option>
+                                <option value="External">External</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for Impacted -->
+                            <label for="pdImpacted">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.impacted")
+                            </label>
+                            <select class="select" id="pdImpacted" name="pdImpacted" title="Select Impacted">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for Severiy(s)-->
+                            <label for="pdSeverity">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.severity")
+                                <span class="aui-icon icon-required"> required</span>
+                            </label>
+                            <select class="select" id="pdSeverity" name="pdSeverity" title="Select Severity">
+                                <option value="">Select</option>
+                                <option value="Critical">Critical</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for DDC Product -->
+                            <label for="sdDDCProd">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.ddcproduct")
+                            </label>
+                            <select class="select" id="sdDDCProd" name="sdDDCProd" title="Select DDC Product">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for DDC Sub Product Level 0-->
+                            <label for="sdDDCSubProd0">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.ddcsubproduct0")
+                            </label>
+                            <select class="select" id="sdDDCSubProd0" name="sdDDCSubProd0"
+                                    title="Select DDC Sub-Product level 0">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for DDC Sub Product Level 1-->
+                            <label for="sdDDCSubProd1">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.ddcsubproduct1")
+                            </label>
+                            <select class="select" id="sdDDCSubProd1" name="sdDDCSubProd1"
+                                    title="Select DDC Sub-Product level 1">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <footer class="aui-dialog2-footer">
+                <!-- Actions to render on the right of the footer -->
+                <div class="aui-dialog2-footer-actions">
+                    <button id="pd-service-add-dialog-add-button" class="aui-button">
+                        $i18n.getText("pagerduty.projadmin.addserviceform.dialog.addbutton")
+                    </button>
+                    <button id="pd-service-add-dialog-cancel-link" class="aui-button aui-button-link">
+                        $i18n.getText("pagerduty.projadmin.addserviceform.dialog.cancellink")
+                    </button>
+                </div>
+            </footer>
+        </section>
+        <!-- Code for adding pager duty service dialog ends -->
+
+        <!-- Render the confirmation dialog to delete a service -->
+        <section role="dialog" id="pd-service-delete-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+            <!-- Dialog header -->
+            <header class="aui-dialog2-header">
+                <!-- The dialog's title -->
+                <h2 class="aui-dialog2-header-main">$i18n.getText("pagerduty.projadmin.deleteservice.form.label")</h2>
+            </header>
+            <!-- Main dialog content -->
+            <div class="aui-dialog2-content" id="deleteconfirmationtext">
+                <strong>$i18n.getText("pagerduty.projadmin.deleteservice.form.message.areyousure")</strong>
+                <p/>
+                <table class="aui">
+                    <thead>
+                    <tr>
+                        <th>Service Key</th>
+                        <th>Service Name</th>
+                        <th>Clients Impacted</th>
+                        <th>Impacted</th>
+                        <th>Severity</th>
+                        <th>DDC Product</th>
+                        <th>DDC Sub Product</th>
+                        <th>DDC Sub Sub Product</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td id="pdServiceKeyconf"></td>
+                        <td id="pdServiceNameconf"></td>
+                        <td id="pdClientsImpactedconf"></td>
+                        <td id="pdImpactedconf"></td>
+                        <td id="pdSeverityconf"></td>
+                        <td id="pdDDCProductconf"></td>
+                        <td id="pdDDCSubProductconf"></td>
+                        <td id="pdDDCSubSubProductconf"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Dialog footer -->
+            <footer class="aui-dialog2-footer">
+                <!-- Actions to render on the right of the footer -->
+                <div class="aui-dialog2-footer-actions">
+                    <button id="pd-service-dialog-delete-button" class="aui-button">
+                        $i18n.getText("pagerduty.projadmin.deleteservice.form.dialog.deletebutton")
+                    </button>
+                    <button id="pd-service-dialog-delete-cancel-link" class="aui-button aui-button-link">
+                        $i18n.getText("pagerduty.projadmin.deleteservice.form.dialog.cancellink")
+                    </button>
+                </div>
+            </footer>
+        </section>
+        <!-- this  finishes the delete mapping confirmation dialog -->
+
+        <!-- NEW!! Render the dialog to EDIT pager duty service -->
+        <section role="dialog" id="pd-service-edit-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+            <!-- Dialog header -->
+            <header class="aui-dialog2-header">
+                <!-- The dialog's title -->
+                <h2 class="aui-dialog2-header-main">
+                    $i18n.getText("pagerduty.projadmin.editserviceform.dialog.header")
+                </h2>
+            </header>
+            <!-- Main dialog content -->
+            <div class="aui-dialog2-content">
+                <form action="#" method="post" id="edit-pdservice-form" class="aui">
+                    <fieldset>
+                        <div class="field-group">
+                            <!-- for PagerDuty Service -->
+                            <label for="pdServiceEdit">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.pdServiceField")
+                                <span class="aui-icon icon-required"> required</span>
+                            </label>
+                            <select class="select" id="pdServiceEdit" name="pdServiceEdit" title="Select PagerDuty Service">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for Clients Impacted -->
+                            <label for="pdClientsImpactedEdit">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.clientsImpacted")
+                                <span class="aui-icon icon-required"> required</span>
+                            </label>
+                            <select class="select" id="pdClientsImpactedEdit" name="pdClientsImpactedEdit"
+                                    title=" Select Clients Impacted">
+                                <option value="">Select</option>
+                                <option value="Internal">Internal (Burlington)</option>
+                                <option value="External">External</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for Impacted -->
+                            <label for="pdImpactedEdit">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.impacted")
+                            </label>
+                            <select class="select" id="pdImpactedEdit" name="pdImpactedEdit" title="Select Impacted">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for Severiy(s)-->
+                            <label for="pdSeverityEdit">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.severity")
+                                <span class="aui-icon icon-required"> required</span>
+                            </label>
+                            <select class="select" id="pdSeverityEdit" name="pdSeverityEdit" title="Select Severity">
+                                <option value="">Select</option>
+                                <option value="Critical">Critical</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for DDC Product -->
+                            <label for="sdDDCProdEdit">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.ddcproduct")
+                            </label>
+                            <select class="select" id="sdDDCProdEdit" name="sdDDCProdEdit" title="Select DDC Product">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for DDC Sub Product Level 0-->
+                            <label for="sdDDCSubProd0Edit">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.ddcsubproduct0")
+                            </label>
+                            <select class="select" id="sdDDCSubProd0Edit" name="sdDDCSubProd0Edit"
+                                    title="Select DDC Sub-Product level 0">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                        <div class="field-group">
+                            <!-- for DDC Sub Product Level 1-->
+                            <label for="sdDDCSubProd1Edit">
+                                $i18n.getText("pagerduty.projadmin.addserviceform.dialog.ddcsubproduct1")
+                            </label>
+                            <select class="select" id="sdDDCSubProd1Edit" name="sdDDCSubProd1Edit"
+                                    title="Select DDC Sub-Product level 1">
+                                <option value="">Select</option>
+                            </select>
+                            <div class="error"></div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <footer class="aui-dialog2-footer">
+                <!-- Actions to render on the right of the footer -->
+                <div class="aui-dialog2-footer-actions">
+                    <button id="pd-service-add-dialog-add-button-Edit" class="aui-button">
+                        $i18n.getText("pagerduty.projadmin.editserviceform.dialog.addbutton")
+                    </button>
+                    <button id="pd-service-add-dialog-cancel-link-Edit" class="aui-button aui-button-link">
+                        $i18n.getText("pagerduty.projadmin.addserviceform.dialog.cancellink")
+                    </button>
+                </div>
+            </footer>
+        </section>
+        <!-- Code for editing pager duty service dialog ends -->
+
+
+
+        <table id="pdservicestable" class="aui aui-table-sortable">
+            <thead>
+            <tr>
+                <th>Service Key</th>
+                <th>Service Name</th>
+                <th>Clients Impacted</th>
+                <th>Impacted</th>
+                <th>Severity</th>
+                <th>DDC Product</th>
+                <th>DDC Sub Product</th>
+                <th>DDC Sub Sub Product</th>
+                <th>Operations</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </body>
+</html>

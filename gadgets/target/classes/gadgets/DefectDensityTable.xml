@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Defect Density (Table view)" directory_title="Defect Density (Table view)" description="Total defects that are accepted as valid ones vs the total of story points " author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">JIRA</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="version" datatype="hidden" default_value="All"/><UserPref name="sprintId" datatype="hidden" default_value="All"/><UserPref name="groupbyField" datatype="hidden" default_value="Severity"/><UserPref name="headertxt" datatype="hidden" default_value="Defect Density (Table view)"/><Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+	#includeResources()
+		<script type="text/javascript">
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var GROUP_BY_FIELD = "DT-Environment";
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						//desc.fields.splice(1,2);
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				      view: {
+							template: function(args) {
+								var gadget = this;
+								var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                                if(header != "" && header != null ){
+                                    gadgets.window.setTitle(header);
+                                }
+                                 else{
+                                    gadgets.window.setTitle("Defect Density (Table view)");
+                                }
+								 
+								var projectList = AJS.$("<table/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center");
+								var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+								sevTR.append(AJS.$("<td/>").css("width","30%").text('Data').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Value').css("border-right","1px solid #B3B8B9"))						
+								
+								projectList.append(sevTR);
+							
+								 var dataTR1 =  AJS.$("<tr/>");								
+								
+								 
+								 dataTR1.append(AJS.$("<td/>").css("width","30%").text('# of Defects').css("border-right","1px solid #B3B8B9"))
+								 
+								dataTR1.append(AJS.$("<td/>").text(''+parseInt(args.projectData.totQA)).css("border-right","1px solid #B3B8B9"))	
+								
+								  projectList.append(dataTR1);
+								  
+								 var dataTR2 =  AJS.$("<tr/>");								
+								 
+								 
+								dataTR2.append(AJS.$("<td/>").css("width","30%").text('# of Normalized Tickets').css("border-right","1px solid #B3B8B9"))
+								dataTR2.append(AJS.$("<td/>").text(''+parseInt(args.projectData.totStories)).css("border-right","1px solid #B3B8B9"))	
+								   
+								 projectList.append(dataTR2);
+								
+								gadget.getView().html(projectList);
+							},
+							args: [{
+								key: "projectData",
+								ajaxOptions: function() {
+									return {
+										url: "/rest/dealertrack/1.0/defectdensity.json", 
+										contentType: "application/json",
+										data:  { projectKey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprintId").split('|').toString())
+												
+										}
+									};
+								}
+							}]
+						}
+			});
+		})();
+	
+ </script>
+  ]]>
+  </Content></Module>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Backlog Elaboration" directory_title="Backlog Elaboration" description="It Describes the granularity of the Issues in the backlog, which is an indicator if the stories are sufficiently elaborated or not." author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">Charts</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="version" datatype="hidden" default_value="All"/><UserPref name="sprintId" datatype="hidden" default_value="All"/><UserPref name="CurrentDate" datatype="hidden" default_value="now()"/><UserPref name="headertxt" datatype="hidden" default_value="Backlog Elaboration"/><Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+		
+		#includeResources()
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						desc.fields.splice(3,1);
+							var today = new Date();
+							var dd = today.getDate();
+							var mm = today.getMonth()+1; //January is 0!
+							var yyyy = today.getFullYear();
+								if(dd<10){dd='0'+dd} 
+								if(mm<10){mm='0'+mm} 
+								today = mm+'/'+dd+'/'+yyyy;
+						desc.fields.push ({
+							id: "current-date-picker",
+							userpref: "CurrentDate",
+							label: "Today's Date(mm/dd/yyyy)",
+							type: "text",
+							value: today							
+							}
+						);
+						
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+                     var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                          if(header != "" && header != null ){
+                              gadgets.window.setTitle(header);
+                          }
+                          else{
+                              gadgets.window.setTitle("Backlog Elaboration");
+                          }
+						//alert();
+						drawchart(args.backlog,this.getPref("CurrentDate"));
+					},
+					args: [
+                        {
+                            key: "backlog",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/backlogelaboration.json",								
+									contentType: "application/json",
+									data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+											version: gadgets.util.unescapeString(this.getPref("version")),
+											currentdate	: gadgets.util.unescapeString(this.getPref("CurrentDate"))											
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(_restdata,currentDate) {
+			console.log(_restdata); 
+			//var range = new Array();			
+			var label = new Array();
+			var story = new Array();
+			var t_story = new Array();
+			var defect = new Array();
+			var epic = new Array();
+			var theme = new Array();
+			var activity = new Array();
+			if (_restdata.length < 1) {
+				//range.push(0);
+				label.push('');
+				//range.push(0);
+				story.push(0);t_story.push(0);defect.push(0);epic.push(0);theme.push(0);activity.push(0);
+			}
+			 var s1 = [5, 57,68, 48,28, 55];    
+			 var s2 = [5, 57,68, 48,28, 55];    			 
+			// var ticks = ['1.1.1 R', '1.1.1 P', 'AHFC1.2', '1.1.1 R','1.1.1 p','1.2.1 R'];
+			if (_restdata.length > 0) {
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {			
+						
+					label.push((_restdata[_i].label == '')?'None':_restdata[_i].label);	
+					if(_restdata[_i].label == '<=0'){
+						story.push(parseInt(_restdata[_i].story));
+						t_story.push(parseInt(_restdata[_i].technicalStory));
+						defect.push(parseInt(_restdata[_i].defect));
+						epic.push(parseInt(_restdata[_i].epic));
+						theme.push(parseInt(_restdata[_i].theme));					
+						activity.push(parseInt(_restdata[_i].activity));
+					
+					}else if(_restdata[_i].label == '1-5'){
+						story.push(parseInt(_restdata[_i].story));
+						t_story.push(parseInt(_restdata[_i].technicalStory));
+						defect.push(parseInt(_restdata[_i].defect));
+						epic.push(parseInt(_restdata[_i].epic));
+						theme.push(parseInt(_restdata[_i].theme));
+						activity.push(parseInt(_restdata[_i].activity));
+						
+					} else if(_restdata[_i].label == '6-10'){
+						story.push(parseInt(_restdata[_i].story));
+						t_story.push(parseInt(_restdata[_i].technicalStory));
+						defect.push(parseInt(_restdata[_i].defect));
+						epic.push(parseInt(_restdata[_i].epic));
+						theme.push(parseInt(_restdata[_i].theme));
+						activity.push(parseInt(_restdata[_i].activity));
+						
+					} else if(_restdata[_i].label == '11-15'){
+						story.push(parseInt(_restdata[_i].story));
+						t_story.push(parseInt(_restdata[_i].technicalStory));
+						defect.push(parseInt(_restdata[_i].defect));
+						epic.push(parseInt(_restdata[_i].epic));
+						theme.push(parseInt(_restdata[_i].theme));
+						activity.push(parseInt(_restdata[_i].activity));
+						
+					} else if(_restdata[_i].label == '16-20'){
+						story.push(parseInt(_restdata[_i].story));
+						t_story.push(parseInt(_restdata[_i].technicalStory));
+						defect.push(parseInt(_restdata[_i].defect));
+						epic.push(parseInt(_restdata[_i].epic));
+						theme.push(parseInt(_restdata[_i].theme));
+						
+					} else if(_restdata[_i].label == '21-50'){
+						story.push(parseInt(_restdata[_i].story));
+						t_story.push(parseInt(_restdata[_i].technicalStory));
+						defect.push(parseInt(_restdata[_i].defect));
+						epic.push(parseInt(_restdata[_i].epic));
+						theme.push(parseInt(_restdata[_i].theme));
+						activity.push(parseInt(_restdata[_i].activity));
+						
+					} 
+					
+				}
+			}
+		
+			AJS.$.jqplot.config.enablePlugins = true;	
+			plot1 = AJS.$.jqplot('backlogelaboration', [story,t_story,defect,epic, theme,activity], {
+ 			stackSeries: true,			
+			title: 'As of today '+currentDate,
+			seriesColors: ['#9CBC5B','#045FB4','#FF0040','#FE9A2E','#00BFFF','#127D82'],
+            seriesDefaults:{
+				renderer:AJS.$.jqplot.BarRenderer,
+				rendererOptions: {
+					fillToZero: false, 
+					barWidth:25,
+					barPadding:2,
+					barMargin:1
+				},
+				pointLabels: {show: true,escapeHTML	: false,
+				 formatter: AJS.$.jqplot.DefaultTickFormatter,
+				 formatString: '<b> <span style="color:black;"> %s  </span> </b>'},
+				trendline: {show: false}
+			},
+			 grid:{ background: 'white'},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series:[
+				{label:'Story'},
+				{label:'Technical Story'},
+				{label:'Defect'},
+				{label:'Epic'},
+				{label:'Theme'},
+				{label:'Activity'}			
+				
+			],
+			 // Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+			  show: true,
+			  location: 'e'
+			},
+			axesDefaults:{
+				tickOptions: {
+					showGridline: true
+				}
+			},
+			
+            axes: {
+                xaxis: {
+                    renderer: AJS.$.jqplot.CategoryAxisRenderer,
+                    ticks: label,
+					pad:1,
+					label:'Story Points',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer					
+                },
+				 // Pad the y axis just a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					min:0,
+					pad:1.2,
+					tickOptions: {formatString: '%d'},
+					label:'No.of Issues',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontColor:'Black'
+					}
+				}
+            },
+            highlighter: { show: false }
+        });
+     plot1.redraw();
+
+	plot1.replot( {axes: {
+					xaxis: {
+						renderer: AJS.$.jqplot.CategoryAxisRenderer,
+						pad:1	
+						}
+					},
+					yaxis: {
+						min:0,
+						pad:1.2					
+					}
+				}
+			);
+	AJS.$('#backlogelaboration').on('jqplotDataHighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+		});
+		AJS.$('#backlogelaboration').on('jqplotDataUnhighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+		});
+         AJS.$('#backlogelaboration').bind('jqplotDataClick', 
+            function (ev, seriesIndex, pointIndex, data) {
+                //$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+				var lnk='';				
+				var  index = data.toString().split(',')[0];
+				lnk = _restdata[index-1].url;
+				
+				
+				console.log( 'url: ' + lnk );
+				top.location.href = lnk;
+				//console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+            }
+        );
+		
+			//console.log(plot1);
+			
+	};
+	
+	</script>		
+		<div id="backlogelaboration"> </div>
+
+
+	]]>
+
+  </Content></Module>

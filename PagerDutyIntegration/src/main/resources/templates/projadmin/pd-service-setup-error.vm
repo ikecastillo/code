@@ -1,0 +1,15 @@
+<html>
+<head>
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+    <meta name="decorator" content="atl.admin" />
+    <meta name="projectKey" content="$projectKey"/>
+    <meta name="admin.active.tab" content="pd-service-setup-link"/>
+    <meta name="admin.active.section" content="atl.jira.proj.config"/>
+    $webResourceManager.requireResource("com.dt.jira.pagerduty.intgt.plugin.PagerDuty-integration-plugin:PagerDuty-integration-plugin-services")
+    $webResourceManager.requireResource("com.atlassian.auiplugin:aui-select2")
+    <title>PagerDuty Service Setup</title>
+</head>
+<body>
+ Error in rendering this page. Please check that you are logged into JIRA and that you have appropriate project permissions to view this page.
+</body>
+</html>

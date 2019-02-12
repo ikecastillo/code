@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Overall DLR (Table view)"
+                 directory_title="Overall DLR (Table view)"
+                 description="Overall DLR (Table view)"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">JIRA</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="sprintId" datatype="hidden" default_value="All"/>
+	<UserPref name="groupbyField" datatype="hidden" default_value="Severity"/>
+    <UserPref name="headertxt" datatype="hidden" default_value="Overall DLR (Table view)"/>
+    <Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+	#includeResources()
+		<script type="text/javascript">
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var GROUP_BY_FIELD = "DT-Environment";
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        //return DTGADGET.DLRdescriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						 var desc = DTGADGET.DLRdescriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						 desc.fields.push ({
+							id: "groupbyField",
+							userpref: "groupbyField",
+							label: gadget.getMsg("Group By"),
+							//description:gadget.getMsg("The filtered data will be grouped by this field"),
+							type: "select",
+							selected: gadget.getPref("groupbyField"),
+							options:[								
+								{
+									label:"Defect Cause",
+									value:"Defect Cause"
+								},
+								{								
+									label:"Severity",
+									value:"Severity"
+								}							
+							] 
+						});
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				      view: {
+							template: function(args) {
+								var gadget = this;
+								var grpBy = gadget.getPref("groupbyField");
+								console.log('GroupByField: ' + grpBy + ' ' + gadget.getPref('groupbyField'));
+								var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                                 if(header != "" && header != null ){
+                                    gadgets.window.setTitle(header);
+                                }
+                                else{
+                                    gadgets.window.setTitle("Overall DLR - " + grpBy);
+                                }
+								//gadgets.window.setTitle("Overall DLR - " + grpBy);
+								var projectList = AJS.$("<table/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center");
+								var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+								sevTR.append(AJS.$("<td/>").css("width","30%").text(grpBy).css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Production').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('QA').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Total'))
+								//sevTR.append(AJS.$("<td/>").text('Medium'))
+								//sevTR.append(AJS.$("<td/>").text('High'))
+								//sevTR.append(AJS.$("<td/>").text('Critical'))
+								projectList.append(sevTR);
+								AJS.$(args.projectData).each(function() {	
+								 var dataTR =  AJS.$("<tr/>");
+								 var k = (this.field == 'Other')? 'Unknown':this.field;
+								 var link;
+								 link = '<a id="fieldname" href="' + gadgets.util.escapeString(this.URLForTable)+'">'+ k +' </a>'
+								 if(k=='Total' || k=='DLR' ){
+									     link = this.field
+								 dataTR.append(AJS.$("<td/>").html(link).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9").css("border-top","1px solid #B3B8B9") )
+								}	else {
+								dataTR.append(AJS.$("<td/>").html(link).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+								}								
+								 if(this.field=='DLR'){
+									dataTR.append( AJS.$("<td/>").text(this.proddefects+'%').css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9").css("border-top","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.qadefects+'%').css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9").css("border-top","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.TotalDef).css("border-right","1px solid #B3B8B9").css("border-top","1px solid #B3B8B9") )
+								 } else if(this.field=='Total'){
+									dataTR.append( AJS.$("<td/>").text(this.proddefects).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9").css("border-top","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.qadefects).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9").css("border-top","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.TotalDef).css("border-right","1px solid #B3B8B9").css("border-top","1px solid #B3B8B9"))									
+								 } else {
+									dataTR.append( AJS.$("<td/>").text(this.proddefects).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.qadefects).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.TotalDef).css("border-right","1px solid #B3B8B9") )
+								 }
+						
+								 
+								 projectList.append(dataTR);
+								});
+								gadget.getView().html(projectList);
+							},
+							args: [{
+								key: "projectData",
+								ajaxOptions: function() {
+									return {
+										url: "/rest/dealertrack/1.0/projectdlr.json", 
+										contentType: "application/json",
+										data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprintId").split('|').toString()),
+												groupbyField: gadgets.util.unescapeString(this.getPref("groupbyField"))
+												
+										}
+									};
+								}
+							}]
+						}
+			});
+		})();
+	
+ </script>
+  ]]>
+  </Content>
+</Module>

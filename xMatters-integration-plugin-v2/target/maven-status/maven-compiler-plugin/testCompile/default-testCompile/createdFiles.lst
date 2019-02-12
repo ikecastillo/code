@@ -1,0 +1,4 @@
+it\com\dt\jira\xmatters\intgt\plugin\MyComponentWiredTest.class
+ut\com\dt\jira\xmatters\intgt\plugin\rest\ProjectFieldsTest.class
+it\com\dt\jira\xmatters\intgt\plugin\rest\ProjectFieldsFuncTest.class
+ut\com\dt\jira\xmatters\intgt\plugin\MyComponentUnitTest.class

@@ -1,0 +1,48 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+		<!--param name="configure.url">/plugins/servlet/standardbauchange/servlet</param-->
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="StandardBAUChange"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="StandardBAUChange-resources" name="StandardBAUChange Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="StandardBAUChange.css" location="/css/StandardBAUChange.css"/>
+        <resource type="download" name="StandardBAUChange.js" location="/js/StandardBAUChange.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>StandardBAUChange</context>
+    </web-resource>
+     <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />  
+	<!-- import from the product container -->    
+   
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/> 
+		 
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.standardbauchange.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.standardbauchange.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+     <!-- WCDICC-693	Copy Template and Value from Service Desk and add to Change Management System -->
+	<rest key="standardtype" name="standardtype" i18n-name-key="standardtype.key" path="/dealertrack/standard" version="1.0">
+        <description key="rest.description">Rest Module Copy Template and Value from Service Desk and add to Change Managment System </description>
+    </rest>
+	
+	<servlet key="standardbauchange-servlet" class="com.dt.jira.plugin.standardbauchange.ui.StandardBAUServlet"> 
+			<url-pattern>/standardbauchange/servlet</url-pattern>
+	</servlet>
+	
+	
+</atlassian-plugin>

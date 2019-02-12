@@ -1,0 +1,4 @@
+ut\com\dt\jira\plugin\rest\dtrestTest.class
+it\com\dt\jira\plugin\MyComponentWiredTest.class
+it\com\dt\jira\plugin\rest\dtrestFuncTest.class
+ut\com\dt\jira\plugin\MyComponentUnitTest.class

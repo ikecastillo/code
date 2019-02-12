@@ -1,0 +1,3 @@
+com\dt\jira\multilevelcascadedepth\impl\MyPluginComponentImpl.class
+com\dt\jira\multilevelcascadedepth\api\MyPluginComponent.class
+com\dt\jira\multilevelcascadedepth\jql\MultilevelCascadeOptionForDepthJQLfunction.class

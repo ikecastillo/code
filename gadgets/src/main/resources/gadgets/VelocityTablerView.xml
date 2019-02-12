@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Velocity Tabular View "
+                 directory_title="Velocity (Scope Variance) table view"
+                 description="Velocity Tabular View"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">JIRA</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="sprintId" datatype="hidden" default_value="All"/>
+	<UserPref name="groupbyField" datatype="hidden" default_value="Severity"/>
+    <UserPref name="headertxt" datatype="hidden" default_value="Velocity Tabular View"/>
+    <Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+	#includeResources()
+		<script type="text/javascript">
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var GROUP_BY_FIELD = "DT-Environment";
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+				 config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						//alert(
+						desc.fields.splice(3,1);
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+			 
+				      view: {
+							//enableReload: true,
+							template: function(args) {
+								var gadget = this;
+								var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+
+                                if(header != "" && header != null ){
+                                    gadgets.window.setTitle(header);
+                                    }
+                                    else{
+                                    gadgets.window.setTitle("Velocity Tabular View");
+                                    }
+
+								var projectList = AJS.$("<table/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center");
+								var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+								sevTR.append(AJS.$("<td/>").css("width","30%").text('Sprint').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Start Date').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('End Date').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Comitted').css("border-right","1px solid #B3B8B9"))							
+								sevTR.append(AJS.$("<td/>").text('Completed').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('% of Story Points').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Vel/Wk'))
+								projectList.append(sevTR);
+								AJS.$(args.projectData).each(function() {	
+								 var dataTR =  AJS.$("<tr/>");
+								 if(this.sprint == 'Total' || this.sprint == 'Average' ){
+									dataTR.append( AJS.$("<td/>").text(this.sprint).css("border-left","1px solid #B3B8B9").css("border-top","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.startdate).css("border-top","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.enddate).css("border-top","1px solid #B3B8B9")  )
+									dataTR.append( AJS.$("<td/>").text(this.comitted).css("border-top","1px solid #B3B8B9").css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.completed).css("border-top","1px solid #B3B8B9").css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.percentage).css("border-top","1px solid #B3B8B9").css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.vel_wk).css("border-top","1px solid #B3B8B9").css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									} else {
+									dataTR.append( AJS.$("<td/>").text(this.sprint).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.startdate).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.enddate).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.comitted).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.completed).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.percentage).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.vel_wk).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									}
+								 projectList.append(dataTR);
+								});
+								gadget.getView().html(projectList);
+							},
+							args: [{
+								key: "projectData",
+								ajaxOptions: function() {
+									return {
+										url: "/rest/dealertrack/1.0/velocity.json",
+										contentType: "application/json",
+										data:  { 
+											projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+											version: gadgets.util.unescapeString(this.getPref("version").split('|').toString())
+										}
+									};
+								}
+							}]
+						}
+			});
+		})();
+	
+ </script>
+  ]]>
+  </Content>
+</Module>

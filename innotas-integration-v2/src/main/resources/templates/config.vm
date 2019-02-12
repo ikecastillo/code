@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>$i18n.getText("innotas.config.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jira.plugin.innotas-integrationv2:innotas-integration-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+  </head>
+  <body>
+		<div class="header">
+        <h3 class="formtitle">$i18n.getText("innotas.config.label")</h3>
+    </div>
+    <form id="config" class="aui">
+      <div class="field-group">
+        <label for="innotasurl">$i18n.getText("innotas.config.innotasurl.label")</label>
+        <input type="text" id="innotasurl" name="innotasurl" class="text">
+      </div>
+      <div class="field-group">
+        <label for="innotasuid">$i18n.getText("innotas.config.innotasuid.label")</label>
+        <input type="text" id="innotasuid" name="innotasuid" class="text">
+      </div>
+      <div class="field-group">
+        <label for="innotaspwd">$i18n.getText("innotas.config.innotaspwd.label")</label>
+        <input type="password" id="innotaspwd" name="innotaspwd" class="text">
+      </div>
+      <div class="field-group">
+        <input type="submit" value="$i18n.getText("innotas.config.save.label")" class="button">
+        <input type="button" value="$i18n.getText("innotas.config.test.label")" class="button" onclick="JIRA.Messages.showWarningMsg('This functionality is not implemented yet');return false;">
+				<input type="button" value="$i18n.getText("innotas.config.cancel.label")" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+      </div>
+    </form>
+		<!--
+ 		<script type="text/javascript">
+      var baseUrl = "$applicationProperties.getBaseUrl()";
+    </script> -->
+	</body>
+</html>

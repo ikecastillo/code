@@ -1,0 +1,25 @@
+{namespace JIRA.Templates.Mail.InlineMessage}
+
+/**
+* Renders a line of text with an error icon at the start
+* @param message The message to render
+*/
+{template .error}
+<span class="aui-icon aui-icon-small aui-iconfont-error icon-default"></span> {$message |noAutoescape}
+{/template}
+
+/**
+* Renders a line of text with an info icon at the start
+* @param message The message to render
+*/
+{template .info}
+<span class="aui-icon aui-icon-small aui-iconfont-info icon-default"></span> {$message |noAutoescape}
+{/template}
+
+/**
+* Renders a line of text with a success icon at the start
+* @param message The message to render
+*/
+{template .success}
+<span class="aui-icon aui-icon-small aui-iconfont-success icon-default"></span> {$message |noAutoescape}
+{/template}

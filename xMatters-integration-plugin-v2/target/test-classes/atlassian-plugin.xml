@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="com.dt.jira.xmatters.intgt.plugin.xMatters-integration-plugin-tests" name="Incident Management xMatters Integration V2.0" plugins-version="2">
+  <plugin-info>
+    <description>This is the com.dt.jira.xmatters.intgt.plugin:xMatters-integration-plugin-v2 plugin for Atlassian JIRA.</description>
+    <version>1.3</version>
+    <vendor name="DT Inc." url="http://www.dealertrack.com/"/>
+  </plugin-info>
+  <!-- from our base plugin -->
+  <component-import key="myComponent" interface="com.dt.jira.xmatters.intgt.plugin.MyPluginComponent"/>
+  <!-- from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <component key="my-component-wired-test" class="it.com.dt.jira.xmatters.intgt.plugin.MyComponentWiredTest" public="true">
+    <interface>it.com.dt.jira.xmatters.intgt.plugin.MyComponentWiredTest</interface>
+    <service-properties>
+      <entry key="inProductTest" value="true"/>
+    </service-properties>
+  </component>
+</atlassian-plugin>

@@ -1,0 +1,2221 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from QMetryWS WSDL service -->
+
+  <service name="QMetryWSSOAPPort_Http" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://www.wso2.org/php"/>
+      <parameter name="wsdlServiceElement" value="QMetryWS"/>
+      <parameter name="schemaQualified" value="http://www.wso2.org/php/xsd"/>
+      <parameter name="wsdlServicePort" value="QMetryWSSOAPPort_Http"/>
+      <parameter name="className" value="org.wso2.www.php.QMetryWSSOAPBindingImpl"/>
+      <parameter name="wsdlPortType" value="QMetryWSPortType"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="linkPlatformToTestSuite" qname="linkPlatformToTestSuite" returnQName="retNS:linkPlatformToTestSuiteResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>linkPlatformToTestSuiteResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/linkPlatformToTestSuite" >
+        <parameter qname="pns:linkPlatformToTestSuite" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>linkPlatformToTestSuite" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="downloadAttachment" qname="downloadAttachment" returnQName="retNS:downloadAttachmentResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>downloadAttachmentResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/downloadAttachment" >
+        <parameter qname="pns:downloadAttachment" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>downloadAttachment" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getRelease" qname="getRelease" returnQName="retNS:getReleaseResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getReleaseResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getRelease" >
+        <parameter qname="pns:getRelease" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getRelease" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCaseWithStepsUsingRunId" qname="executeTestCaseWithStepsUsingRunId" returnQName="retNS:executeTestCaseWithStepsUsingRunIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseWithStepsUsingRunIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCaseWithStepsUsingRunId" >
+        <parameter qname="pns:executeTestCaseWithStepsUsingRunId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCaseWithStepsUsingRunId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createReleaseBuild" qname="createReleaseBuild" returnQName="retNS:createReleaseBuildResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createReleaseBuildResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createReleaseBuild" >
+        <parameter qname="pns:createReleaseBuild" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createReleaseBuild" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listDefectTrackers" qname="listDefectTrackers" returnQName="retNS:listDefectTrackersResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listDefectTrackersResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listDefectTrackers" >
+        <parameter qname="pns:listDefectTrackers" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listDefectTrackers" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="setScope" qname="setScope" returnQName="retNS:setScopeResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>setScopeResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/setScope" >
+        <parameter qname="pns:setScope" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>setScope" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listTestCasesFromFolderId" qname="listTestCasesFromFolderId" returnQName="retNS:listTestCasesFromFolderIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listTestCasesFromFolderIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listTestCasesFromFolderId" >
+        <parameter qname="pns:listTestCasesFromFolderId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listTestCasesFromFolderId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="addTestLog" qname="addTestLog" returnQName="retNS:addTestLogResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>addTestLogResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/addTestLog" >
+        <parameter qname="pns:addTestLog" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>addTestLog" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listFolders" qname="listFolders" returnQName="retNS:listFoldersResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listFoldersResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listFolders" >
+        <parameter qname="pns:listFolders" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listFolders" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="setRelease" qname="setRelease" returnQName="retNS:setReleaseResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>setReleaseResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/setRelease" >
+        <parameter qname="pns:setRelease" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>setRelease" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listUsers" qname="listUsers" returnQName="retNS:listUsersResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listUsersResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listUsers" >
+        <parameter qname="pns:listUsers" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listUsers" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestSuiteStatusByPlatform" qname="getTestSuiteStatusByPlatform" returnQName="retNS:getTestSuiteStatusByPlatformResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestSuiteStatusByPlatformResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestSuiteStatusByPlatform" >
+        <parameter qname="pns:getTestSuiteStatusByPlatform" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestSuiteStatusByPlatform" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCase" qname="executeTestCase" returnQName="retNS:executeTestCaseResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCase" >
+        <parameter qname="pns:executeTestCase" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCase" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getRequirementsFromDefectId" qname="getRequirementsFromDefectId" returnQName="retNS:getRequirementsFromDefectIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getRequirementsFromDefectIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getRequirementsFromDefectId" >
+        <parameter qname="pns:getRequirementsFromDefectId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getRequirementsFromDefectId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listReleasesWithTargetDate" qname="listReleasesWithTargetDate" returnQName="retNS:listReleasesWithTargetDateResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listReleasesWithTargetDateResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listReleasesWithTargetDate" >
+        <parameter qname="pns:listReleasesWithTargetDate" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listReleasesWithTargetDate" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestSuiteById" qname="getTestSuiteById" returnQName="retNS:getTestSuiteByIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestSuiteByIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestSuiteById" >
+        <parameter qname="pns:getTestSuiteById" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestSuiteById" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="addTestLogUsingRunId" qname="addTestLogUsingRunId" returnQName="retNS:addTestLogUsingRunIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>addTestLogUsingRunIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/addTestLogUsingRunId" >
+        <parameter qname="pns:addTestLogUsingRunId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>addTestLogUsingRunId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCaseUsingRunId" qname="executeTestCaseUsingRunId" returnQName="retNS:executeTestCaseUsingRunIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseUsingRunIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCaseUsingRunId" >
+        <parameter qname="pns:executeTestCaseUsingRunId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCaseUsingRunId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getProject" qname="getProject" returnQName="retNS:getProjectResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getProjectResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getProject" >
+        <parameter qname="pns:getProject" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getProject" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listAttachments" qname="listAttachments" returnQName="retNS:listAttachmentsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listAttachmentsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listAttachments" >
+        <parameter qname="pns:listAttachments" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listAttachments" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createPlatform" qname="createPlatform" returnQName="retNS:createPlatformResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createPlatformResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createPlatform" >
+        <parameter qname="pns:createPlatform" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createPlatform" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getRequirementById" qname="getRequirementById" returnQName="retNS:getRequirementByIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getRequirementByIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getRequirementById" >
+        <parameter qname="pns:getRequirementById" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getRequirementById" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="login" qname="login" returnQName="retNS:loginResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>loginResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/login" >
+        <parameter qname="pns:login" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>login" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="logout" qname="logout" returnQName="retNS:logoutResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>logoutResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/logout" >
+        <parameter qname="pns:logout" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>logout" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getDefectsFromTestCaseId" qname="getDefectsFromTestCaseId" returnQName="retNS:getDefectsFromTestCaseIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getDefectsFromTestCaseIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getDefectsFromTestCaseId" >
+        <parameter qname="pns:getDefectsFromTestCaseId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getDefectsFromTestCaseId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="deleteAttachment" qname="deleteAttachment" returnQName="retNS:deleteAttachmentResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>deleteAttachmentResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/deleteAttachment" >
+        <parameter qname="pns:deleteAttachment" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>deleteAttachment" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listRequirementsFromFolderId" qname="listRequirementsFromFolderId" returnQName="retNS:listRequirementsFromFolderIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listRequirementsFromFolderIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listRequirementsFromFolderId" >
+        <parameter qname="pns:listRequirementsFromFolderId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listRequirementsFromFolderId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listCustomizedList" qname="listCustomizedList" returnQName="retNS:listCustomizedListResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listCustomizedListResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listCustomizedList" >
+        <parameter qname="pns:listCustomizedList" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listCustomizedList" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="setProject" qname="setProject" returnQName="retNS:setProjectResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>setProjectResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/setProject" >
+        <parameter qname="pns:setProject" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>setProject" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="deleteBuild" qname="deleteBuild" returnQName="retNS:deleteBuildResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>deleteBuildResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/deleteBuild" >
+        <parameter qname="pns:deleteBuild" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>deleteBuild" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestCaseById" qname="getTestCaseById" returnQName="retNS:getTestCaseByIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestCaseByIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestCaseById" >
+        <parameter qname="pns:getTestCaseById" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestCaseById" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listProjects" qname="listProjects" returnQName="retNS:listProjectsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listProjectsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listProjects" >
+        <parameter qname="pns:listProjects" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listProjects" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="logExecutionHistory" qname="logExecutionHistory" returnQName="retNS:logExecutionHistoryResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>logExecutionHistoryResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/logExecutionHistory" >
+        <parameter qname="pns:logExecutionHistory" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>logExecutionHistory" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="QMetryVersion" qname="QMetryVersion" returnQName="retNS:QMetryVersionResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>QMetryVersionResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/QMetryVersion" >
+        <parameter qname="pns:QMetryVersion" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>QMetryVersion" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listFoldersWithStatus" qname="listFoldersWithStatus" returnQName="retNS:listFoldersWithStatusResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listFoldersWithStatusResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listFoldersWithStatus" >
+        <parameter qname="pns:listFoldersWithStatus" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listFoldersWithStatus" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="updateTestSuite" qname="updateTestSuite" returnQName="retNS:updateTestSuiteResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>updateTestSuiteResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/updateTestSuite" >
+        <parameter qname="pns:updateTestSuite" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>updateTestSuite" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="deleteTestCase" qname="deleteTestCase" returnQName="retNS:deleteTestCaseResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>deleteTestCaseResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/deleteTestCase" >
+        <parameter qname="pns:deleteTestCase" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>deleteTestCase" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="deleteFolder" qname="deleteFolder" returnQName="retNS:deleteFolderResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>deleteFolderResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/deleteFolder" >
+        <parameter qname="pns:deleteFolder" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>deleteFolder" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createFolder" qname="createFolder" returnQName="retNS:createFolderResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createFolderResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createFolder" >
+        <parameter qname="pns:createFolder" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createFolder" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getBuild" qname="getBuild" returnQName="retNS:getBuildResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getBuildResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getBuild" >
+        <parameter qname="pns:getBuild" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getBuild" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCaseWithComments" qname="executeTestCaseWithComments" returnQName="retNS:executeTestCaseWithCommentsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseWithCommentsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCaseWithComments" >
+        <parameter qname="pns:executeTestCaseWithComments" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCaseWithComments" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestCaseRunIds" qname="getTestCaseRunIds" returnQName="retNS:getTestCaseRunIdsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestCaseRunIdsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestCaseRunIds" >
+        <parameter qname="pns:getTestCaseRunIds" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestCaseRunIds" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="deleteRelease" qname="deleteRelease" returnQName="retNS:deleteReleaseResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>deleteReleaseResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/deleteRelease" >
+        <parameter qname="pns:deleteRelease" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>deleteRelease" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listFoldersFromParentId" qname="listFoldersFromParentId" returnQName="retNS:listFoldersFromParentIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listFoldersFromParentIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listFoldersFromParentId" >
+        <parameter qname="pns:listFoldersFromParentId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listFoldersFromParentId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listTestSuitesFromFolderId" qname="listTestSuitesFromFolderId" returnQName="retNS:listTestSuitesFromFolderIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listTestSuitesFromFolderIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listTestSuitesFromFolderId" >
+        <parameter qname="pns:listTestSuitesFromFolderId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listTestSuitesFromFolderId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listStatuses" qname="listStatuses" returnQName="retNS:listStatusesResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listStatusesResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listStatuses" >
+        <parameter qname="pns:listStatuses" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listStatuses" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCaseWithSteps" qname="executeTestCaseWithSteps" returnQName="retNS:executeTestCaseWithStepsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseWithStepsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCaseWithSteps" >
+        <parameter qname="pns:executeTestCaseWithSteps" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCaseWithSteps" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestcaseStepsStausByPlatform" qname="getTestcaseStepsStausByPlatform" returnQName="retNS:getTestcaseStepsStausByPlatformResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestcaseStepsStausByPlatformResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestcaseStepsStausByPlatform" >
+        <parameter qname="pns:getTestcaseStepsStausByPlatform" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestcaseStepsStausByPlatform" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="assignProject" qname="assignProject" returnQName="retNS:assignProjectResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>assignProjectResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/assignProject" >
+        <parameter qname="pns:assignProject" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>assignProject" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="setBuild" qname="setBuild" returnQName="retNS:setBuildResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>setBuildResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/setBuild" >
+        <parameter qname="pns:setBuild" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>setBuild" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCaseSteps" qname="executeTestCaseSteps" returnQName="retNS:executeTestCaseStepsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseStepsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCaseSteps" >
+        <parameter qname="pns:executeTestCaseSteps" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCaseSteps" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createSchedule" qname="createSchedule" returnQName="retNS:createScheduleResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createScheduleResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createSchedule" >
+        <parameter qname="pns:createSchedule" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createSchedule" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestCasesFromJiraDefectId" qname="getTestCasesFromJiraDefectId" returnQName="retNS:getTestCasesFromJiraDefectIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestCasesFromJiraDefectIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestCasesFromJiraDefectId" >
+        <parameter qname="pns:getTestCasesFromJiraDefectId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestCasesFromJiraDefectId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCaseStepWithResult" qname="executeTestCaseStepWithResult" returnQName="retNS:executeTestCaseStepWithResultResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseStepWithResultResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCaseStepWithResult" >
+        <parameter qname="pns:executeTestCaseStepWithResult" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCaseStepWithResult" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="associateDefect" qname="associateDefect" returnQName="retNS:associateDefectResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>associateDefectResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/associateDefect" >
+        <parameter qname="pns:associateDefect" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>associateDefect" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="activateProject" qname="activateProject" returnQName="retNS:activateProjectResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>activateProjectResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/activateProject" >
+        <parameter qname="pns:activateProject" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>activateProject" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="updateSchedulerComments" qname="updateSchedulerComments" returnQName="retNS:updateSchedulerCommentsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>updateSchedulerCommentsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/updateSchedulerComments" >
+        <parameter qname="pns:updateSchedulerComments" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>updateSchedulerComments" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="wsSearchDrops" qname="wsSearchDrops" returnQName="retNS:wsSearchDropsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>wsSearchDropsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/wsSearchDrops" >
+        <parameter qname="pns:wsSearchDrops" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>wsSearchDrops" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="deleteProject" qname="deleteProject" returnQName="retNS:deleteProjectResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>deleteProjectResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/deleteProject" >
+        <parameter qname="pns:deleteProject" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>deleteProject" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listTestCases" qname="listTestCases" returnQName="retNS:listTestCasesResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listTestCasesResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listTestCases" >
+        <parameter qname="pns:listTestCases" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listTestCases" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createTestCaseStep" qname="createTestCaseStep" returnQName="retNS:createTestCaseStepResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createTestCaseStepResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createTestCaseStep" >
+        <parameter qname="pns:createTestCaseStep" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createTestCaseStep" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="linkTestCaseWithTestSuite" qname="linkTestCaseWithTestSuite" returnQName="retNS:linkTestCaseWithTestSuiteResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>linkTestCaseWithTestSuiteResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/linkTestCaseWithTestSuite" >
+        <parameter qname="pns:linkTestCaseWithTestSuite" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>linkTestCaseWithTestSuite" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listReleases" qname="listReleases" returnQName="retNS:listReleasesResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listReleasesResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listReleases" >
+        <parameter qname="pns:listReleases" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listReleases" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="addAttachment" qname="addAttachment" returnQName="retNS:addAttachmentResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>addAttachmentResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/addAttachment" >
+        <parameter qname="pns:addAttachment" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>addAttachment" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createUser" qname="createUser" returnQName="retNS:createUserResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createUserResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createUser" >
+        <parameter qname="pns:createUser" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createUser" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestDataVariables" qname="getTestDataVariables" returnQName="retNS:getTestDataVariablesResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestDataVariablesResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestDataVariables" >
+        <parameter qname="pns:getTestDataVariables" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestDataVariables" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="setTestSuiteStartTime" qname="setTestSuiteStartTime" returnQName="retNS:setTestSuiteStartTimeResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>setTestSuiteStartTimeResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/setTestSuiteStartTime" >
+        <parameter qname="pns:setTestSuiteStartTime" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>setTestSuiteStartTime" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="wsArchiveDrops" qname="wsArchiveDrops" returnQName="retNS:wsArchiveDropsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>wsArchiveDropsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/wsArchiveDrops" >
+        <parameter qname="pns:wsArchiveDrops" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>wsArchiveDrops" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getPlatformStatusByPlatformId" qname="getPlatformStatusByPlatformId" returnQName="retNS:getPlatformStatusByPlatformIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getPlatformStatusByPlatformIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getPlatformStatusByPlatformId" >
+        <parameter qname="pns:getPlatformStatusByPlatformId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getPlatformStatusByPlatformId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getRequirementsJiraFromDefectId" qname="getRequirementsJiraFromDefectId" returnQName="retNS:getRequirementsJiraFromDefectIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getRequirementsJiraFromDefectIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getRequirementsJiraFromDefectId" >
+        <parameter qname="pns:getRequirementsJiraFromDefectId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getRequirementsJiraFromDefectId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listFoldersWithStatusFromParentId" qname="listFoldersWithStatusFromParentId" returnQName="retNS:listFoldersWithStatusFromParentIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listFoldersWithStatusFromParentIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listFoldersWithStatusFromParentId" >
+        <parameter qname="pns:listFoldersWithStatusFromParentId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listFoldersWithStatusFromParentId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listPlatformsByTestSuite" qname="listPlatformsByTestSuite" returnQName="retNS:listPlatformsByTestSuiteResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listPlatformsByTestSuiteResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listPlatformsByTestSuite" >
+        <parameter qname="pns:listPlatformsByTestSuite" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listPlatformsByTestSuite" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCaseWithCommentsAndTester" qname="executeTestCaseWithCommentsAndTester" returnQName="retNS:executeTestCaseWithCommentsAndTesterResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseWithCommentsAndTesterResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCaseWithCommentsAndTester" >
+        <parameter qname="pns:executeTestCaseWithCommentsAndTester" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCaseWithCommentsAndTester" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="setTestSuiteEndTime" qname="setTestSuiteEndTime" returnQName="retNS:setTestSuiteEndTimeResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>setTestSuiteEndTimeResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/setTestSuiteEndTime" >
+        <parameter qname="pns:setTestSuiteEndTime" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>setTestSuiteEndTime" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestSuite" qname="executeTestSuite" returnQName="retNS:executeTestSuiteResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestSuiteResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestSuite" >
+        <parameter qname="pns:executeTestSuite" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestSuite" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createTestSuite" qname="createTestSuite" returnQName="retNS:createTestSuiteResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createTestSuiteResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createTestSuite" >
+        <parameter qname="pns:createTestSuite" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createTestSuite" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listBuilds" qname="listBuilds" returnQName="retNS:listBuildsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listBuildsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listBuilds" >
+        <parameter qname="pns:listBuilds" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listBuilds" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="updateTestCase" qname="updateTestCase" returnQName="retNS:updateTestCaseResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>updateTestCaseResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/updateTestCase" >
+        <parameter qname="pns:updateTestCase" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>updateTestCase" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listUserRoles" qname="listUserRoles" returnQName="retNS:listUserRolesResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listUserRolesResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listUserRoles" >
+        <parameter qname="pns:listUserRoles" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listUserRoles" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listRequirements" qname="listRequirements" returnQName="retNS:listRequirementsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listRequirementsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listRequirements" >
+        <parameter qname="pns:listRequirements" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listRequirements" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listBuildsWithTargetDate" qname="listBuildsWithTargetDate" returnQName="retNS:listBuildsWithTargetDateResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listBuildsWithTargetDateResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listBuildsWithTargetDate" >
+        <parameter qname="pns:listBuildsWithTargetDate" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listBuildsWithTargetDate" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="linkTestCasesWithTestSuite" qname="linkTestCasesWithTestSuite" returnQName="retNS:linkTestCasesWithTestSuiteResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>linkTestCasesWithTestSuiteResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/linkTestCasesWithTestSuite" >
+        <parameter qname="pns:linkTestCasesWithTestSuite" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>linkTestCasesWithTestSuite" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getUserDefinedFields" qname="getUserDefinedFields" returnQName="retNS:getUserDefinedFieldsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getUserDefinedFieldsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getUserDefinedFields" >
+        <parameter qname="pns:getUserDefinedFields" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getUserDefinedFields" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createRequirement" qname="createRequirement" returnQName="retNS:createRequirementResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createRequirementResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createRequirement" >
+        <parameter qname="pns:createRequirement" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createRequirement" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="wsCreateDrops" qname="wsCreateDrops" returnQName="retNS:wsCreateDropsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>wsCreateDropsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/wsCreateDrops" >
+        <parameter qname="pns:wsCreateDrops" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>wsCreateDrops" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestcaseStepsFromTestcaseId" qname="getTestcaseStepsFromTestcaseId" returnQName="retNS:getTestcaseStepsFromTestcaseIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestcaseStepsFromTestcaseIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestcaseStepsFromTestcaseId" >
+        <parameter qname="pns:getTestcaseStepsFromTestcaseId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestcaseStepsFromTestcaseId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createProject" qname="createProject" returnQName="retNS:createProjectResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createProjectResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createProject" >
+        <parameter qname="pns:createProject" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createProject" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="executeTestCaseStep" qname="executeTestCaseStep" returnQName="retNS:executeTestCaseStepResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>executeTestCaseStepResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/executeTestCaseStep" >
+        <parameter qname="pns:executeTestCaseStep" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>executeTestCaseStep" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listCustomizedListValues" qname="listCustomizedListValues" returnQName="retNS:listCustomizedListValuesResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listCustomizedListValuesResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listCustomizedListValues" >
+        <parameter qname="pns:listCustomizedListValues" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listCustomizedListValues" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="createTestCase" qname="createTestCase" returnQName="retNS:createTestCaseResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>createTestCaseResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/createTestCase" >
+        <parameter qname="pns:createTestCase" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>createTestCase" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestSuiteExecutions" qname="getTestSuiteExecutions" returnQName="retNS:getTestSuiteExecutionsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestSuiteExecutionsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestSuiteExecutions" >
+        <parameter qname="pns:getTestSuiteExecutions" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestSuiteExecutions" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="deactivateProject" qname="deactivateProject" returnQName="retNS:deactivateProjectResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>deactivateProjectResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/deactivateProject" >
+        <parameter qname="pns:deactivateProject" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>deactivateProject" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="associateDefectTracker" qname="associateDefectTracker" returnQName="retNS:associateDefectTrackerResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>associateDefectTrackerResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/associateDefectTracker" >
+        <parameter qname="pns:associateDefectTracker" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>associateDefectTracker" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="updateRequirement" qname="updateRequirement" returnQName="retNS:updateRequirementResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>updateRequirementResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/updateRequirement" >
+        <parameter qname="pns:updateRequirement" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>updateRequirement" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="wsAssignDrops" qname="wsAssignDrops" returnQName="retNS:wsAssignDropsResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>wsAssignDropsResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/wsAssignDrops" >
+        <parameter qname="pns:wsAssignDrops" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>wsAssignDrops" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="listTestSuites" qname="listTestSuites" returnQName="retNS:listTestSuitesResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>listTestSuitesResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/listTestSuites" >
+        <parameter qname="pns:listTestSuites" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>listTestSuites" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="disablePlatform" qname="disablePlatform" returnQName="retNS:disablePlatformResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>disablePlatformResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/disablePlatform" >
+        <parameter qname="pns:disablePlatform" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>disablePlatform" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getScope" qname="getScope" returnQName="retNS:getScopeResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getScopeResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getScope" >
+        <parameter qname="pns:getScope" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getScope" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getListIdFromValue" qname="getListIdFromValue" returnQName="retNS:getListIdFromValueResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getListIdFromValueResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getListIdFromValue" >
+        <parameter qname="pns:getListIdFromValue" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getListIdFromValue" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="getTestCasesFromDefectId" qname="getTestCasesFromDefectId" returnQName="retNS:getTestCasesFromDefectIdResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>getTestCasesFromDefectIdResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/getTestCasesFromDefectId" >
+        <parameter qname="pns:getTestCasesFromDefectId" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>getTestCasesFromDefectId" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <operation name="deleteTestSuite" qname="deleteTestSuite" returnQName="retNS:deleteTestSuiteResponse" xmlns:retNS="http://www.wso2.org/php/xsd" returnType="rtns:>deleteTestSuiteResponse" xmlns:rtns="http://www.wso2.org/php/xsd" soapAction="http://10.134.8.17/qmetry/WEB-INF/ws/service.php/deleteTestSuite" >
+        <parameter qname="pns:deleteTestSuite" xmlns:pns="http://www.wso2.org/php/xsd" type="tns:>deleteTestSuite" xmlns:tns="http://www.wso2.org/php/xsd"/>
+      </operation>
+      <parameter name="allowedMethods" value="listAttachments executeTestCase getTestCaseRunIds createFolder wsArchiveDrops getRequirementById listTestCasesFromFolderId getTestSuiteStatusByPlatform getTestSuiteExecutions listPlatformsByTestSuite setProject deleteRelease executeTestCaseStep executeTestCaseWithComments addTestLogUsingRunId listBuilds wsAssignDrops QMetryVersion getListIdFromValue updateRequirement getRequirementsFromDefectId listFoldersWithStatusFromParentId getTestcaseStepsFromTestcaseId listDefectTrackers getRelease setScope executeTestCaseUsingRunId getTestSuiteById createTestCaseStep listFolders deleteFolder listProjects downloadAttachment getRequirementsJiraFromDefectId createProject listCustomizedListValues addTestLog linkTestCaseWithTestSuite wsSearchDrops executeTestCaseSteps logout setTestSuiteEndTime updateTestSuite linkTestCasesWithTestSuite listRequirements deleteTestSuite addAttachment setRelease wsCreateDrops getTestCasesFromJiraDefectId listRequirementsFromFolderId listReleases listBuildsWithTargetDate createSchedule deleteAttachment login getDefectsFromTestCaseId executeTestCaseWithSteps listTestSuites executeTestCaseStepWithResult createTestCase createRequirement listUserRoles associateDefect executeTestSuite deleteBuild createUser associateDefectTracker createTestSuite createReleaseBuild listFoldersWithStatus getBuild getTestcaseStepsStausByPlatform getScope updateTestCase deactivateProject listTestCases logExecutionHistory setBuild updateSchedulerComments listStatuses disablePlatform getTestCaseById linkPlatformToTestSuite deleteProject getTestCasesFromDefectId setTestSuiteStartTime deleteTestCase executeTestCaseWithStepsUsingRunId listFoldersFromParentId executeTestCaseWithCommentsAndTester createPlatform getPlatformStatusByPlatformId getTestDataVariables listCustomizedList activateProject listUsers getProject listTestSuitesFromFolderId listReleasesWithTargetDate assignProject getUserDefinedFields"/>
+      <parameter name="scope" value="Application"/>
+
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteFolderResponse"
+        type="java:org.wso2.www.php.xsd.DeleteFolderResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestSuiteStatusByPlatformResponse"
+        type="java:org.wso2.www.php.xsd.GetTestSuiteStatusByPlatformResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>addAttachment"
+        type="java:org.wso2.www.php.xsd.AddAttachment"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestSuitePlatformExecution"
+        type="java:org.wso2.www.php.xsd.TestSuitePlatformExecution"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>addTestLogUsingRunIdResponse"
+        type="java:org.wso2.www.php.xsd.AddTestLogUsingRunIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>addTestLog"
+        type="java:org.wso2.www.php.xsd.AddTestLog"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getDefectsFromTestCaseId"
+        type="java:org.wso2.www.php.xsd.GetDefectsFromTestCaseId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getReleaseResponse"
+        type="java:org.wso2.www.php.xsd.GetReleaseResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestSuiteEntity"
+        type="java:org.wso2.www.php.xsd.TestSuiteEntity"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listStatusesResponse"
+        type="java:org.wso2.www.php.xsd.ListStatusesResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:UserDefinedFieldDefination"
+        type="java:org.wso2.www.php.xsd.UserDefinedFieldDefination"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listTestSuitesFromFolderIdResponse"
+        type="java:org.wso2.www.php.xsd.ListTestSuitesFromFolderIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listCustomizedListValues"
+        type="java:org.wso2.www.php.xsd.ListCustomizedListValues"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setReleaseResponse"
+        type="java:org.wso2.www.php.xsd.SetReleaseResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listTestSuitesFromFolderId"
+        type="java:org.wso2.www.php.xsd.ListTestSuitesFromFolderId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:DefectTracker"
+        type="java:org.wso2.www.php.xsd.DefectTracker"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseWithComments"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseWithComments"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getRequirementsFromDefectId"
+        type="java:org.wso2.www.php.xsd.GetRequirementsFromDefectId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listFoldersFromParentId"
+        type="java:org.wso2.www.php.xsd.ListFoldersFromParentId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createScheduleResponse"
+        type="java:org.wso2.www.php.xsd.CreateScheduleResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listRequirementsFromFolderIdResponse"
+        type="java:org.wso2.www.php.xsd.ListRequirementsFromFolderIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestcaseStepsFromTestcaseIdResponse"
+        type="java:org.wso2.www.php.xsd.GetTestcaseStepsFromTestcaseIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createSchedule"
+        type="java:org.wso2.www.php.xsd.CreateSchedule"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseStepResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseStepResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestSuiteExecutionsResponse"
+        type="java:org.wso2.www.php.xsd.GetTestSuiteExecutionsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listReleasesWithTargetDate"
+        type="java:org.wso2.www.php.xsd.ListReleasesWithTargetDate"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>associateDefectTracker"
+        type="java:org.wso2.www.php.xsd.AssociateDefectTracker"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listCustomizedListResponse"
+        type="java:org.wso2.www.php.xsd.ListCustomizedListResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getScopeResponse"
+        type="java:org.wso2.www.php.xsd.GetScopeResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>updateRequirement"
+        type="java:org.wso2.www.php.xsd.UpdateRequirement"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listUsersResponse"
+        type="java:org.wso2.www.php.xsd.ListUsersResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:UserDefinedFieldArray"
+        type="java:org.wso2.www.php.xsd.UserDefinedFieldArray"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>wsArchiveDropsResponse"
+        type="java:org.wso2.www.php.xsd.WsArchiveDropsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:PlatformAttribute"
+        type="java:org.wso2.www.php.xsd.PlatformAttribute"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseStepWithResultResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseStepWithResultResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseStepExecutions"
+        type="java:org.wso2.www.php.xsd.TestCaseStepExecutions"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>downloadAttachment"
+        type="java:org.wso2.www.php.xsd.DownloadAttachment"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listRequirementsFromFolderId"
+        type="java:org.wso2.www.php.xsd.ListRequirementsFromFolderId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createTestCase"
+        type="java:org.wso2.www.php.xsd.CreateTestCase"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestSuiteById"
+        type="java:org.wso2.www.php.xsd.GetTestSuiteById"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestcaseStepsFromTestcaseId"
+        type="java:org.wso2.www.php.xsd.GetTestcaseStepsFromTestcaseId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getUserDefinedFieldsResponse"
+        type="java:org.wso2.www.php.xsd.GetUserDefinedFieldsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteBuild"
+        type="java:org.wso2.www.php.xsd.DeleteBuild"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listTestSuitesResponse"
+        type="java:org.wso2.www.php.xsd.ListTestSuitesResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseStepExecution"
+        type="java:org.wso2.www.php.xsd.TestCaseStepExecution"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestCaseRunIdsResponse"
+        type="java:org.wso2.www.php.xsd.GetTestCaseRunIdsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listRequirementsResponse"
+        type="java:org.wso2.www.php.xsd.ListRequirementsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setProject"
+        type="java:org.wso2.www.php.xsd.SetProject"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteAttachmentResponse"
+        type="java:org.wso2.www.php.xsd.DeleteAttachmentResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>linkTestCasesWithTestSuiteResponse"
+        type="java:org.wso2.www.php.xsd.LinkTestCasesWithTestSuiteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteAttachment"
+        type="java:org.wso2.www.php.xsd.DeleteAttachment"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>wsSearchDropsResponse"
+        type="java:org.wso2.www.php.xsd.WsSearchDropsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseWithSteps"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseWithSteps"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createUserResponse"
+        type="java:org.wso2.www.php.xsd.CreateUserResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getPlatformStatusByPlatformIdResponse"
+        type="java:org.wso2.www.php.xsd.GetPlatformStatusByPlatformIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:AttachmentEntity"
+        type="java:org.wso2.www.php.xsd.AttachmentEntity"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseWithStepsUsingRunId"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseWithStepsUsingRunId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestSuite"
+        type="java:org.wso2.www.php.xsd.ExecuteTestSuite"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteProjectResponse"
+        type="java:org.wso2.www.php.xsd.DeleteProjectResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>linkTestCasesWithTestSuite"
+        type="java:org.wso2.www.php.xsd.LinkTestCasesWithTestSuite"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestDataVariablesResponse"
+        type="java:org.wso2.www.php.xsd.GetTestDataVariablesResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>addTestLogResponse"
+        type="java:org.wso2.www.php.xsd.AddTestLogResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getRequirementsFromDefectIdResponse"
+        type="java:org.wso2.www.php.xsd.GetRequirementsFromDefectIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>linkTestCaseWithTestSuiteResponse"
+        type="java:org.wso2.www.php.xsd.LinkTestCaseWithTestSuiteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:Entity"
+        type="java:org.wso2.www.php.xsd.Entity"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createPlatformResponse"
+        type="java:org.wso2.www.php.xsd.CreatePlatformResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createPlatform"
+        type="java:org.wso2.www.php.xsd.CreatePlatform"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listBuilds"
+        type="java:org.wso2.www.php.xsd.ListBuilds"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseEntity"
+        type="java:org.wso2.www.php.xsd.TestCaseEntity"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createReleaseBuildResponse"
+        type="java:org.wso2.www.php.xsd.CreateReleaseBuildResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listFoldersResponse"
+        type="java:org.wso2.www.php.xsd.ListFoldersResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestSuiteResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestSuiteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setScope"
+        type="java:org.wso2.www.php.xsd.SetScope"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestCasesFromJiraDefectIdResponse"
+        type="java:org.wso2.www.php.xsd.GetTestCasesFromJiraDefectIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseRunDetails"
+        type="java:org.wso2.www.php.xsd.TestCaseRunDetails"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestCaseRunIds"
+        type="java:org.wso2.www.php.xsd.GetTestCaseRunIds"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseDomainAssociation"
+        type="java:org.wso2.www.php.xsd.TestCaseDomainAssociation"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listFoldersWithStatusFromParentIdResponse"
+        type="java:org.wso2.www.php.xsd.ListFoldersWithStatusFromParentIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getListIdFromValue"
+        type="java:org.wso2.www.php.xsd.GetListIdFromValue"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseWithCommentsResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseWithCommentsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestCasesFromDefectIdResponse"
+        type="java:org.wso2.www.php.xsd.GetTestCasesFromDefectIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listTestCasesFromFolderId"
+        type="java:org.wso2.www.php.xsd.ListTestCasesFromFolderId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setTestSuiteEndTime"
+        type="java:org.wso2.www.php.xsd.SetTestSuiteEndTime"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>assignProjectResponse"
+        type="java:org.wso2.www.php.xsd.AssignProjectResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listPlatformsByTestSuite"
+        type="java:org.wso2.www.php.xsd.ListPlatformsByTestSuite"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setTestSuiteStartTime"
+        type="java:org.wso2.www.php.xsd.SetTestSuiteStartTime"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getBuild"
+        type="java:org.wso2.www.php.xsd.GetBuild"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteTestSuite"
+        type="java:org.wso2.www.php.xsd.DeleteTestSuite"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>wsAssignDropsResponse"
+        type="java:org.wso2.www.php.xsd.WsAssignDropsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>updateSchedulerCommentsResponse"
+        type="java:org.wso2.www.php.xsd.UpdateSchedulerCommentsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>downloadAttachmentResponse"
+        type="java:org.wso2.www.php.xsd.DownloadAttachmentResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseUsingRunIdResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseUsingRunIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteBuildResponse"
+        type="java:org.wso2.www.php.xsd.DeleteBuildResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getProjectResponse"
+        type="java:org.wso2.www.php.xsd.GetProjectResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createUser"
+        type="java:org.wso2.www.php.xsd.CreateUser"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setTestSuiteEndTimeResponse"
+        type="java:org.wso2.www.php.xsd.SetTestSuiteEndTimeResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listDefectTrackers"
+        type="java:org.wso2.www.php.xsd.ListDefectTrackers"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>associateDefectResponse"
+        type="java:org.wso2.www.php.xsd.AssociateDefectResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteReleaseResponse"
+        type="java:org.wso2.www.php.xsd.DeleteReleaseResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteTestCaseResponse"
+        type="java:org.wso2.www.php.xsd.DeleteTestCaseResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getRequirementByIdResponse"
+        type="java:org.wso2.www.php.xsd.GetRequirementByIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listFoldersWithStatusResponse"
+        type="java:org.wso2.www.php.xsd.ListFoldersWithStatusResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseStepWithResult"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseStepWithResult"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>addTestLogUsingRunId"
+        type="java:org.wso2.www.php.xsd.AddTestLogUsingRunId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listTestCasesFromFolderIdResponse"
+        type="java:org.wso2.www.php.xsd.ListTestCasesFromFolderIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseWithStepsResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseWithStepsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>QMetryVersion"
+        type="java:org.wso2.www.php.xsd.QMetryVersion"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestSuiteByIdResponse"
+        type="java:org.wso2.www.php.xsd.GetTestSuiteByIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getRequirementsJiraFromDefectIdResponse"
+        type="java:org.wso2.www.php.xsd.GetRequirementsJiraFromDefectIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getListIdFromValueResponse"
+        type="java:org.wso2.www.php.xsd.GetListIdFromValueResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:RequirementEntity"
+        type="java:org.wso2.www.php.xsd.RequirementEntity"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestSuiteStatusByPlatform"
+        type="java:org.wso2.www.php.xsd.GetTestSuiteStatusByPlatform"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>login"
+        type="java:org.wso2.www.php.xsd.Login"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listReleases"
+        type="java:org.wso2.www.php.xsd.ListReleases"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listFoldersWithStatus"
+        type="java:org.wso2.www.php.xsd.ListFoldersWithStatus"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setBuild"
+        type="java:org.wso2.www.php.xsd.SetBuild"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>updateSchedulerComments"
+        type="java:org.wso2.www.php.xsd.UpdateSchedulerComments"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>loginResponse"
+        type="java:org.wso2.www.php.xsd.LoginResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseWithStepsUsingRunIdResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseWithStepsUsingRunIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:StatusEntity"
+        type="java:org.wso2.www.php.xsd.StatusEntity"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>disablePlatform"
+        type="java:org.wso2.www.php.xsd.DisablePlatform"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createTestSuite"
+        type="java:org.wso2.www.php.xsd.CreateTestSuite"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getBuildResponse"
+        type="java:org.wso2.www.php.xsd.GetBuildResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getDefectsFromTestCaseIdResponse"
+        type="java:org.wso2.www.php.xsd.GetDefectsFromTestCaseIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listReleasesResponse"
+        type="java:org.wso2.www.php.xsd.ListReleasesResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listBuildsWithTargetDateResponse"
+        type="java:org.wso2.www.php.xsd.ListBuildsWithTargetDateResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>logout"
+        type="java:org.wso2.www.php.xsd.Logout"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listDefectTrackersResponse"
+        type="java:org.wso2.www.php.xsd.ListDefectTrackersResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createTestCaseStep"
+        type="java:org.wso2.www.php.xsd.CreateTestCaseStep"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listFoldersWithStatusFromParentId"
+        type="java:org.wso2.www.php.xsd.ListFoldersWithStatusFromParentId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createProject"
+        type="java:org.wso2.www.php.xsd.CreateProject"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>associateDefectTrackerResponse"
+        type="java:org.wso2.www.php.xsd.AssociateDefectTrackerResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>addAttachmentResponse"
+        type="java:org.wso2.www.php.xsd.AddAttachmentResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listFolders"
+        type="java:org.wso2.www.php.xsd.ListFolders"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createFolderResponse"
+        type="java:org.wso2.www.php.xsd.CreateFolderResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>wsSearchDrops"
+        type="java:org.wso2.www.php.xsd.WsSearchDrops"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getProject"
+        type="java:org.wso2.www.php.xsd.GetProject"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createTestSuiteResponse"
+        type="java:org.wso2.www.php.xsd.CreateTestSuiteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>updateTestCaseResponse"
+        type="java:org.wso2.www.php.xsd.UpdateTestCaseResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseStepsResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseStepsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listTestSuites"
+        type="java:org.wso2.www.php.xsd.ListTestSuites"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>assignProject"
+        type="java:org.wso2.www.php.xsd.AssignProject"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseWithCommentsAndTester"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseWithCommentsAndTester"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createProjectResponse"
+        type="java:org.wso2.www.php.xsd.CreateProjectResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>linkPlatformToTestSuiteResponse"
+        type="java:org.wso2.www.php.xsd.LinkPlatformToTestSuiteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listUsers"
+        type="java:org.wso2.www.php.xsd.ListUsers"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteTestSuiteResponse"
+        type="java:org.wso2.www.php.xsd.DeleteTestSuiteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestCaseByIdResponse"
+        type="java:org.wso2.www.php.xsd.GetTestCaseByIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deactivateProjectResponse"
+        type="java:org.wso2.www.php.xsd.DeactivateProjectResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listAttachments"
+        type="java:org.wso2.www.php.xsd.ListAttachments"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseStep"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseStep"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listRequirements"
+        type="java:org.wso2.www.php.xsd.ListRequirements"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createRequirementResponse"
+        type="java:org.wso2.www.php.xsd.CreateRequirementResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createReleaseBuild"
+        type="java:org.wso2.www.php.xsd.CreateReleaseBuild"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>disablePlatformResponse"
+        type="java:org.wso2.www.php.xsd.DisablePlatformResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestSuiteRunByPlatform"
+        type="java:org.wso2.www.php.xsd.TestSuiteRunByPlatform"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listReleasesWithTargetDateResponse"
+        type="java:org.wso2.www.php.xsd.ListReleasesWithTargetDateResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestDataVariables"
+        type="java:org.wso2.www.php.xsd.GetTestDataVariables"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>linkTestCaseWithTestSuite"
+        type="java:org.wso2.www.php.xsd.LinkTestCaseWithTestSuite"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setProjectResponse"
+        type="java:org.wso2.www.php.xsd.SetProjectResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestSuiteExecution"
+        type="java:org.wso2.www.php.xsd.TestSuiteExecution"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteTestCase"
+        type="java:org.wso2.www.php.xsd.DeleteTestCase"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestcaseStepsStausByPlatformResponse"
+        type="java:org.wso2.www.php.xsd.GetTestcaseStepsStausByPlatformResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestcaseStepsStausByPlatform"
+        type="java:org.wso2.www.php.xsd.GetTestcaseStepsStausByPlatform"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseStepsEntity"
+        type="java:org.wso2.www.php.xsd.TestCaseStepsEntity"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCase"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCase"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>linkPlatformToTestSuite"
+        type="java:org.wso2.www.php.xsd.LinkPlatformToTestSuite"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteFolder"
+        type="java:org.wso2.www.php.xsd.DeleteFolder"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestCaseById"
+        type="java:org.wso2.www.php.xsd.GetTestCaseById"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setBuildResponse"
+        type="java:org.wso2.www.php.xsd.SetBuildResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>wsCreateDropsResponse"
+        type="java:org.wso2.www.php.xsd.WsCreateDropsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listPlatformsByTestSuiteResponse"
+        type="java:org.wso2.www.php.xsd.ListPlatformsByTestSuiteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>updateRequirementResponse"
+        type="java:org.wso2.www.php.xsd.UpdateRequirementResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>wsCreateDrops"
+        type="java:org.wso2.www.php.xsd.WsCreateDrops"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>logoutResponse"
+        type="java:org.wso2.www.php.xsd.LogoutResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestCasesFromDefectId"
+        type="java:org.wso2.www.php.xsd.GetTestCasesFromDefectId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createTestCaseStepResponse"
+        type="java:org.wso2.www.php.xsd.CreateTestCaseStepResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getUserDefinedFields"
+        type="java:org.wso2.www.php.xsd.GetUserDefinedFields"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>updateTestSuiteResponse"
+        type="java:org.wso2.www.php.xsd.UpdateTestSuiteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listStatuses"
+        type="java:org.wso2.www.php.xsd.ListStatuses"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:KeyValuePair"
+        type="java:org.wso2.www.php.xsd.KeyValuePair"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>activateProject"
+        type="java:org.wso2.www.php.xsd.ActivateProject"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:UserDefinedField"
+        type="java:org.wso2.www.php.xsd.UserDefinedField"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getPlatformStatusByPlatformId"
+        type="java:org.wso2.www.php.xsd.GetPlatformStatusByPlatformId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseUsingRunId"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseUsingRunId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>wsAssignDrops"
+        type="java:org.wso2.www.php.xsd.WsAssignDrops"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listProjects"
+        type="java:org.wso2.www.php.xsd.ListProjects"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>updateTestCase"
+        type="java:org.wso2.www.php.xsd.UpdateTestCase"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listTestCases"
+        type="java:org.wso2.www.php.xsd.ListTestCases"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listBuildsWithTargetDate"
+        type="java:org.wso2.www.php.xsd.ListBuildsWithTargetDate"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createFolder"
+        type="java:org.wso2.www.php.xsd.CreateFolder"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setTestSuiteStartTimeResponse"
+        type="java:org.wso2.www.php.xsd.SetTestSuiteStartTimeResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>activateProjectResponse"
+        type="java:org.wso2.www.php.xsd.ActivateProjectResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseWithCommentsAndTesterResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseWithCommentsAndTesterResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getRelease"
+        type="java:org.wso2.www.php.xsd.GetRelease"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseSteps"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseSteps"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>associateDefect"
+        type="java:org.wso2.www.php.xsd.AssociateDefect"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestSuitePlatformExecutions"
+        type="java:org.wso2.www.php.xsd.TestSuitePlatformExecutions"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseExecutions"
+        type="java:org.wso2.www.php.xsd.TestCaseExecutions"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:PlatformAttributes"
+        type="java:org.wso2.www.php.xsd.PlatformAttributes"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteProject"
+        type="java:org.wso2.www.php.xsd.DeleteProject"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setRelease"
+        type="java:org.wso2.www.php.xsd.SetRelease"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listFoldersFromParentIdResponse"
+        type="java:org.wso2.www.php.xsd.ListFoldersFromParentIdResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>setScopeResponse"
+        type="java:org.wso2.www.php.xsd.SetScopeResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestCasesFromJiraDefectId"
+        type="java:org.wso2.www.php.xsd.GetTestCasesFromJiraDefectId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestLogs"
+        type="java:org.wso2.www.php.xsd.TestLogs"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getRequirementsJiraFromDefectId"
+        type="java:org.wso2.www.php.xsd.GetRequirementsJiraFromDefectId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listBuildsResponse"
+        type="java:org.wso2.www.php.xsd.ListBuildsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getScope"
+        type="java:org.wso2.www.php.xsd.GetScope"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseElements"
+        type="java:org.wso2.www.php.xsd.TestCaseElements"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listCustomizedList"
+        type="java:org.wso2.www.php.xsd.ListCustomizedList"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:ScopeInfo"
+        type="java:org.wso2.www.php.xsd.ScopeInfo"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deactivateProject"
+        type="java:org.wso2.www.php.xsd.DeactivateProject"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listCustomizedListValuesResponse"
+        type="java:org.wso2.www.php.xsd.ListCustomizedListValuesResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestSuiteRunDetails"
+        type="java:org.wso2.www.php.xsd.TestSuiteRunDetails"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>logExecutionHistoryResponse"
+        type="java:org.wso2.www.php.xsd.LogExecutionHistoryResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listUserRolesResponse"
+        type="java:org.wso2.www.php.xsd.ListUserRolesResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createRequirement"
+        type="java:org.wso2.www.php.xsd.CreateRequirement"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>logExecutionHistory"
+        type="java:org.wso2.www.php.xsd.LogExecutionHistory"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>executeTestCaseResponse"
+        type="java:org.wso2.www.php.xsd.ExecuteTestCaseResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getTestSuiteExecutions"
+        type="java:org.wso2.www.php.xsd.GetTestSuiteExecutions"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>getRequirementById"
+        type="java:org.wso2.www.php.xsd.GetRequirementById"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listProjectsResponse"
+        type="java:org.wso2.www.php.xsd.ListProjectsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseStepRunDetails"
+        type="java:org.wso2.www.php.xsd.TestCaseStepRunDetails"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>wsArchiveDrops"
+        type="java:org.wso2.www.php.xsd.WsArchiveDrops"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>createTestCaseResponse"
+        type="java:org.wso2.www.php.xsd.CreateTestCaseResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listUserRoles"
+        type="java:org.wso2.www.php.xsd.ListUserRoles"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>deleteRelease"
+        type="java:org.wso2.www.php.xsd.DeleteRelease"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listTestCasesResponse"
+        type="java:org.wso2.www.php.xsd.ListTestCasesResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>updateTestSuite"
+        type="java:org.wso2.www.php.xsd.UpdateTestSuite"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:FolderStatus"
+        type="java:org.wso2.www.php.xsd.FolderStatus"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>listAttachmentsResponse"
+        type="java:org.wso2.www.php.xsd.ListAttachmentsResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:TestCaseExecution"
+        type="java:org.wso2.www.php.xsd.TestCaseExecution"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:FolderDetails"
+        type="java:org.wso2.www.php.xsd.FolderDetails"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:>QMetryVersionResponse"
+        type="java:org.wso2.www.php.xsd.QMetryVersionResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.wso2.org/php/xsd"
+        qname="ns:RequirementElements"
+        type="java:org.wso2.www.php.xsd.RequirementElements"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

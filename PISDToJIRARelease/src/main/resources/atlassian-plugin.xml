@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="PISDToJIRARelease"/>
+  <!-- add our web resources -->
+  <web-resource key="PISDToJIRARelease-resources" name="PISDToJIRARelease Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:aui-select2</dependency>
+    <resource type="download" name="PISDToJIRARelease.css" location="/css/PISDToJIRARelease.css"/>
+    <resource type="download" name="PISDToJIRARelease.js" location="/js/PISDToJIRARelease.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>PISDToJIRARelease</context>
+      <context>atl.general</context>
+      <context>atl.admin</context>
+  </web-resource>
+
+  <component key="pluginsettings-service" name="pluginsettings-service" class="com.dt.jira.plugin.pisdtojirarelease.handler.PluginSettingFactoryHandlerServiceImpl" public="true">
+    <interface>com.dt.jira.plugin.pisdtojirarelease.handler.PluginSettingFactoryHandler</interface>
+  </component>
+
+
+  <web-item name="CreateAndLinkJIRAReleaseWebItem" i18n-name-key="create-and-link-jira-release-web-item.name" key="create-and-link-jira-release-web-item" section="operations-subtasks" weight="1000">
+    <description key="create-and-link-jira-release-web-item.description">The Create And Link JIRA Release Story</description>
+     <conditions type="AND">
+        <condition class="com.dt.jira.plugin.pisdtojirarelease.condition.ProjectPISDCondition" />
+    </conditions>
+    <label key="create-and-link-jira-release-web-item.label"/>
+    <styleClass>trigger-dialog</styleClass>
+    <link linkId="create-and-link-jira-release-web-item-link">/secure/CreateAndLinkJiraResourceAction!default.jspa?id=${issueId}</link>
+    <tooltip key="create-and-link-jira-release-web-item.tooltip"/>
+  </web-item>
+  <webwork1 key="CreateAndLinkJIRAReleaseWebwork" name="CreateAndLinkJIRAReleaseWebWork" i18n-name-key="Create And Link JIRA Release Webwork">
+    <description key="JiraTktCreate">The Incident Mgmt PISD Plugin</description>
+    <actions>
+      <action name="com.dt.jira.plugin.pisdtojirarelease.action.CreateAndLinkJiraResourceAction" alias="CreateAndLinkJiraResourceAction">
+          <view name="create">/templates/create.vm</view>
+        <view name="error">/templates/error.vm</view>
+        <view name="success">/templates/success.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <rest name="Create Jira Ticket" i18n-name-key="create-jira-ticket.name" key="create-jira-ticket" path="/createjiraticket" version="1.0">
+    <description key="create-jira-ticket.description">The Create Jira Ticket Plugin</description>
+  </rest>
+  
+  
+  
+  <!-- RELATED TO THE ADMIN CONFIGURATION SCREENS -->
+  <web-section key="pisdtoreltkt-admin-section" name="XMatters Plugin Section" location="admin_plugins_menu"
+               i18n-name-key="pisdtoreltkt-admin-section.name" weight="900">
+    <label key="pisdtoreltkt-admin-section.label"/>
+    <description>PISD To JIRA Release Setup</description>
+    <tooltip>PISD To JIRA Release Setup</tooltip>
+  </web-section>
+  <web-item key="pisdtoreltkt-admin-web-item-1" section="admin_plugins_menu/pisdtoreltkt-admin-section"
+            i18n-name-key="pisdtoreltkt-admin-web-item.name-1" name="PISD Tkt Plugin Initial Setup" weight="1000">
+    <description>Initial Setup</description>
+    <label key="pisdtoreltkt-admin.initialsetup"/>
+    <link linkId="pisdtoreltkt-admin-web-item-link-1">/secure/plugins/pisdtoreltkt/pisdtoreltktConfigure.jspa</link>   
+  </web-item>
+  <web-item key="pisdtoreltkt-admin-web-item-2" section="admin_plugins_menu/pisdtoreltkt-admin-section"
+            i18n-name-key="pisdtoreltkt-admin-web-item.name-2" name="Service Desk Related Mappings" weight="1010">
+    <description>Project Mappings</description>
+    <label key="pisdtoreltkt-admin-web-item.projectmappings"/>
+    <link linkId="pisdtoreltkt-admin-web-item-link-2">/secure/plugins/pisdtoreltkt/pisdtoreltktMapping.jspa</link>
+    <!--<link linkId="pisdtoreltkt-admin-web-item-link-2">https://www.google.com</link>-->
+  </web-item>
+  <webwork1 name="pisdtoreltktadminwebwork" key="pisdtoreltkt-admin-webwork" class="java.lang.Object">
+    <description key="pisdtoreltkt-admin.description">The Admin Page input webwork</description>
+    <actions>
+      <action alias="pisdtoreltktConfigure" name="com.dt.jira.plugin.pisdtojirarelease.webwork.ConfigureAction" roles-required="sysadmin">
+        <view name="success" type="velocity">/templates/admin/admin.vm</view>
+        <view name="error" type="velocity">/templates/admin/admin.vm</view>
+      </action>
+      <action alias="pisdtoreltktMapping" name="com.dt.jira.plugin.pisdtojirarelease.webwork.MappingAction" roles-required="sysadmin">
+        <view name="success" type="velocity">/templates/admin/mapping.vm</view>
+        <view name="error" type="velocity">/templates/admin/mapping.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <web-resource key="PISDToJIRARelease-admin-resources" name="PISDToJIRARelease Admin Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:aui-select2</dependency>
+    <dependency>com.atlassian.auiplugin:dialog2</dependency>
+    <resource type="download" name="admin.js" location="/js/admin.js"/>
+    <resource type="download" name="configureProjectMapping.js" location="/js/configureProjectMapping.js"/>
+    <resource type="download" name="tableFormatter.js" location="/js/tableFormatter.js"/>
+    <context>atl.admin</context>
+  </web-resource>
+
+  <ao key="ao-module-group">
+    <description>The module configuring the Active Objects service used by this plugin</description>
+    <entity>com.dt.jira.plugin.pisdtojirarelease.ao.ProjMapDB</entity>
+  </ao>
+  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+    <description>Component to access Active Objects functionality from the plugin</description>
+  </component-import>
+  <component key="projmap-service" name="projmap-service" class="com.dt.jira.plugin.pisdtojirarelease.service.ProjMapServiceImpl" public="true">
+    <interface>com.dt.jira.plugin.pisdtojirarelease.service.ProjMapService</interface>
+  </component>
+
+
+
+
+
+  <!-- ALL THE COMPONENTS RELATED TO ADMIN CONFIG SCREENS END HERE -->
+
+  <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+  <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+  <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
+  <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+  
+</atlassian-plugin>

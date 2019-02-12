@@ -1,0 +1,196 @@
+<html>
+	<head>
+		<title> Innotas </title>
+		<meta name="decorator" content="atl.admin" />
+		<meta name="admin.active.section" content="atl.jira.proj.config">
+		<meta name="admin.active.tab" content="innotas_tab_link"/>
+		<meta name="projectKey" content="$textutils.htmlEncode($action.jiraProjectKey)"/>
+		<style>
+			table,td,th { border:0px solid black; font-family: Arial,sans-serif;font-size: 14px;}
+			td { text-align:right; padding:5px; }
+			tr.thick {font-weight:bold;}
+			table.brdr {border:1px solid black;}
+			tr.brdr {border:1px dashed black;}
+		</style>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+			#set ($innotaslink = $action.innotasservice)
+			#set ($bu = $innotaslink.getInnotasBUs())
+			#if ("$!action.businessUnit" != "")
+				#set ($sbu = $innotaslink.getInnotasSBUs($action.businessUnit))
+				#if ("$!action.subBusinessUnit" != "")
+					#set ($prj = $innotaslink.getInnotasProjects($action.businessUnit, $action.subBusinessUnit))
+				#else
+					#set ($prj = $innotaslink.getInnotasProjects($action.businessUnit))
+				#end
+			#end
+			#set ($relList = $innotaslink.getReleases($action.jiraProjectKey))
+	</head>
+	<body style="font-family: Arial,sans-serif;font-size: 14px;">
+	#if ($relList.isEmpty())
+		<div> 
+			<p>This Project does not have any Releases/Versions to map.
+			<p>Navigate to <a href="${req.contextPath}/plugins/servlet/project-config/$textutils.htmlEncode($action.jiraProjectKey)/versions">Versions Tab</a> to create Releases/Versions. 
+		</div>
+	#else
+		<div><br><br>
+			<form id="uniqueid1" 
+				method="post" 
+				action="${req.contextPath}/secure/admin/InnotasAction.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)">
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+					<tr>
+						<td>Jira Project Key: </td>
+						<td style="text-align:left"> <input type="text" id="jiraProjectKey" name="jiraProjectKey" class="ajs-dirty-warning-exempt" value="$textutils.htmlEncode($action.jiraProjectKey)" disabled></td>
+					</tr>
+					<tr>
+						<td >Business Unit:</td>
+						<td width="400px"> 	
+							<!--aui-field-versionspicker-->
+							<!--<div class="aui-field-versionspicker frother-control-renderer" style="text-align:left;width=300px">-->
+							<div class="frother-control-renderer" style="text-align:left;width=300px">
+										<select id="businessUnit" name="businessUnit" class="ajs-dirty-warning-exempt" >
+										<option value="">Select a Innotas BU...</option>
+										#foreach ($buKey in $bu.keySet())
+											#set ($selected = "")
+											#if ($!buKey == ${businessUnit}) 
+												#set ($selected = "Selected")
+											#end
+											<option value="$!buKey" $!selected>$!bu.get($!buKey)</option>
+										#end
+										</select>
+							</div>			
+						</td>
+					</tr>					
+					<!--
+					<tr>
+						<td >Sub Business Unit:</td>
+						<td width="400px"> 	
+							<div class="frother-control-renderer" style="text-align:left;width=300px">
+										<select id="sbu" name="sbu" class="ajs-dirty-warning-exempt" >
+										<option value="">All SBUs</option>
+										#foreach ($sbuKey in $sbu.keySet())
+											#set ($selected = "")
+											#if ($!sbuKey == ${sbu}) 
+												#set ($selected = "Selected")
+											#end
+											<option value="$!sbuKey" $!selected>$!sbu.get($!sbuKey)</option>
+										#end
+										</select>
+							</div>			
+						</td>
+					</tr>	-->					
+					</table>
+					<table class="brdr">
+					<tr class="thick">
+						<td style="text-align:center">Jira Release </td> 
+						<td style="text-align:center">Innotas Project </td>
+						<td style="text-align:center">Ext Rel?</td>
+						<td style="text-align:center">Innotas Project Id </td>
+						<td style="text-align:center">Sub Business Unit </td>
+						<td style="text-align:center">Program </td>
+					</tr>
+					#set ($counter = 0)
+					#foreach($relId in $relList.keySet())
+						#set($rel = $relList.get($relId))
+						#set ($iMapList = $innotaslink.getInnotasMapping($action.jiraProjectKey,$relId))
+						#set ($iMap = $iMapList.get($relId))
+						#set ($extRel = "#if($iMap.getExtRel())checked#{else} #end")						
+						<tr >
+							<td style="text-align:left" >  $rel.getName()
+								<input type="hidden" id="relId_$counter" name="relId" disabled class="ajs-dirty-warning-exempt" value="$relId">
+							</td> 
+							<td style="text-align:center">
+								<div class="frother-control-renderer" style="text-align:left;width=300px">
+											<select id="innotasProjectId_$counter" name="innotasProjectId" class="ajs-dirty-warning-exempt" >
+											<option value="">Select a Innotas Project...</option>
+											#foreach ($prjKey in $prj.keySet() ) 			
+												#set ($selected = "")
+												#set ($ipm = $!prj.get($!prjKey))
+												#if ($!prjKey == $iMap.getInnotasProjectId()) 
+													#set ($selected = "Selected")
+												#end
+												<option value="$ipm.getProjectId()" data-sbu="$ipm.getSbuName()" data-prg="$ipm.getProgramName()" $!selected>$ipm.getProjectName()</option>
+											#end
+											</select>
+								</div>						
+							</td>
+							<td><input id="extRel_$counter" type="checkbox" $extRel></td>
+							<td style="text-align:left"> <input type="text" id="innotasProjectIdtxt_$counter" name="innotasProjectIdtxt" disabled class="ajs-dirty-warning-exempt" value=""></td>
+							<td style="text-align:left"> <input type="text" id="subBusinessUnit_$counter" name="subBusinessUnit" class="ajs-dirty-warning-exempt" value="" disabled></td>
+							<td style="text-align:left"> <input type="text" id="program_$counter" name="program" class="ajs-dirty-warning-exempt" value="" disabled></td>
+							<td style="text-align:left"> <input type="hidden" id="mapping_$counter" name="mapping" class="ajs-dirty-warning-exempt" value=""></td>
+						</tr>
+						#set ($counter = $counter+1)
+					#end
+					</table>
+				<p> <p>		
+				<input type="button" class="aui-button" value=" Save " onclick="getAllMapData();this.form.submit();">	
+				<input type="hidden" id="allMapping" name="allMapping" value="">
+			</form>
+				<p>
+				<p style="color:white">Admin Tasks:
+				<br><a style="color:white" href="${req.contextPath}/secure/admin/InnotasAction!syncCache.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)">Sync-up Jira Cache</a> with latest Innotas data
+				<br><a style="color:white" href="${req.contextPath}/secure/admin/InnotasAction!updateOldIssues.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)">Update Existing Issues </a> with currently mapped Innotas attributes
+				</p><a style="color:white" href="${req.contextPath}/secure/admin/InnotasAction!setFieldOptions.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)">Set All Field Options
+				<input type="hidden" id="allMapping" name="allMapping" value="">
+				<!-- <p><a href="javascript:getAllMapData();"> Gather Data </a> -->
+		</div>		
+	<script>
+	
+		AJS.$('[id^=innotasProjectId_]')
+		  .change(function () {
+			var str = "";
+			AJS.$( "select option:selected" ).each(function() {
+			  str += AJS.$( this ).text() + " ";
+			});
+			//$( "log" ).text( str );
+			var selected = AJS.$(this).find('option:selected');
+			var idx = this.id.substring(this.id.indexOf('_'));
+			console.log('selected sbu: ' + selected.data('sbu') + ' & program: ' + selected.data('prg'));
+			console.log(idx);
+			AJS.$('#subBusinessUnit' + idx).val(selected.data('sbu'));
+			AJS.$('#program' + idx).val(selected.data('prg'));
+			//AJS.$('#extRel' + idx).val(selected.data('extrel'));
+			//AJS.$('#extRel' + idx).prop("checked", selected.data('extrel')=="0"?false:true);
+			AJS.$('#innotasProjectIdtxt' + idx).val(selected.val());
+			gatherMapData(idx);
+			window.formDirty = false;
+			console.log('***** ' + str);
+		  })
+		  .change();
+			
+		AJS.$('[id^=extRel_]')
+		  .change(function () {
+				var idx = this.id.substring(this.id.indexOf('_'));
+				gatherMapData(idx);
+			});
+			
+		  AJS.$('#businessUnit')
+		  .change(function () {
+			var bu = AJS.$(this).find('option:selected');
+			var sbu = AJS.$('#sbu').find('option:selected');
+			var ax = '${req.contextPath}/secure/admin/InnotasAction!refreshProject.jspa?jiraProjectKey=$textutils.htmlEncode($action.jiraProjectKey)';
+			ax += '&businessUnit=' + bu.val() + '&sbu=' + sbu.val();
+			this.form.setAttribute('action', ax);
+			this.form.submit();
+		  });
+			
+			function gatherMapData(eltIdx){
+				var selected = AJS.$('#innotasProjectId'+ eltIdx).find('option:selected')
+				var chk=AJS.$('#extRel' + eltIdx).is(':checked')?1:0;
+				AJS.$('#mapping' + eltIdx).val(AJS.$('#relId' + eltIdx).val()+'|'+ selected.val()+'|'+chk);
+				return true;
+			}
+			function getAllMapData() {
+				var allMapping = [];
+				AJS.$('[id^=mapping_]').each(function(){
+					allMapping.push(this.value);
+				});
+				console.log(allMapping);
+				AJS.$("#allMapping").val(allMapping);
+				return true;
+			}
+		</script>
+	#end
+	</body>
+</html>

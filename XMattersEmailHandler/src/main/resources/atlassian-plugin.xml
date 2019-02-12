@@ -1,0 +1,32 @@
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="XMattersEmailHandler"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="XMattersEmailHandler-resources" name="XMattersEmailHandler Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="XMattersEmailHandler.css" location="/css/XMattersEmailHandler.css"/>
+        <resource type="download" name="XMattersEmailHandler.js" location="/js/XMattersEmailHandler.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <context>XMattersEmailHandler</context>
+    </web-resource>
+
+    <message-handler i18n-name-key="xMattersEHandler.name" key="xMattersEHandler.name"
+                     class="com.dt.plugin.xmattersehandler.emailhandler.XMattersEmailHandler"
+                     add-edit-url="/secure/admin/EditHandlerDetailsUsingParams!default.jspa" weight="0"/>
+
+    <component key="email-parser" name="email-parser" class="com.dt.plugin.xmattersehandler.impl.EmailParserImpl" public="true">
+        <interface>com.dt.plugin.xmattersehandler.api.EmailParser</interface>
+    </component>
+
+
+</atlassian-plugin>

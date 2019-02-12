@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module><ModulePrefs title="ITSM Change Details Summary" directory_title="ITSM Change Details Summary"
+                     description="ITSM Change Details Summary" author="DT" thumbnail="http://goo.gl/LDofI">
+    <Require feature="dynamic-height"/>
+	<Require feature="oauthpopup"/>
+	<Require feature="setprefs"/>
+	<Require feature="settitle"/>
+    <Require feature="views"/>
+    <Optional feature="atlassian.util"/>
+    <Optional feature="auth-refresh"/>
+    <Optional feature="gadget-directory">
+        <Param name="categories">
+            JIRA
+        </Param>
+    </Optional>
+    #oauth
+    #supportedLocales("gadget.common,gadget.filter.results,gadget.issuetable.common")
+    #supportLocales
+    <Locale lang="en" country="US">
+        <messagebundle><msg name="gadget.issuetable.common.fields.to.display">Fields to display</msg>
+            <msg name="gadget.issuetable.common.column.picker.prompt">Select a field......</msg>
+            <msg name="gadget.issuetable.common.fields.add">Add</msg>
+            <msg name="gadget.issuetable.common.column.reorder.instructions">Drag-drop to reorder the fields.</msg>
+            <msg name="gadget.issuetable.common.column.picker.instructions">Add fields to the list above by selecting them and clicking ''Add''.</msg>
+        </messagebundle>
+    </Locale>
+</ModulePrefs>
+    <UserPref name="columnNames" datatype="hidden" default_value="--Default--"/>
+    <UserPref name="refresh" datatype="hidden" default_value="false"/>
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+	<UserPref name="firstTime" datatype="hidden" default_value="true"/>
+	<UserPref name="headertxt" datatype="hidden" default_value="ITSM Change Details Summary"/>
+	<UserPref name="filterId" datatype="hidden" />
+    <UserPref name="solutionGroup" datatype="hidden" default_value="All"/>
+    <UserPref name="solutionGroupOptionID" datatype="hidden" default_value="All"/>
+    <UserPref name="num" datatype="hidden" default_value="10"/>
+    <Content type="html" view="profile,canvas,home">
+        <![CDATA[
+		#requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:ITSMDashboard-resources")
+		#requireResource("com.atlassian.gadgets.publisher:ajs-gadgets")
+		#requireResource("com.atlassian.jira.gadgets:column-picker")
+		#requireResource("com.atlassian.jira.gadgets:g-assigned-to-me")
+		#requireContext("com.atlassian.jira.gadgets:autocomplete")
+		#requireResource("com.atlassian.auiplugin:aui-lozenge")		
+		#requireContext("jira.webresources:issue-table")
+		#requireResource("com.atlassian.jira.gadgets:g-filter-results")
+		#requireResource("com.atlassian.auiplugin:aui-experimental-tooltips")
+		#includeResources()
+
+		<script type="text/javascript">
+			var solutionGadget = "";
+			var viewGadget = "";
+			(function () {
+				var contextPath = "__ATLASSIAN_BASE_URL__"; // Adding context path as it is required for actions dropdowns
+
+				AJS.Gadget({
+					baseUrl: "__ATLASSIAN_BASE_URL__",
+					useOauth: "/rest/gadget/1.0/currentUser",
+					config: {
+						descriptor: function (args) {
+							var gadget = this;							
+							return {
+								fields: [
+									{
+										userpref: "headertxt",
+										label: "Header",
+										type: "text",
+										value: gadget.getPref("headertxt")
+									},
+									AJS.gadget.fields.filterPicker(gadget, "filterId"),
+									columnGadgetFieldType(gadget, "columnNames", args.columnChoices.availableColumns),
+									AJS.gadget.fields.numberToShow(gadget, "num"),
+									AJS.gadget.fields.nowConfigured()
+								]
+							}
+						},
+						args: [
+							{
+								key: "columnChoices",
+								ajaxOptions: "/rest/gadget/1.0/availableColumns"
+							}
+						]
+					},
+					view: {
+						onResizeAdjustHeight: true,
+						enableReload: true,
+						template: function (args) {
+							var gadget = this;
+							var filter = args.twod_stats.name; 
+							gadget.projectOrFilterName = filter;
+							gadget.getView().empty();
+							gadget.getView().addClass("g-two-d-stats");
+							var gadgetHeader = gadget.getPref("headertxt");
+							var filterId = gadget.getPref("filterId");
+							filterId = filterId.substr(7); //Remove the word 'filter-'
+
+							console.log("gadgetHeader" + gadgetHeader)
+
+							if (gadgetHeader != "" && gadgetHeader != null) {
+								gadgets.window.setTitle(gadgetHeader);
+							} else {
+								gadgets.window.setTitle("ITSM Change Details Summary");
+							}
+							/*if (viewGadget != "") {
+								viewGadget.getView().empty();
+							}
+							viewGadget = gadget;
+							if (solutionGadget != "") {
+								solutionGadget.getView().empty();
+							}*/
+
+							var solution = gadget.getPref("solutionGroup");
+							console.log("SOLUTION IN VIEW IS " + solution);
+							populateTable(solution, gadget, filterId, args);
+
+							console.log("=====onLoad1======");
+							//datePersist(gadget);
+
+						},
+						args: [
+							{
+								key: "solutionGroups",
+								ajaxOptions: function () {
+									return {
+										url: "/rest/incident/1.0/getOldSolutionGroups.json?projectkey=CHG",
+										contentType: "application/json"
+									}
+								}
+							},
+							{ 	
+								key: "twod_stats", 
+								ajaxOptions: function () 	{ 
+									var gadget = this;
+									var id = gadget.getPref("filterId");
+									id = id.substr(7);
+									return { 
+										url: "/rest/api/2/filter/"+id,
+										contentType: "application/json"
+									}; 
+								} 
+							}, 
+							{
+								key: "issueTable",
+								ajaxOptions: function () {
+									var gadget = this;
+									var solutionList = gadget.getPref("solutionGroup");
+									var filterId = gadget.getPref("filterId");
+									filterId = filterId.substr(7); //Remove the word 'filter-'
+									console.log("Filter Id in view is " + filterId);
+
+									var jqlQueryLinkHtml = buildJQLQuery(solutionList, gadget, filterId);
+
+									var jqlQueryString = jqlQueryLinkHtml;
+									var columnNames = gadget.getPrefArray("columnNames");
+
+									var hasDefault = false;
+									var indexOf = -1;
+									for (var i = 0; i < columnNames.length; i++) {
+										if (columnNames[i] === "--Default--") {
+											hasDefault = true;
+											indexOf = i;
+											break;
+										}
+									}
+									if (hasDefault) {
+										columnNames.splice(indexOf, 1);
+									}
+
+									if (!this.sortBy) {
+										this.sortBy = null;
+									}
+									return {
+										url: "/rest/gadget/1.0/issueTable/jql",
+										data: {
+											jql: jqlQueryString,
+											num: this.getPref("num"),
+											columnNames: columnNames,
+											enableSorting: true,
+											sortBy: function () {
+												if (gadget.sortBy && gadget.sortBy !== "") {
+													return gadget.sortBy;
+												} else {
+													return null;
+												}
+											}(),
+											paging: true,
+											startIndex: function () {
+												if (gadget.startIndex && gadget.startIndex !== "") {
+													return gadget.startIndex;
+												} else {
+													return "0";
+												}
+											}(),
+											showActions: gadget.isLocal()
+										}
+									};
+
+								}
+							}
+						]
+					}
+				});
+			})();
+			/* Construct jql query */
+			function buildJQLQuery(solutionList, gadget, filterId) {
+				var solutionListOptionID = gadget.getPref("solutionGroupOptionID");
+
+				console.log("Solution List Option ID is " + solutionListOptionID);
+
+				console.log("Solution List is " + solutionList);
+
+				var finalQry = 'filter in (' + filterId + ')'; //sample  query would be like filter in (11300)
+				var  solutionListItem = "";
+				if(solutionList != "All"){
+					solutionListItem =  "'Solution Group - Product' in  cascadeOption('" + solutionList + "')";
+					finalQry += " AND " + solutionListItem;
+				}
+
+
+				var jqlQueryLinkHtml = finalQry;
+
+				console.log("JQL link is " + jqlQueryLinkHtml);
+				console.log("Final Query " + finalQry);
+
+				return jqlQueryLinkHtml;
+			}
+			/* Build UI */
+			function populateTable(solutionList, gadget, filterId, args) {
+				//var projectNames = gadget.getPref("projectId");
+
+				var form = AJS.$('<form class="aui"></form>').attr("action", "#");
+				var formTable = AJS.$('<table colspan="8" border="0" style="width:100%;"></table>');
+				var tableBody = AJS.$('<tbody></tbody>');
+				var tableTR = AJS.$('<tr></tr>');
+				//var tableTD1 = AJS.$('<td style="text-align:left;width:10%;"></td>');// typeSelect
+				var tableTD2 = AJS.$('<td style="text-align:left;width:92%;"></td>');//solution group select
+				//var tableTD3 = AJS.$('<td style="text-align:left;width:12%;"></td>');//Product select
+				var tableTD12 = AJS.$('<td style="text-align:left;width:11%;"></td>');//solution group Label
+					var selectT = '<label class="label" for="solution" >&nbsp;Solution Group:&nbsp;</label>';
+
+					tableTD12.append(selectT);
+					var $solSelect = AJS.$("<select/>").attr("id", "solutionSelect").addClass("select");
+				    var solSelectAllOption =  AJS.$("<option/>").attr("value", "All")
+							.attr("id", "All")
+							.attr("selected", "selected")
+							.text("All");
+					$solSelect.append(solSelectAllOption);
+					AJS.$(args.solutionGroups).each(function () {
+						var solutionOption = AJS.$("<option/>").attr("value", this.value).attr("id", this.label).text(this.value);
+
+						$solSelect.append(solutionOption);
+						var projectUserPrefValue = gadget.getPref("solutionGroup");
+						console.log("PROJECT USER PREF VALUE " + projectUserPrefValue);
+						var p = projectUserPrefValue.split("|");
+						if (AJS.$.inArray(this.value, p) > -1) {
+							solutionOption.attr({selected: "selected"});
+						}
+					});
+
+					tableTD2.append($solSelect);
+
+					$solSelect.change(function (event) {
+						event.preventDefault();
+						gadget.savePref("solutionGroup", AJS.$('#solutionSelect').val());
+						//Store the option ID for multiselect cascade
+						gadget.savePref("solutionGroupOptionID", AJS.$(this).children(":selected").attr("id"));
+						console.log("SOLUTION GROUP OPTION ID OUT OF SELECT CHANGE is " + AJS.$(this).children(":selected").attr("id"));
+						populateIssueTable(gadget, filterId, args );
+					});
+
+					tableTR.append(tableTD12);
+					tableTR.append(tableTD2);
+				//}
+				tableBody.append(tableTR);
+				formTable.append(tableBody);
+				form.append(formTable);
+
+				gadget.getView().append(form);
+
+				var emptyLabel = '<br>';
+				var emptyLabel1 = '<label for="emptyLabel"><b>  &nbsp;&nbsp;</b></label><br>';
+				//gadget.getView().append(emptyLabel);
+
+				console.log("=====solutionList***************======" + solutionList);
+
+				var jqlQueryLinkHtml = buildJQLQuery(solutionList, gadget, filterId);
+
+				args.linkHtml = "<a href=\"__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?reset=true&jqlQuery=" + jqlQueryLinkHtml + "\" target=\"_parent\" title=\"Issue Detail\">";
+				args.linkEndHtml = "</a>";
+				args.issueTable.empty = args.issueTable.displayed === 0;
+				args.issueTable.hasPaging = args.issueTable.displayed === args.issueTable.total;
+				if (args.issueTable.displayed === 0) {
+
+					var jiraview = gadget.getView().find(".view");
+					var jiradiv = AJS.$("<div/>").attr("id", "jira");
+					var resultsWrap = AJS.$("<div/>").addClass("results-wrap");
+					var pagingTable = AJS.$("<div/>");
+					resultsWrap.append(pagingTable);
+					jiradiv.append(resultsWrap);
+					//jiraview.append(jiradiv);
+					gadget.getView().append(jiradiv);
+
+
+				} else if (args.issueTable.displayed === 1 || args.issueTable.displayed === 2 || args.issueTable.displayed === 3) {
+					gadget.getView().append(JIRA.Templates.Gadgets.assignedToMe(args));
+
+				} else {
+					gadget.getView().append(JIRA.Templates.Gadgets.assignedToMe(args));
+					console.log("args.issueTable.total: " + args.issueTable.total);
+				}
+				var $resultCountLink = gadget.getView().find(".results-count-link");
+				$resultCountLink.replaceWith(AJS.$(args.linkHtml + $resultCountLink.html() + args.linkEndHtml));
+				AJS.$("th.sortable").each(function () {
+					this.onclick = null;
+				}).click(function () {
+					gadget.sortBy = AJS.$(this).attr("rel");
+					gadget.getView().empty();
+					gadget.showView(true);
+				});
+
+				AJS.$(".pagination a").click(function (event) {
+					event.preventDefault();
+					gadget.startIndex = AJS.$(this).attr("rel");
+					gadget.getView().empty();
+					gadget.showView(true);
+				});
+				if (gadget.isLocal()) {
+					if (typeof contextPath === "undefined") {
+						contextPath = "__ATLASSIAN_BASE_URL__";
+					}
+					AJS.Dropdown.create({
+						trigger: ".issue-actions-trigger",
+						ajaxOptions: {
+							dataType: "json",
+							cache: false,
+							formatSuccess: JIRA.FRAGMENTS.issueActionsFragment
+						}
+					});
+				}
+
+
+				// Apply hover class to issuetable
+				jQuery("#issuetable tr").hover(function () {
+					jQuery(this).addClass("hover");
+				}, function () {
+					if (!AJS.dropDown.current) {
+						jQuery(this).removeClass("hover");
+					}
+				});
+				gadget.resize();
+			} //end pouplateTable
+
+			// Generate the table
+			function populateIssueTable(gadget, filterId, args) {
+				if (gadget.getView().find("#jira")) {
+					AJS.$("#jira").empty();
+					console.log("empty");
+				}
+
+				var solutionList = gadget.getPref("solutionGroup");
+				var jqlQueryLinkHtml = buildJQLQuery(solutionList, gadget, filterId);
+
+				var jqlQueryString = jqlQueryLinkHtml;
+				var columnNames = gadget.getPrefArray("columnNames");
+
+				var hasDefault = false;
+				var indexOf = -1;
+				for (var i = 0; i < columnNames.length; i++) {
+					if (columnNames[i] === "--Default--") {
+						hasDefault = true;
+						indexOf = i;
+						break;
+					}
+				}
+				if (hasDefault) {
+					columnNames.splice(indexOf, 1);
+				}
+				if (!gadget.sortBy) {
+					gadget.sortBy = null;
+				}
+				AJS.$.ajax({
+					url: '/rest/gadget/1.0/issueTable/jql',
+					data: {
+						jql: jqlQueryString, num: gadget.getPref("num"), columnNames: columnNames,
+						enableSorting: true,
+						sortBy: function () {
+							if (gadget.sortBy && gadget.sortBy !== "") {
+								return gadget.sortBy;
+							} else {
+								return null;
+							}
+						}(),
+						paging: true,
+						startIndex: function () {
+							if (gadget.startIndex && gadget.startIndex !== "") {
+								return gadget.startIndex;
+							} else {
+								return "0";
+							}
+						}(),
+						showActions: gadget.isLocal()
+					},
+					success: function (data) {
+						var jiradiv = gadget.getView().find("#jira");
+						var resultsWrap = AJS.$("<div/>").addClass("results-wrap");
+						var pagingTable = AJS.$("<div/>");
+
+						pagingTable.append(data.table);
+						resultsWrap.append(pagingTable);
+						jiradiv.append(resultsWrap);
+						var count = 0;
+						if (gadget.getView().find("#issuetable")) {
+							count = gadget.getView().find("#issuetable tr").length;
+							console.log("issutable tr lenth============== " + count);
+						}
+
+						gadget.getView().find("#emptytable").remove();
+						var emptyDiv = AJS.$("<div/>").attr("id", "emptytable");
+						var emptyLabel1 = '<label  for="emptyLabel"><b>  &nbsp;&nbsp;</b></label><br>';
+
+						var linkHtml = "<a href=\"__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?reset=true&jqlQuery=" + jqlQueryLinkHtml + "\" target=\"_parent\" title=\"Issue details\">";
+						var linkEndHtml = "</a>";
+
+						var $resultCountLink = gadget.getView().find(".results-count-link");
+						$resultCountLink.replaceWith(AJS.$(linkHtml + $resultCountLink.html() + linkEndHtml));
+
+						AJS.$("th.sortable").each(function () {
+							this.onclick = null;
+						}).click(function () {
+							gadget.sortBy = AJS.$(this).attr("rel");
+
+							gadget.showView(true);
+						});
+						AJS.$(".pagination a").click(function (event) {
+							event.preventDefault();
+							gadget.startIndex = AJS.$(this).attr("rel");
+							;
+							gadget.showView(true);
+						});
+						// Apply hover class to issuetable
+						jQuery("#issuetable tr").hover(function () {
+							jQuery(this).addClass("hover");
+						}, function () {
+							if (!AJS.dropDown.current) {
+								jQuery(this).removeClass("hover");
+							}
+						});
+						gadget.resize();
+					}
+				});
+
+				gadget.resize();
+			}
+
+
+		</script>
+		]]>
+    </Content></Module>

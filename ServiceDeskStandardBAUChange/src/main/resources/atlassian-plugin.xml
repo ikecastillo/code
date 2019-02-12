@@ -1,0 +1,52 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+		<param name="configure.url">/plugins/servlet/standardbauchange/servlet</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="ServiceDeskStandardBAUChange"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="ServiceDeskStandardBAUChange-resources" name="ServiceDeskStandardBAUChange Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="ServiceDeskStandardBAUChange.css" location="/css/ServiceDeskStandardBAUChange.css"/>
+        <resource type="download" name="ServiceDeskStandardBAUChange.js" location="/js/ServiceDeskStandardBAUChange.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>ServiceDeskStandardBAUChange</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.servicedesk.standardbauchange.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.servicedesk.standardbauchange.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    
+	 <!-- import from the product container -->    
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/> 
+	
+	 <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+   <component key="eventListener" class="com.dt.jira.plugin.servicedesk.standardbauchange.event.StandardBAUEventListener">
+		<description>Event listener for copying summary values from Service desk to CHG Remote link .</description>
+  </component>
+  
+   <servlet key="standardbauchange-servlet" class="com.dt.jira.plugin.servicedesk.standardbauchange.ui.StandardBAUServlet"> 
+			<url-pattern>/standardbauchange/servlet</url-pattern>
+	</servlet>
+	
+	 <rest key="standardbauchange" name="standardbauchangerest" i18n-name-key="rest" path="/dealertrack/standardbauchange" version="1.0">
+	 <description key="StandardBAUchange-desc">Standard BAU change rest Modules</description>
+	 </rest>
+    
+</atlassian-plugin>

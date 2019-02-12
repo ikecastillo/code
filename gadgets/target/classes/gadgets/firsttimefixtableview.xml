@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="First Time Fix (Table view)" directory_title="First Time Fix (Table view)" description="First Time Fix" author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">JIRA</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="version" datatype="hidden" default_value="All"/><UserPref name="sprint" datatype="hidden" default_value="All"/><UserPref name="groupbyField" datatype="hidden" default_value="Severity"/><UserPref name="headertxt" datatype="hidden" default_value="First Time Fix (Table view)"/><Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+	#includeResources()
+		<script type="text/javascript">
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var GROUP_BY_FIELD = "DT-Environment";
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        return DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				      view: {
+							template: function(args) {
+								var gadget = this;
+								var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                                if(header != "" && header != null ){
+                                    gadgets.window.setTitle(header);
+                                }
+                                 else{
+                                    gadgets.window.setTitle("First Time Fix (Table view)");
+                                }
+								 
+								var projectList = AJS.$("<table/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center");
+								var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+								sevTR.append(AJS.$("<td/>").css("width","30%").text('Severity').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('First Time Fix').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Rework').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Total'))
+								//sevTR.append(AJS.$("<td/>").text('Medium'))
+								//sevTR.append(AJS.$("<td/>").text('High'))
+								//sevTR.append(AJS.$("<td/>").text('Critical'))
+								projectList.append(sevTR);
+								AJS.$(args.projectData).each(function() {	
+								 var dataTR =  AJS.$("<tr/>");
+								 var k = (this.Severity == 'Other')? 'Unknown':this.Severity;
+								 var link;
+								 if(k=='Critical' || k=='Medium' || k=='High' || k=='Low')
+										 link = '<a id="fieldname" href="' + gadgets.util.escapeString(this.URLForTable) + k +'">'+ k +' </a>'
+								      else 
+									     link = this.Severity
+								 dataTR.append(AJS.$("<td/>").html(link).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )	
+								 if(this.Severity=='FTF'){
+									dataTR.append( AJS.$("<td/>").text(this.FistTimeFix+'%').css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.Rework+'%').css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+								 } else {
+									dataTR.append( AJS.$("<td/>").text(this.FistTimeFix).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+									dataTR.append( AJS.$("<td/>").text(this.Rework).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9") )
+								 }
+						
+								 dataTR.append( AJS.$("<td/>").text(this.TotalDef).css("border-right","1px solid #B3B8B9") )
+								 projectList.append(dataTR);
+								});
+								gadget.getView().html(projectList);
+							},
+							args: [{
+								key: "projectData",
+								ajaxOptions: function() {
+									return {
+										url: "/rest/dealertrack/1.0/firsttimefix.json", 
+										contentType: "application/json",
+										data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprint").split('|').toString())
+												
+										}
+									};
+								}
+							}]
+						}
+			});
+		})();
+	
+ </script>
+  ]]>
+  </Content></Module>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Velocity (Scope Variance)"
+                 directory_title="Velocity (Scope Variance)"
+                 description="Velocity (Scope Variance)"
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">Charts</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="projectId" datatype="hidden"/>
+    <UserPref name="version" datatype="hidden" default_value="All"/>
+	<UserPref name="sprintId" datatype="hidden" default_value="All"/>
+	<UserPref name="groupbyField" datatype="hidden" default_value="Severity"/>
+    <UserPref name="headertxt" datatype="hidden" default_value="Velocity (Scope Variance)"/>
+	
+    <Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						//alert(
+						desc.fields.splice(3,1);
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+						//this.getView().empty();
+						//this.getView().append(AJS.$('<div id="velocityChart"> </div>'));
+					    var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                        if(header != "" && header != null ){
+                            gadgets.window.setTitle(header);
+                        }
+                        else{
+                            gadgets.window.setTitle("Velocity (Scope Variance)");
+                        }
+						drawchart(args.defectdistribution);
+					},
+					args: [
+                        {
+                            key: "defectdistribution",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/velocity.json",
+									//url: "/rest/dealertrack/1.0/defectdistribution.json",
+									contentType: "application/json",
+									data:  {
+											projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+											version: gadgets.util.unescapeString(this.getPref("version").split('|').toString())
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(_restdata) {
+			console.log(_restdata); 
+			var noofComitted = new Array();
+			var noofCompleted = new Array();
+			var sprint = new Array();
+			if (_restdata.length < 1) {
+				noofCompleted.push(0);
+				noofComitted.push(0);
+				sprint.push('');
+			}
+			 var s1 = [5, 57,68, 48,28, 55];     
+			// var ticks = ['1.1.1 R', '1.1.1 P', 'AHFC1.2', '1.1.1 R','1.1.1 p','1.2.1 R'];
+			if (_restdata.length > 0) {
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {
+				  if(_restdata[_i].sprint == 'Total' || _restdata[_i].sprint == 'Average'){
+						
+				  } else {
+						sprint.push((_restdata[_i].release == '')?'None':_restdata[_i].sprint);
+						noofComitted.push((_restdata[_i].comitted == '')? 0 : parseInt(_restdata[_i].comitted));
+						noofCompleted.push((_restdata[_i].completed == '')? 0 : parseInt(_restdata[_i].completed));
+					}
+				}
+			}
+			console.log(noofComitted);
+			console.log(noofCompleted);
+			console.log(sprint);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			plot1 = AJS.$.jqplot('velocityChart', [noofComitted, noofCompleted], {
+            // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+            //animate: !AJS.$.jqplot.use_excanvas,
+			seriesColors: ['darkgray', 'green'],
+            seriesDefaults:{
+				renderer:AJS.$.jqplot.BarRenderer,
+				rendererOptions: {
+					fillToZero: false, 
+					barWidth:9,
+					barPadding:2,
+					barMargin:3
+				},
+				pointLabels: {show: true},
+				trendline: {show: false, color: 'gray'}
+			},
+			 grid:{ background: 'white'},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series:[
+				{label:'Committed'},
+				{label:'Completed', trendline: {show: true}} 
+			],
+			 // Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+			  show: true,
+			  location: 'e'
+			},
+			axesDefaults:{
+				tickOptions: {
+					showGridline: false
+				}
+			},
+            axes: {
+                xaxis: {
+                    renderer: AJS.$.jqplot.CategoryAxisRenderer,
+                    ticks: sprint,
+					tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer,
+					tickOptions: {
+					  angle: -30,
+					  fontSize:'8pt',
+					  fontFamily: 'Helvetica',
+					  fontWeight: 'normal',
+					  textColor : '#211717'
+					},
+					label:'Sprint',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'						
+					},
+					pad:1	
+                },
+				 // Pad the y axis just a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					min:0,
+					pad:1.2,
+					tickOptions: {formatString: '%d'},
+					label:'Story Points',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'
+					}
+				}
+            },
+            highlighter: { show: false }
+        });
+     plot1.redraw();
+
+	plot1.replot( {axes: {
+					xaxis: {
+						renderer: AJS.$.jqplot.CategoryAxisRenderer,
+						pad:1	
+						}
+					},
+					yaxis: {
+						min:0,
+						pad:1.2					
+					}
+				}
+			);
+	AJS.$('#velocityChart').on('jqplotDataHighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+		});
+		AJS.$('#velocityChart').on('jqplotDataUnhighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+		});
+         AJS.$('#velocityChart').bind('jqplotDataClick', 
+            function (ev, seriesIndex, pointIndex, data) {
+                //$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+				var lnk='';				
+				var  index = data.toString().split(',')[0];
+				var  committed = _restdata[index-1].committedurl;
+				var  completed = _restdata[index-1].completedurl;
+				if(seriesIndex==0)
+					lnk =committed;
+				else 
+					lnk =completed;
+				console.log( 'url: ' + lnk );
+				top.location.href = lnk;
+				//console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+            }
+        );
+			console.log(plot1);
+			
+		};
+		</script>		
+		<div id="velocityChart"> </div>
+	]]>
+
+  </Content>
+</Module>

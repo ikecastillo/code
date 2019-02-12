@@ -1,0 +1,113 @@
+/**
+ * QMetryWSPortType.java
+ *
+ * This file was auto-generated from WSDL
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
+ */
+
+package org.wso2.www.php;
+
+public interface QMetryWSPortType extends java.rmi.Remote {
+    public org.wso2.www.php.xsd.LinkPlatformToTestSuiteResponse linkPlatformToTestSuite(org.wso2.www.php.xsd.LinkPlatformToTestSuite parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DownloadAttachmentResponse downloadAttachment(org.wso2.www.php.xsd.DownloadAttachment parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetReleaseResponse getRelease(org.wso2.www.php.xsd.GetRelease parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseWithStepsUsingRunIdResponse executeTestCaseWithStepsUsingRunId(org.wso2.www.php.xsd.ExecuteTestCaseWithStepsUsingRunId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateReleaseBuildResponse createReleaseBuild(org.wso2.www.php.xsd.CreateReleaseBuild parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListDefectTrackersResponse listDefectTrackers(org.wso2.www.php.xsd.ListDefectTrackers parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.SetScopeResponse setScope(org.wso2.www.php.xsd.SetScope parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListTestCasesFromFolderIdResponse listTestCasesFromFolderId(org.wso2.www.php.xsd.ListTestCasesFromFolderId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.AddTestLogResponse addTestLog(org.wso2.www.php.xsd.AddTestLog parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListFoldersResponse listFolders(org.wso2.www.php.xsd.ListFolders parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.SetReleaseResponse setRelease(org.wso2.www.php.xsd.SetRelease parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListUsersResponse listUsers(org.wso2.www.php.xsd.ListUsers parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestSuiteStatusByPlatformResponse getTestSuiteStatusByPlatform(org.wso2.www.php.xsd.GetTestSuiteStatusByPlatform parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseResponse executeTestCase(org.wso2.www.php.xsd.ExecuteTestCase parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetRequirementsFromDefectIdResponse getRequirementsFromDefectId(org.wso2.www.php.xsd.GetRequirementsFromDefectId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListReleasesWithTargetDateResponse listReleasesWithTargetDate(org.wso2.www.php.xsd.ListReleasesWithTargetDate parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestSuiteByIdResponse getTestSuiteById(org.wso2.www.php.xsd.GetTestSuiteById parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.AddTestLogUsingRunIdResponse addTestLogUsingRunId(org.wso2.www.php.xsd.AddTestLogUsingRunId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseUsingRunIdResponse executeTestCaseUsingRunId(org.wso2.www.php.xsd.ExecuteTestCaseUsingRunId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetProjectResponse getProject(org.wso2.www.php.xsd.GetProject parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListAttachmentsResponse listAttachments(org.wso2.www.php.xsd.ListAttachments parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreatePlatformResponse createPlatform(org.wso2.www.php.xsd.CreatePlatform parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetRequirementByIdResponse getRequirementById(org.wso2.www.php.xsd.GetRequirementById parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.LoginResponse login(org.wso2.www.php.xsd.Login parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.LogoutResponse logout(org.wso2.www.php.xsd.Logout parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetDefectsFromTestCaseIdResponse getDefectsFromTestCaseId(org.wso2.www.php.xsd.GetDefectsFromTestCaseId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DeleteAttachmentResponse deleteAttachment(org.wso2.www.php.xsd.DeleteAttachment parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListRequirementsFromFolderIdResponse listRequirementsFromFolderId(org.wso2.www.php.xsd.ListRequirementsFromFolderId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListCustomizedListResponse listCustomizedList(org.wso2.www.php.xsd.ListCustomizedList parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.SetProjectResponse setProject(org.wso2.www.php.xsd.SetProject parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DeleteBuildResponse deleteBuild(org.wso2.www.php.xsd.DeleteBuild parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestCaseByIdResponse getTestCaseById(org.wso2.www.php.xsd.GetTestCaseById parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListProjectsResponse listProjects(org.wso2.www.php.xsd.ListProjects parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.LogExecutionHistoryResponse logExecutionHistory(org.wso2.www.php.xsd.LogExecutionHistory parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.QMetryVersionResponse QMetryVersion(org.wso2.www.php.xsd.QMetryVersion parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListFoldersWithStatusResponse listFoldersWithStatus(org.wso2.www.php.xsd.ListFoldersWithStatus parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.UpdateTestSuiteResponse updateTestSuite(org.wso2.www.php.xsd.UpdateTestSuite parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DeleteTestCaseResponse deleteTestCase(org.wso2.www.php.xsd.DeleteTestCase parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DeleteFolderResponse deleteFolder(org.wso2.www.php.xsd.DeleteFolder parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateFolderResponse createFolder(org.wso2.www.php.xsd.CreateFolder parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetBuildResponse getBuild(org.wso2.www.php.xsd.GetBuild parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseWithCommentsResponse executeTestCaseWithComments(org.wso2.www.php.xsd.ExecuteTestCaseWithComments parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestCaseRunIdsResponse getTestCaseRunIds(org.wso2.www.php.xsd.GetTestCaseRunIds parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DeleteReleaseResponse deleteRelease(org.wso2.www.php.xsd.DeleteRelease parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListFoldersFromParentIdResponse listFoldersFromParentId(org.wso2.www.php.xsd.ListFoldersFromParentId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListTestSuitesFromFolderIdResponse listTestSuitesFromFolderId(org.wso2.www.php.xsd.ListTestSuitesFromFolderId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListStatusesResponse listStatuses(org.wso2.www.php.xsd.ListStatuses parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseWithStepsResponse executeTestCaseWithSteps(org.wso2.www.php.xsd.ExecuteTestCaseWithSteps parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestcaseStepsStausByPlatformResponse getTestcaseStepsStausByPlatform(org.wso2.www.php.xsd.GetTestcaseStepsStausByPlatform parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.AssignProjectResponse assignProject(org.wso2.www.php.xsd.AssignProject parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.SetBuildResponse setBuild(org.wso2.www.php.xsd.SetBuild parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseStepsResponse executeTestCaseSteps(org.wso2.www.php.xsd.ExecuteTestCaseSteps parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateScheduleResponse createSchedule(org.wso2.www.php.xsd.CreateSchedule parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestCasesFromJiraDefectIdResponse getTestCasesFromJiraDefectId(org.wso2.www.php.xsd.GetTestCasesFromJiraDefectId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseStepWithResultResponse executeTestCaseStepWithResult(org.wso2.www.php.xsd.ExecuteTestCaseStepWithResult parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.AssociateDefectResponse associateDefect(org.wso2.www.php.xsd.AssociateDefect parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ActivateProjectResponse activateProject(org.wso2.www.php.xsd.ActivateProject parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.UpdateSchedulerCommentsResponse updateSchedulerComments(org.wso2.www.php.xsd.UpdateSchedulerComments parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.WsSearchDropsResponse wsSearchDrops(org.wso2.www.php.xsd.WsSearchDrops parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DeleteProjectResponse deleteProject(org.wso2.www.php.xsd.DeleteProject parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListTestCasesResponse listTestCases(org.wso2.www.php.xsd.ListTestCases parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateTestCaseStepResponse createTestCaseStep(org.wso2.www.php.xsd.CreateTestCaseStep parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.LinkTestCaseWithTestSuiteResponse linkTestCaseWithTestSuite(org.wso2.www.php.xsd.LinkTestCaseWithTestSuite parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListReleasesResponse listReleases(org.wso2.www.php.xsd.ListReleases parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.AddAttachmentResponse addAttachment(org.wso2.www.php.xsd.AddAttachment parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateUserResponse createUser(org.wso2.www.php.xsd.CreateUser parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestDataVariablesResponse getTestDataVariables(org.wso2.www.php.xsd.GetTestDataVariables parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.SetTestSuiteStartTimeResponse setTestSuiteStartTime(org.wso2.www.php.xsd.SetTestSuiteStartTime parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.WsArchiveDropsResponse wsArchiveDrops(org.wso2.www.php.xsd.WsArchiveDrops parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetPlatformStatusByPlatformIdResponse getPlatformStatusByPlatformId(org.wso2.www.php.xsd.GetPlatformStatusByPlatformId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetRequirementsJiraFromDefectIdResponse getRequirementsJiraFromDefectId(org.wso2.www.php.xsd.GetRequirementsJiraFromDefectId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListFoldersWithStatusFromParentIdResponse listFoldersWithStatusFromParentId(org.wso2.www.php.xsd.ListFoldersWithStatusFromParentId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListPlatformsByTestSuiteResponse listPlatformsByTestSuite(org.wso2.www.php.xsd.ListPlatformsByTestSuite parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseWithCommentsAndTesterResponse executeTestCaseWithCommentsAndTester(org.wso2.www.php.xsd.ExecuteTestCaseWithCommentsAndTester parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.SetTestSuiteEndTimeResponse setTestSuiteEndTime(org.wso2.www.php.xsd.SetTestSuiteEndTime parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestSuiteResponse executeTestSuite(org.wso2.www.php.xsd.ExecuteTestSuite parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateTestSuiteResponse createTestSuite(org.wso2.www.php.xsd.CreateTestSuite parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListBuildsResponse listBuilds(org.wso2.www.php.xsd.ListBuilds parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.UpdateTestCaseResponse updateTestCase(org.wso2.www.php.xsd.UpdateTestCase parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListUserRolesResponse listUserRoles(org.wso2.www.php.xsd.ListUserRoles parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListRequirementsResponse listRequirements(org.wso2.www.php.xsd.ListRequirements parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListBuildsWithTargetDateResponse listBuildsWithTargetDate(org.wso2.www.php.xsd.ListBuildsWithTargetDate parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.LinkTestCasesWithTestSuiteResponse linkTestCasesWithTestSuite(org.wso2.www.php.xsd.LinkTestCasesWithTestSuite parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetUserDefinedFieldsResponse getUserDefinedFields(org.wso2.www.php.xsd.GetUserDefinedFields parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateRequirementResponse createRequirement(org.wso2.www.php.xsd.CreateRequirement parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.WsCreateDropsResponse wsCreateDrops(org.wso2.www.php.xsd.WsCreateDrops parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestcaseStepsFromTestcaseIdResponse getTestcaseStepsFromTestcaseId(org.wso2.www.php.xsd.GetTestcaseStepsFromTestcaseId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateProjectResponse createProject(org.wso2.www.php.xsd.CreateProject parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ExecuteTestCaseStepResponse executeTestCaseStep(org.wso2.www.php.xsd.ExecuteTestCaseStep parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListCustomizedListValuesResponse listCustomizedListValues(org.wso2.www.php.xsd.ListCustomizedListValues parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.CreateTestCaseResponse createTestCase(org.wso2.www.php.xsd.CreateTestCase parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestSuiteExecutionsResponse getTestSuiteExecutions(org.wso2.www.php.xsd.GetTestSuiteExecutions parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DeactivateProjectResponse deactivateProject(org.wso2.www.php.xsd.DeactivateProject parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.AssociateDefectTrackerResponse associateDefectTracker(org.wso2.www.php.xsd.AssociateDefectTracker parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.UpdateRequirementResponse updateRequirement(org.wso2.www.php.xsd.UpdateRequirement parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.WsAssignDropsResponse wsAssignDrops(org.wso2.www.php.xsd.WsAssignDrops parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.ListTestSuitesResponse listTestSuites(org.wso2.www.php.xsd.ListTestSuites parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DisablePlatformResponse disablePlatform(org.wso2.www.php.xsd.DisablePlatform parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetScopeResponse getScope(org.wso2.www.php.xsd.GetScope parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetListIdFromValueResponse getListIdFromValue(org.wso2.www.php.xsd.GetListIdFromValue parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.GetTestCasesFromDefectIdResponse getTestCasesFromDefectId(org.wso2.www.php.xsd.GetTestCasesFromDefectId parameters) throws java.rmi.RemoteException;
+    public org.wso2.www.php.xsd.DeleteTestSuiteResponse deleteTestSuite(org.wso2.www.php.xsd.DeleteTestSuite parameters) throws java.rmi.RemoteException;
+}

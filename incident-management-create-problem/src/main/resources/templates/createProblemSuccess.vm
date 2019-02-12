@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>$action.getText('create-and-link-problem.success.issue')</title>
+    #if (${action.issueObject})
+        <meta name="decorator" content="issueaction" />
+    #else
+        <meta name="decorator" content="message" />
+    #end
+</head>
+<body>
+#if(${action.issueObject})
+<div class="aui">
+    <h2 class="dialog-title">$action.getText('create-and-link-problem.success.header')</h2>
+        <div class="aui-message closeable shadowed">
+            <p class="title"><span class="aui-icon icon-success"></span><strong>$action.getText("create-and-link-problem.success.text")</strong></p>
+        </div>
+  </div>
+        
+        <div class="buttons-container form-footer">
+        <div class="buttons"><span class="icon throbber"></span>
+             <input class="button submit" type="submit" name="add" value="Close" class="aui-button" accesskey="S" title="Press Alt+Shift+S to submit form" onclick="location.href='/browse/${action.issueObject}'"/>
+		</div>
+        </div>          
+#end
+</body>
+</html>

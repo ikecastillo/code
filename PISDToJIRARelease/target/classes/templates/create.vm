@@ -1,0 +1,61 @@
+<html>
+<head>
+$webResourceManager.requireResource("com.dt.jira.plugin.pisdtojirarelease.PISDToJIRARelease:PISDToJIRARelease-resources")
+    <title>Create Jira ticket from Service Desk</title>
+    <meta name ="decorator" content="atl.general">
+    #if (${action.issueObject})
+        <meta name="decorator" content="issueaction" />
+    #else
+        <meta name="decorator" content="message" />
+    #end
+
+</head>
+<body>
+#set( $projects = ${action.jiraProjectList} )
+
+
+#if(${action.issueObject})
+<div class="aui">
+    <h2 class="dialog-title">Create Jira ticket from Service Desk</h2>
+
+
+             <form class ="aui auiSelectForm">
+                 <div class="basic_row">
+                  <input type="hidden" id="issueID" value="${action.id}"/>
+                 </div>
+                 <div class="basic_row">
+                    <input type="hidden" id="pKey" value="${action.issueObject.getKey()}"/>
+                  </div>
+                    <label class="selectLabel">Select Project: </label>
+                   <div class="basic_row">
+                   <select id="projectList" class="projectDropdown">
+                        <option></option>
+                        #foreach( $project in $projects )
+                        #if( $project.getSelected() == "selected" )
+                         <option selected value = "$project.getProjectKey()" > $project.getProjectName() </option>
+                         #else
+                         <option value = "$project.getProjectKey()" > $project.getProjectName() </option>
+                         #end
+                        #end
+                    </select>
+                   </div>
+                   <div class="basic_row">
+                       <label id="info">Please select Jira Project</label>
+                   </div>
+
+             </form>
+
+
+
+  </div>
+
+        <div class="buttons-container form-footer">
+
+                <div class="buttons" ><span class="icon throbber"></span>
+             <input class="aui-button" type="submit" name="add" value="Create" id="aui-submit" class="aui-button" accesskey="S" title="Press Alt+Shift+S to submit form" />
+             <input class="aui-button" type="submit" name="add" value="Close" id = "aui-close" class="aui-button" accesskey="S"  onclick="location.href='/browse/${action.issueObject}'"/>
+		        </div>
+        </div>
+#end
+</body>
+</html>

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Overall Burndown (Optimistic\Pessimistic)" directory_title="Overall Burndown (Optimistic\Pessimistic)" description="Burndown of Story points over a given project" author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">Charts</Param></Optional>
+        #oauth
+      #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="version" datatype="hidden" default_value="auto"/><UserPref name="headertxt" datatype="hidden" default_value="Overall Burndown (Optimistic\Pessimistic)"/><Content type="html">
+    <![CDATA[
+	#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+	<style type="text/css">
+		table.jqplot-table-legend { border: none; }
+		div.jqplot-table-legend-swatch-outline { border: none; }	
+	</style>
+	<style type="text/css">
+		#container {
+			padding: 15px;
+		}
+
+		#no-versions-warning {
+			line-height: 1.4;
+			font-size: 12px;
+		}
+
+		#days-box {
+			text-align: center;
+		}
+
+		#days-value {
+			text-align: center;
+			font-size: 5em;
+		}
+
+		#days-text {
+			padding-bottom: 15px;
+		}
+
+		#version-link {
+			text-align: center;
+		}
+
+		#no-future-versions-warning {
+			padding: 15px;
+		}
+
+		.view {
+			padding: 0.5em 1em;
+		}
+
+		.overdue {
+			color: #cc0000;
+		}
+
+		.future-release {
+			color: #00cc00;
+		}
+
+		.today {
+			color: #cc0000;
+		}
+
+		#days-text .today {
+			font-weight: bold;
+		}
+
+		.icon {
+			padding-top: 3px;
+			padding-right: 3px;
+		}
+
+		.disabled {
+			color: #C0C0C0;
+		}
+	</style>
+	<style type="text/css">
+		.jqplot-point-label {
+		  transform:rotate(7deg);
+	  }
+	</style>
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						//alert(
+						desc.fields.splice(2,2);
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+                    var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                    if(header != "" && header != null ){
+                        gadgets.window.setTitle(header);
+                    }
+                    else{
+                        gadgets.window.setTitle("Overall Burndown (Optimistic\Pessimistic)");
+                     }
+
+						//this.getView().empty();
+						//this.getView().append(AJS.$('<div id="defectdistChart"> </div>'));
+						drawchart(args.releaseburn);
+					},
+					args: [
+                        {
+                            key: "releaseburn",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/releaseversionburndown.json",
+									contentType: "application/json",
+									data:  { 
+											projectkey : gadgets.util.unescapeString(this.getPref("projectId"))
+										}									
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+	   drawchart=function(_restdata) {
+		//var allIssuesObj = getAllIssues(versionId, 0);
+		//var burndownSP = getbacklogSP(allIssuesObj);
+		//var chartData = getChartObj(allIssuesObj);
+		//console.log(allIssuesObj);
+		console.log(_restdata);
+		AJS.$.jqplot.config.enablePlugins = true;
+		
+		//var committed = [];
+		//var completed = [];
+		var ticks = [];
+		var SP = [];
+		var optimistic = [];
+		var pessimistic = [];
+		var planned = [];
+		if (_restdata.length < 1) {
+				SP.push(0);
+				optimistic.push(0);
+				pessimistic.push(0);
+				planned.push(0);
+				ticks.push('');
+			}
+		if (_restdata.length > 0) {
+		for (var _i=0; _i<_restdata.length; _i++) {
+			if (_restdata[_i]['backlog']!='') SP.push(parseInt(_restdata[_i]['backlog']));
+			ticks.push(_restdata[_i]['name']);			
+			var opt = (_restdata[_i]['optimistic']);
+			var pst = (_restdata[_i]['pesimistic']);
+			var plan = (_restdata[_i]['planned']);
+			optimistic.push(parseInt(opt));
+			pessimistic.push(parseInt(pst));
+			planned.push(parseInt(plan));
+		}
+		}
+			console.log(SP);
+			console.log(optimistic);
+			console.log(pessimistic);
+			console.log(planned);
+		//var committed = [10, 22, 64, 75, 100, 10];
+		//var completed = [15, 20, 50, 40, 80, 5];
+		// Can specify a custom tick Array.
+		// Ticks should match up one for each y value (category) in the series.
+		//var ticks = ['Sprint1', 'Sprint 2', 'Sprint 3', 'Sprint 4', 'Sprint 5', 'Sprint 6'];
+		plot1 = AJS.$.jqplot('chart_div', [SP,optimistic,pessimistic, planned], {
+			// The "seriesDefaults" option is an options object that will
+			// be applied to all series in the chart.
+			seriesDefaults:{
+				lineWidth:1.2,
+				pointLabels: {show: false,location:'n'},
+				trendline: {show: false, color: 'gray'},
+				markerRenderer: AJS.$.jqplot.MarkerRenderer, 
+				markerOptions: {
+					size: 0
+				}			
+			},
+			grid:{ background: 'white'},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series:[
+				{label:'Burndown', pointLabels: {show: true}, markerOptions: {size: 5}},
+				{label:'Optimistic'},	
+				{label:'Pessimistic'},
+				{label:'Planned'}			
+			],
+			// Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+			  show: true,
+			  location: 'e'
+			},
+			axesDefaults:{
+				tickOptions: {
+					showGridline: false
+				}
+			},
+			
+			axes: {
+				// Use a category axis on the x axis and use our custom ticks.
+				xaxis: {
+					renderer: AJS.$.jqplot.CategoryAxisRenderer,
+					ticks: ticks, 
+					tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer,
+					tickOptions: {
+					  angle: -30
+					},
+					min:0
+				},
+				// Pad the y axis just a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					min:0,
+					pad: 1.2,	
+					tickOptions: {					 
+					formatString: '%d'
+					}
+				}
+			},
+			seriesColors: ['blue', 'green', 'red', 'black']
+		});
+		
+		//plot1.redraw();
+		plot1.replot( {resetAxes: false } );
+
+            //gadgets.window.setTitle("Overall Burndown (Optimistic\Pessimistic)");
+	}
+	</script>
+        
+	<div id="chart_div"></div>
+]]>
+  </Content></Module>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Defect Turnaround Time" directory_title="Defect Turnaround Time" description="Defect Turnaround Time" author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">Charts</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="version" datatype="hidden" default_value="All"/><UserPref name="sprintId" datatype="hidden" default_value="All"/><UserPref name="groupbyField" datatype="hidden" default_value="Severity"/><UserPref name="baseline" datatype="hidden" default_value="2"/><UserPref name="headertxt" datatype="hidden" default_value="Defect Turnaround Time"/><Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");						
+						
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+						//this.getView().empty();
+						//this.getView().append(AJS.$('<div id="defectdistChart"> </div>'));
+						//AJS.$('#baseline_box').val(this.getPref("baseline"));
+						var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                                if(header != "" && header != null ){
+                                    gadgets.window.setTitle(header);
+                                }
+                                 else{
+                                    gadgets.window.setTitle("Defect Turnaround Time");
+                                }
+						drawchart(args.defectdistribution);
+					},
+					args: [
+                        {
+                            key: "defectdistribution",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/defectturnaround.json",
+									//url: "/rest/dealertrack/1.0/defectdistribution.json",
+									contentType: "application/json",
+									data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+												version: gadgets.util.unescapeString(this.getPref("version").split('|').toString()), 
+												sprintId: gadgets.util.unescapeString(this.getPref("sprintId").split('|').toString())												
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(_restdata) {
+			//console.log(_restdata); 
+	
+			//var turnaround = [6.5, 8,1.4, 15,5];     
+			//var releases = ['Critical', 'Low', 'Medium', 'High','Other'];
+			 
+			var turnaround = new Array();
+			var releases = new Array();
+			if(_restdata.length<1){
+					releases.push('');
+					turnaround.push(0);
+			}
+			if(_restdata.length>0){
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {
+						releases.push((_restdata[_i].Severity == '')?'None':_restdata[_i].Severity);
+						turnaround.push((_restdata[_i].turnaroundtime == '')? 0 : parseFloat(_restdata[_i].turnaroundtime));
+				}
+			}
+			console.log(turnaround);
+			console.log(releases);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			plot1 = AJS.$.jqplot('defectdistChart', [turnaround], {
+            // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+            //animate: !AJS.$.jqplot.use_excanvas,
+			 //title: '# of Emergency Tickets ',  
+            seriesDefaults:{
+                renderer: AJS.$.jqplot.BarRenderer,
+				 rendererOptions: {
+						fillToZero: false, 
+						barWidth:25,
+						barPadding:-1,
+						barMargin:3
+				},
+                pointLabels: { show: true },
+            },
+			series: [
+				{label:'Days', renderer:AJS.$.jqplot.BarRenderer, color:'#045FB4', trendline: {show: false}}
+			],
+			grid:{ background: 'white'},
+			axesDefaults:{
+				tickOptions: {
+					showGridline: false
+				}
+			},
+            axes: {
+                xaxis: {
+                    renderer: AJS.$.jqplot.CategoryAxisRenderer,
+                    ticks: releases,
+					tickOptions: {
+						angle: -30
+					},
+					//tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer, 
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					label:'Defect Count',	
+					//labelOptions:{           
+						//fontFamily:'Arial', fontSize: '14pt' 
+					//},
+					pad:1.2
+                },
+				yaxis: {
+					renderer: AJS.$.jqplot.LogAxisRenderer,
+					tickOptions:{
+						//labelPosition: 'middle', 
+						//angle:-30,
+						formatString: '%d'
+					},
+					//tickRenderer:  AJS.$.jqplot.CanvasAxisTickRenderer,
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					//labelOptions:{
+						//fontFamily:'Arial',
+						//fontSize: '14pt'
+					//},
+					label:'Days',
+					min:0,
+					pad:1.2					
+				}
+            },
+            highlighter: { show: false },
+			legend: { show: true }
+        });
+		AJS.$('#defectdistChart').on('jqplotDataHighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+		});
+		AJS.$('#defectdistChart').on('jqplotDataUnhighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+		});
+        AJS.$('#defectdistChart').on('jqplotDataClick', 
+            function (ev, seriesIndex, pointIndex, data) {
+               // console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+					console.log(_restdata[pointIndex].URLForBar);
+					top.location.href = _restdata[pointIndex].URLForBar;
+            }
+        );
+		
+		};
+	
+		</script>		
+		
+		<div id="defectdistChart"> </div>
+	]]>
+
+  </Content></Module>

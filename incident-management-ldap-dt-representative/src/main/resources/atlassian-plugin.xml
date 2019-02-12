@@ -1,0 +1,50 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/dtIcon.png</param>
+	    <param name="plugin-logo">images/dtLogo.png</param>
+	    <param name="configure.url">/plugins/servlet/incidentldap/service</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="incident-ldap"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="incident-ldap-dt-representative-resources" name="incident-ldap-dt-representative Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="incident-ldap.css" location="/css/incident-ldap.css"/>
+        <resource type="download" name="incident-ldap.js" location="/js/incident-ldap.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <context>incident-management-ldap-dt-representative</context>
+    </web-resource>
+   
+  <!-- add user picker web resources -->
+   <web-resource key="incident-user-picker-js" name="javascript">
+    <dependency>jira.webresources:global-static</dependency>
+    <description>JavaScript</description>
+    <resource name="incident-user-picker.js" type="download" location="js/incident-user-picker.js"/>
+    <context>atl.general</context>
+    <context>atl.admin</context>
+  </web-resource>
+
+  <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+  <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+  <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+  <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
+
+  <!-- add servlet resources -->
+  <servlet key="incident-ldap-servlet" class="com.dt.jira.ldap.incident.integration.ui.IncidentLdapServlet"> 
+			<url-pattern>/incidentldap/service</url-pattern>
+  </servlet>
+  
+  <!-- add rest resources -->	
+  <rest name="Incident Mgmt DT Rest" i18n-name-key="incident-mgmt-dt-rest.name" key="incident-mgmt-dt-rest" path="/incidentmgmtdt" version="1.0">
+    <description key="incident-mgmt-dt-rest.description">The Incident Mgmt DT Rest Plugin</description>
+  </rest>
+    
+</atlassian-plugin>

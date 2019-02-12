@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="com.dt.jira.plugin.servicedesk.standardbauchange.ServiceDeskStandardBAUChange-tests" name="Service Management - Standard Change Template Creator" plugins-version="2">
+  <plugin-info>
+    <description>This is the com.dt.jira.plugin.servicedesk.standardbauchange:ServiceDeskStandardBAUChange plugin creates new template under Change Management for Standard change type.</description>
+    <version>1.0</version>
+    <vendor name="DT Inc." url="http://www.dealerTrack.com/"/>
+  </plugin-info>
+  <!-- from our base plugin -->
+  <component-import key="myComponent" interface="com.dt.jira.plugin.servicedesk.standardbauchange.MyPluginComponent"/>
+  <!-- from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+  <component key="my-component-wired-test" class="it.com.dt.jira.plugin.servicedesk.standardbauchange.MyComponentWiredTest" public="true">
+    <interface>it.com.dt.jira.plugin.servicedesk.standardbauchange.MyComponentWiredTest</interface>
+    <service-properties>
+      <entry key="inProductTest" value="true"/>
+    </service-properties>
+  </component>
+</atlassian-plugin>

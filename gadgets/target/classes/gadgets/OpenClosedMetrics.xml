@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Open Vs Closed Defects " directory_title="Open Vs Closed Defects" description="Open vs Closed defects based on a date range. We will provide option to specify the interval between the date range and also give an option to display the Month Only or Full Date on the horizontal axis." author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">Charts</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="version" datatype="hidden" default_value="All"/><UserPref name="issuetypes" datatype="hidden" default_value="All"/><UserPref name="startDate" datatype="hidden" default_value="2013-01-01"/><UserPref name="endDate" datatype="hidden" default_value="2013-03-01"/><UserPref name="interval" datatype="hidden" default_value="2"/><UserPref name="headertxt" datatype="hidden" default_value="Open Vs Closed Defects"/><Content type="html">
+    <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:jqplot")
+		#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+
+		#includeResources()
+		<script type="text/javascript">
+		GROUP_BY_FIELD = "Defect Cause";
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                config: {
+                    descriptor: function(args)
+                    {
+                        var desc = DTGADGET.descriptor(this, args, "__ATLASSIAN_BASE_URL__");
+						desc.fields.splice(2,2);
+						desc.fields.push ({
+							id: "start-date-picker",
+							userpref: "startDate",
+							label: "Start Date",
+							type: "date",
+							value: gadget.getPref("startDate")							
+							}
+						);
+						desc.fields.push ({
+							id: "end-date-picker",
+							userpref: "endDate",
+							label: "End Date",
+							type: "date",
+							value: gadget.getPref("endDate")							
+							}
+						);						
+						desc.fields.push ({
+							id: "interval",
+							userpref: "interval",
+							label: "Interval(wk)",
+							type: "text",
+							value: gadget.getPref("interval")							
+							}
+						);
+						return desc;
+                    },
+                    args: DTGADGET.descriptorArgs("__ATLASSIAN_BASE_URL__")
+                },
+				view: { 
+				/* (2) Define the view logic */
+					onResizeAdjustHeight: true,
+                    enableReload: true,
+                    template: function (args){
+                    var header = gadgets.util.unescapeString(this.getPref("headertxt"));
+                        if(header != "" && header != null ){
+                            gadgets.window.setTitle(header);
+                        }
+                        else{
+                            gadgets.window.setTitle("Open Vs Closed Defects");
+                        }
+						drawchart(args.openclosedmetrics);
+					},
+					args: [
+                        {
+                            key: "openclosedmetrics",
+                            ajaxOptions: function ()
+                            {
+                                return {
+                                    url: "/rest/dealertrack/1.0/openvscloseddefects.json",
+									contentType: "application/json",
+									data:  { projectkey : gadgets.util.unescapeString(this.getPref("projectId")),
+											startdate: gadgets.util.unescapeString(this.getPref("startDate")),
+											enddate	: gadgets.util.unescapeString(this.getPref("endDate")),
+											interval: gadgets.util.unescapeString(this.getPref("interval"))
+									}
+                                };
+                            }
+                        }
+                    ]				
+				}
+			});
+		})();
+		drawchart=function(_restdata) {
+			console.log(_restdata); 
+			var open = new Array();
+			var closed = new Array();
+			var trend1 = new Array();
+			var trend2 = new Array();
+			var date = new Array();
+			if (_restdata.length < 1) {
+				open.push(0);
+				closed.push(0);
+				date.push('');
+			}
+			 var s1 = [5, 57,68, 48,28, 55];    
+			 var s2 = [5, 57,68, 48,28, 55];    			 
+			// var ticks = ['1.1.1 R', '1.1.1 P', 'AHFC1.2', '1.1.1 R','1.1.1 p','1.2.1 R'];
+			if (_restdata.length > 0) {
+				for (var _i=0, _len=_restdata.length; _i<_len; _i++) {	
+					//if(_restdata[_i].open == '0' && _restdata[_i].closed == '0'){
+							
+					//} else {				
+							date.push((_restdata[_i].date == '')?'None':_restdata[_i].date);
+							open.push((_restdata[_i].open == '')? 0 : parseInt(_restdata[_i].open));
+							trend1.push((_restdata[_i].open == '')? 0 : parseInt(_restdata[_i].open));
+							
+							closed.push((_restdata[_i].closed == '')? 0 : parseInt(_restdata[_i].closed));
+							trend2.push((_restdata[_i].closed == '')? 0 : parseInt(_restdata[_i].closed));						
+					 //}
+				}
+			}
+			if (open.length < 1 && closed.length < 1) {
+				open.push(0);
+				closed.push(0);
+				date.push('');
+			}
+			console.log(open);
+			console.log(closed);
+			console.log(date);
+			AJS.$.jqplot.config.enablePlugins = true;	
+			plot1 = AJS.$.jqplot('velocityChart', [open, closed, trend1,trend2], {
+            // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+            //animate: !AJS.$.jqplot.use_excanvas,
+			seriesColors: ['#E5F497', '#00AF52'],
+            seriesDefaults:{
+				//renderer:AJS.$.jqplot.BarRenderer,
+				rendererOptions: {
+					fillToZero: false, 
+					barWidth:16,
+					barPadding:2,
+					barMargin:3
+				},
+				pointLabels: {show: true},
+				trendline: {show: false, color: 'gray'}
+			},
+			 grid:{ background: 'white'},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series: [
+							{label:'Open',renderer:AJS.$.jqplot.BarRenderer},
+							{label: 'Closed',renderer:AJS.$.jqplot.BarRenderer},
+							{label: 'Open Trend line',pointLabels: {show: false}},
+							{label: 'Closed Trend line',pointLabels: {show: false}}
+			],
+			 // Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+			  show: true,
+			  location: 'e'
+			},
+			axesDefaults:{
+				tickOptions: {
+					showGridline: true
+				}
+			},
+			
+            axes: {
+                xaxis: {
+                    renderer: AJS.$.jqplot.CategoryAxisRenderer,
+                    ticks: date,
+					tickRenderer: AJS.$.jqplot.CanvasAxisTickRenderer,
+					tickOptions: {
+					  angle: -30,
+					  fontSize:'7pt',
+					  fontFamily: 'Helvetica',
+					  fontWeight: 'normal'
+					},
+					label:'Date Range',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'
+					},
+					pad:1	
+                },
+				 // Pad the y axis just a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					min:0,
+					pad:1.2,
+					tickOptions: {formatString: '%d'},
+					label:'No. Of Defects',
+					labelRenderer: AJS.$.jqplot.CanvasAxisLabelRenderer,
+					labelOptions:{
+						fontSize:'7pt',
+						fontFamily: 'Helvetica',
+						fontWeight: 'normal'
+					}
+				}
+            },
+            highlighter: { show: false }
+        });
+     plot1.redraw();
+
+	plot1.replot( {axes: {
+					xaxis: {
+						renderer: AJS.$.jqplot.CategoryAxisRenderer,
+						pad:1	
+						}
+					},
+					yaxis: {
+						min:0,
+						pad:1.2					
+					}
+				}
+			);
+	AJS.$('#velocityChart').on('jqplotDataHighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'pointer' );
+		});
+		AJS.$('#velocityChart').on('jqplotDataUnhighlight', function () {
+			AJS.$('.jqplot-event-canvas').css( 'cursor', 'auto' );
+		});
+         AJS.$('#velocityChart').bind('jqplotDataClick', 
+            function (ev, seriesIndex, pointIndex, data) {
+                //$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+				var lnk='';				
+				var  index = data.toString().split(',')[0];
+				var  open = _restdata[index-1].openDrillDownUrl;
+				var  closed = _restdata[index-1].closeDrillDownUrl;
+				if(seriesIndex==0)
+					lnk =open;
+				else 
+					lnk =closed;
+				console.log( 'url: ' + lnk );
+				top.location.href = lnk;
+				//console.log('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+            }
+        );
+		
+			console.log(plot1);
+			
+	};
+	
+	</script>		
+		<div id="velocityChart"> </div>
+
+
+	]]>
+
+  </Content></Module>

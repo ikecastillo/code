@@ -1,0 +1,5 @@
+com\dt\jira\handler\MyPluginComponentImpl.class
+com\dt\jira\handler\ThirdPartyChangeEmailHandler.class
+com\dt\jira\utils\PropertyUtils.class
+com\dt\jira\handler\MyPluginComponent.class
+com\dt\jira\handler\EditEmailHandlerDetailsWebAction.class

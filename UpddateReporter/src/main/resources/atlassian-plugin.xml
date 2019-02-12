@@ -1,0 +1,33 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="UpddateReporter"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="UpddateReporter-resources" name="UpddateReporter Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="UpddateReporter.css" location="/css/UpddateReporter.css"/>
+        <resource type="download" name="UpddateReporter.js" location="/js/UpddateReporter.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>UpddateReporter</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.plugin.updatereporter.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.plugin.updatereporter.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    
+     <rest key="updatereporter" name="updatereporter" i18n-name-key="rest" path="/dealertrack" version="1.0"><description key="rest.description">Request Update reporter and incident id on PSID </description></rest>
+</atlassian-plugin>

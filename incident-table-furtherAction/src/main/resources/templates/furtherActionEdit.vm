@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+$webResourceManager.requireResource("com.atlassian.auiplugin:ajs")
+$webResourceManager.requireResource("com.dt.jira.table.furtherAction.incident-table-furtherAction:furtherActionmapping-js")
+
+ </head>
+ <body>
+ <table id="incidentDummyTable"> </table>
+   #customControlHeader ($action $customField.id $customField.name $fieldLayoutItem.required $displayParameters $auiparams)
+<table  id="incidentTable" border="1" width="100%" style="border-collapse:collapse;" cellpadding="0" cellspacing="0" BORDERCOLOR="D7D7D7">
+<thead>
+ <colgroup>
+       <col span="1" style="width: 15%;height=5%">    
+       <col span="1" style="width: 39%;height=5%">
+	   <col span="1" style="width: 1%;height=5%">
+    </colgroup>
+        <tr> 
+            <th bgcolor="#E7E7E7">Date</th>			
+            <th bgcolor="#E7E7E7">Description</th>
+		    <td bgcolor ="#E7E7E7">
+			<table>
+			<tr>
+				<td><input  type="button" title="Add FA Action Row" value=" + " style="font-weight:bold;font-size:1em;color:#33CC33;background-color:#E7E7E7;border:none;height=5%"  id="addfa" onclick ="onAddEvent(this)"/></td>
+				<td>
+		 
+					<input type="text" style="width:2%;height=5%;display: none;" id="actionItem" name="$customField.id" value="$!value"/>
+        
+				</td>  
+				<td>
+		 
+					<input type="text" style="width:2%;height=5%;display: none;" id="sampleItem" name="sampleAction" value=""/>
+        
+				</td>  
+			</tr>
+			</table>
+			</td>
+        </tr>
+ </thead>
+ <tbody>
+ <tr id="rowId_1" style="display: none;">
+ <td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="dateId_text" id="dateId_1"  value="" onchange="TextChangeAction(this)"></td>
+ <td ><textarea style="background-color:transparent;border:0px solid white;height: 20px; width: 100%;" name="descId_text" id="descId_1" onchange="TextChangeAction(this)"></textarea></td>
+ <td><input  type="button" title="Remove Row" value=" - "  style="font-weight:bold;font-size:1em;color:#FF3300;background-color:#FFFFFF;border:none;" id="removeId_1"  onclick ="onRemoveEvent(this)">
+ 
+ </input>
+ </td>
+ </tr> 
+ </tbody>
+ </table>
+  #customControlFooter ($action $customField.id $fieldLayoutItem.fieldDescription $displayParameters $auiparams)
+ <script>
+ 
+ var fadataList = new Array();
+ var fadateItem = "";
+ var fadescItem = "";
+ var faindex = "";
+ var faItemIndex ="";
+ var faItemType ="";
+ var fanewList = new Array();
+  var facnt = 0;
+  var indexcnt = 0;
+  
+  
+ var tempAction = AJS.$('#' + "actionItem").val();
+ 
+  var tableend =  tempAction.split("</table>");
+ var tableTag= tableend[0].split("<table border=1>");
+ AJS.$('#incidentDummyTable').show();
+ AJS.$('#incidentDummyTable').html(tableTag[1]);
+ var tableToJson = AJS.$("#incidentDummyTable").tableToJSON(); 
+ //alert("FA tableToJson "+tableToJson);
+ var tempValAction = JSON.stringify(tableToJson); 
+ var obj = jQuery.parseJSON(tempValAction);
+ AJS.$('#incidentDummyTable').hide();
+if(obj.length > 0){
+	var tempLenAction = 1;
+	jQuery.each(obj, function() 
+	{
+	  var tempIndexAction = this['FA Index'];
+	  if(tempIndexAction >= tempLenAction){
+	     tempLenAction = tempIndexAction;
+	  }
+	  var mapdata = new Array();
+     mapdata.push(this['FA Date']);
+	mapdata.push(this['FA Description']);
+	mapdata.push(this['FA Index']);
+	  var datVal = mapdata +":";
+	  fadataList.push(datVal);      
+	  AJS.$('#' + "sampleItem").val(fadataList);
+	  AJS.$('#incidentTable').append('<tr id="rowId_'+ tempIndexAction +'"><td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="date_text" id="dateId_'+ tempIndexAction +'" value="" onchange="TextChangeAction(this)"></td><td><textarea style="background-color:transparent;border:0px solid white;height:20px;width:100%;" name="desc_text" id="descId_'+ tempIndexAction +'" onchange="TextChangeAction(this)"></textarea></td><td><input  type="button" title="Remove Row" value=" - " style="font-weight:bold;font-size:1em;color:#FF3300;background-color:#FFFFFF;border:none;" id="removeId_'+ tempIndexAction +'" onclick ="onRemoveActionClick(this)" /></td></tr>');
+      var idDateAtt1 = "dateId_"+tempIndexAction;
+      AJS.$("#"+idDateAtt1).val(this['FA Date']);
+      var idDescAtt1 = "descId_"+tempIndexAction;
+	  AJS.$("#"+idDescAtt1).val(this['FA Description']);
+    });
+	facnt = tempLenAction;
+ }
+ 
+ function onRemoveActionClick(tButton){
+ 
+ var buttonId = AJS.$(tButton).attr('id');
+ 
+  var idAttribute = buttonId.split("_");
+ 
+   if(idAttribute[1] == 1){
+	AJS.$("#rowId_1").hide();
+ }
+ else{
+ AJS.$(tButton).closest('tr').remove();
+ }
+  for ( var i = 0, l = fadataList.length; i < l; i++ ) {
+       
+	  
+       var dataSplit = fadataList[i].split(",");
+	   
+        var index1 = dataSplit[3];
+	
+		 var index2 = index1.split(":");
+		
+		if(index2[0] == idAttribute[1]){
+		fadataList.splice(i, 1);	
+		break;
+		}
+		
+  } 
+  //  alert("remove list"+fadataList);
+	  AJS.$('#' + "sampleItem").val(fadataList);
+   
+ }
+ 
+ function onAddEvent(tAdd){
+ //alert(tAdd.title);
+ ++facnt;
+ if(facnt !=1){
+ AJS.$('#incidentTable tr').last().after('<tr id="rowId_'+ facnt +'"><td><input type="text" style="background-color:transparent;border:0px solid white;width: 100%;" name="dateId_text" id="dateId_'+ facnt +'" value="" onchange="TextChangeAction(this)"></td><td><textarea style="background-color:transparent;border:0px solid white;height:20px;width:100%;" name="descId_text" id="descId_'+ facnt +'" onchange="TextChangeAction(this)"></textarea></td><td><input  type="button" title="Remove Row" value=" - " style="font-weight:bold;font-size:1em;color:#FF3300;background-color:#FFFFFF;border:none;" id="removeId_'+ facnt +'" onclick ="onRemoveClick(this)" /></td></tr>');
+     var idDateAtt1 = "dateId_"+facnt;
+	
+		var output = faPopulateDate();
+		AJS.$("#"+idDateAtt1).val(output);
+		
+		var mapdata = new Array();
+		mapdata.push(output);
+		
+		mapdata.push(" ");
+		mapdata.push(facnt);
+
+		var datVal = mapdata +":";
+	fadataList.push(datVal);	
+	//alert("Add row count--> FA:  "+fadataList);
+    AJS.$('#' + "sampleItem").val(fadataList);
+  }
+   else{
+   
+    AJS.$("#rowId_1").show();
+   var idDateAtt1 = "dateId_1";
+		
+		var output = populateDate();
+		AJS.$("#"+idDateAtt1).val(output);
+		
+		var mapdata = new Array();
+		mapdata.push(output);
+		
+		mapdata.push(" ");
+		mapdata.push(1);
+
+		var datVal = mapdata +":";
+	fadataList.push(datVal);	
+    AJS.$('#' + "sampleItem").val(fadataList);
+  
+   }   
+ }
+ 
+ function faDateValidation(tBoxData)
+ {
+
+ var months = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+"Jul", "Aug","Sep","Oct","Nov","Dec");
+ var split = tBoxData.split(" ");
+ 
+
+		 if(split.length != 3){
+			 alert("Date is not proper");
+			 return false;
+		 }
+		 if(split[0].length == 3){
+		  var monthExist = false;
+	      for(var i = 0, l = months.length; i < l; i++){
+			if(split[0] == months[i]){
+			   monthExist = true;
+			   break;
+			}
+		  }
+		  if(monthExist == false){
+		    alert("Month is not proper");
+			return false;
+		  }
+		  }
+		  else{
+			alert("Month is not proper");
+			return;
+		  }
+		  
+		if(split[1].length == 3 || split[1].length == 2){
+		      var split1 = split[1].split(",");
+			  
+			 var iNum = parseInt(split1[0]);
+			 var convLength = iNum.toString().length;
+			 var stringLen = split1[0].length;
+			 
+			 if(stringLen != convLength){
+				alert("Date is not proper");
+				return false;
+			 }
+			 if(iNum == NaN){
+				alert("Date is not proper");
+				return false;
+			 }
+			
+			if(iNum < 1 || iNum  > 31){
+				alert("Date is not proper");
+				return false;
+			   }
+		  }
+		  else{
+			alert("Date is not proper");
+				return false;
+		  }
+		  var iNum1 = parseInt(split[2]);
+			 var convLength1 = iNum1.toString().length;
+			 var stringLen1 = split[2].length;
+			
+			 if(stringLen1 != convLength1){
+				alert("Year is not proper");
+				return false;
+			 }
+			 if(stringLen1 != 4){
+				alert("Year is not proper");
+				return false;
+			 }
+			 if(iNum1 == NaN){
+				alert("Year is not proper");
+				return false;
+			 }
+		  if(split[2].length != 4){
+		    alert("Year is not proper");
+			return false;
+		  }
+
+ }
+ 
+ function TextChangeAction(faTBox) { 
+	//alert(faTBox.title);
+ 	var duplicateRow = false;
+    var faMapdata = new Array();
+	var item;
+    var faData = AJS.$(faTBox).attr('id');
+	
+	var faIdAttribute = faData.split("_");
+	var tBoxData = AJS.$(faTBox).val();	
+	var months = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+"Jul", "Aug","Sep","Oct","Nov","Dec");
+	if(faIdAttribute[0] == "dateId"){
+	var resultDate = faDateValidation(tBoxData);	
+		fadateItem = tBoxData;
+	for ( var i = 0, l = fadataList.length; i < l; i++ ) {
+	
+	var dataSplit = fadataList[i].split(",");
+	  var index1 = dataSplit[3];
+	
+	 var index2 = index1.split(":");
+	  
+	  if(index2[0] == faIdAttribute[1]){
+	//alert("ifgfjkg");
+	  faMapdata.push(fadateItem);
+    faMapdata.push(dataSplit[2]);
+    faMapdata.push(index2[0]);
+	
+	var datVal = faMapdata +":";
+	fadataList[i] = datVal;	
+    AJS.$('#' + "sampleItem").val(fadataList);
+	     duplicateRow = true;
+		fadateItem = "";
+	//timeItem = "";
+	fadescItem = "";
+	faindex= "";
+	
+	  }  
+	  }	
+    }
+	else if(faIdAttribute[0] == "descId")
+	{
+
+	    var idDateAtt1 = "dateId_"+faIdAttribute[1];
+		
+		fadescItem = tBoxData;
+		var d = new Date();
+        var month = d.getMonth();
+        var day = d.getDate();
+        var monthString = ""; 
+		
+	
+		fadateItem = AJS.$("#"+idDateAtt1).val();		
+		for ( var i = 0, l = fadataList.length; i < l; i++ ) {
+	
+	var dataSplit = fadataList[i].split(",");
+	  var index1 = dataSplit[3];
+	
+	 var index2 = index1.split(":");
+	  
+	  if(index2[0] == faIdAttribute[1]){
+	
+	  faMapdata.push(fadateItem);
+	
+    faMapdata.push(fadescItem);
+    faMapdata.push(index2[0]);
+	
+	var datVal = faMapdata +":";
+	fadataList[i] = datVal;	
+    AJS.$('#' + "sampleItem").val(fadataList);
+	//alert("fa"+AJS.$('#' + "sampleItem").val());
+	     duplicateRow = true;
+		fadateItem = "";
+	fadescItem = "";
+	faindex= "";
+	
+	  }  
+	  }		 
+		
+	} 
+	faItemType = faIdAttribute[0];
+	faItemIndex = faIdAttribute[1];
+	faindex = faIdAttribute[1];
+
+	
+	
+	 	  
+	if(duplicateRow  == false){
+	
+    faMapdata.push(fadateItem);
+
+    faMapdata.push(fadescItem);
+    faMapdata.push(faindex);
+
+	var datVal = faMapdata +":";
+	fadataList.push(datVal);	
+    AJS.$('#' + "sampleItem").val(fadataList);
+	var len = fadataList.length -1;
+	fanewList[faindex] = len;
+	fadateItem = "";
+	
+	fadescItem = "";
+	faindex= "";
+	}
+	duplicateRow = false;
+	//alert(fadataList);
+
+  }
+function faPopulateDate(){
+var months = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+"Jul", "Aug","Sep","Oct","Nov","Dec");
+	var d = new Date();
+        var month = d.getMonth();
+        var day = d.getDate();
+        var monthString = ""; 
+	for(var i = 0, l = months.length; i < l; i++){
+		if(month == i){
+			monthString = months[i];
+		}
+	}
+	var output = monthString+" "+day+","+" "+d.getFullYear();
+	
+    return output;
+}  
+ </script>
+
+ </body>
+ </html>

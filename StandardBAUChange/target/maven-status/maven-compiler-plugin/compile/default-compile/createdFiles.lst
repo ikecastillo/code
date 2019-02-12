@@ -1,0 +1,8 @@
+com\dt\jira\plugin\standardbauchange\ui\StandardBAUServlet.class
+com\dt\jira\plugin\standardbauchange\StandardBAUChangeResource.class
+com\dt\jira\plugin\standardbauchange\MyPluginComponent.class
+com\dt\jira\plugin\standardbauchange\MyPluginComponentImpl.class
+com\dt\jira\plugin\standardbauchange\rest\ServiceDeskConfigResource$2.class
+com\dt\jira\plugin\standardbauchange\rest\ServiceDeskConfigResource$1.class
+com\dt\jira\plugin\standardbauchange\rest\ServiceDeskConfigResource.class
+com\dt\jira\plugin\standardbauchange\rest\ServiceDeskConfig.class

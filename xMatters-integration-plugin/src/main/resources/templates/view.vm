@@ -1,0 +1,26 @@
+#if ($value)
+
+ #disable_html_escaping()
+  #set($customFieldType = $customField.getCustomFieldType())
+ 
+   #set ($id  = $customField.getIdAsLong())
+ $value
+   <script>
+   
+   jQuery(document).ready(function() { 
+   
+	var idscript = "$id";
+	var customeField = "customfield_"+idscript+"-val";
+	var removeCTE = setInterval(function() {
+    	    //For each editable element type
+			AJS.$("#"+customeField).removeClass("editable-field");
+    		  AJS.$("#"+customeField).removeAttr('class');
+    		  AJS.$("#"+customeField).find('span.overlay-icon').hide(); 
+    		  AJS.$("#"+customeField).removeAttr( "title" );
+    	
+    		}, 500);
+	
+    });
+   </script>
+#end
+

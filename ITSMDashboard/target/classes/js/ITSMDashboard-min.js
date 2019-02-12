@@ -1,0 +1,1 @@
+var ReportTypeGenerator={generateYAxisColumnName:function(a){var b;switch(a){case"IncidentCount":b="Incident Count";break;case"IncidentDuration":b="Incident Duration";break;case"ProblemCount":b="Problem Count";break;case"ProblemDuration":b="Problem Duration";break}return b}};var YAxisLegend={generateYAxisLegend:function(a,b){return a+" "+b}};

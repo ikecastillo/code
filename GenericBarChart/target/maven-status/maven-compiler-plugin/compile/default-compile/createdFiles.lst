@@ -1,0 +1,10 @@
+com\dt\jira\plugin\genericbarchart\utils\DateOperations.class
+com\dt\jira\plugin\genericbarchart\MyPluginComponent.class
+com\dt\jira\plugin\genericbarchart\rest\CustomFieldsModel.class
+com\dt\jira\plugin\genericbarchart\rest\EnhancedIncidentExecSummary.class
+com\dt\jira\plugin\genericbarchart\rest\GenericModel.class
+com\dt\jira\plugin\genericbarchart\MyPluginComponentImpl.class
+com\dt\jira\plugin\genericbarchart\utils\DrillDown.class
+com\dt\jira\plugin\genericbarchart\utils\NumberFormatter.class
+com\dt\jira\plugin\genericbarchart\rest\FilterModel.class
+com\dt\jira\plugin\genericbarchart\rest\GenericSummaryModel.class

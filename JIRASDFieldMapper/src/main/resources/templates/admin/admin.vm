@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>Initial Setup</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jirasdfieldmapper.JIRASDFieldMapper:JIRASDFieldMapper-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+</head>
+<body>
+<div class="header">
+    <h3 class="jirasdfmadminformtitle">$i18n.getText("jirasdfm.admin.label")</h3>
+</div>
+<form id="jirasdfmadmin2" class="aui">
+    <div class="field-group">
+        <label for="jirasdfmSDURL">$i18n.getText("jirasdfm.admin.jirasdfmSDURL.label")</label>
+        <input type="text" id="jirasdfmSDURL" name="jirasdfmSDURL" class="text">
+        <div class="description">$i18n.getText("jirasdfm.admin.jirasdfmSDURL.description")</div>
+    </div>
+    <div class="field-group">
+        <label for="jirasdfmuid">$i18n.getText("jirasdfm.admin.jirasdfmuid.label")</label>
+        <input type="text" id="jirasdfmuid" name="jirasdfmuid" class="text">
+    </div>
+    <div class="field-group">
+        <label for="jirasdfmpwd">$i18n.getText("jirasdfm.admin.jirasdfmpwd.label")</label>
+        <input type="password" id="jirasdfmpwd" name="jirasdfmpwd" class="text">
+    </div>
+    <div class="field-group">
+        <input type="submit" value="$i18n.getText("jirasdfm.admin.save.label")" class="button">
+        <input type="button" value="$i18n.getText("jirasdfm.admin.cancel.label")" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+    </div>
+</form>
+
+<script type="text/javascript">
+    function populateJIRASDFMForm() {
+        console.log("Populating Service desk settings");
+        jQuery.ajax({
+            url: "/rest/jirasdfm/1.0/jirasdfmadminconfig",
+            dataType: "json",
+            success: function(config) {
+                AJS.$("#jirasdfmSDURL").attr("value", config.serviceDeskURL);
+                AJS.$("#jirasdfmuid").attr("value", config.serviceDeskUserId);
+                AJS.$("#jirasdfmpwd").attr("value", config.serviceDeskPwd);
+
+
+            }
+        });
+    }
+    AJS.$(function() {
+        populateJIRASDFMForm();
+    });
+</script>
+</body>

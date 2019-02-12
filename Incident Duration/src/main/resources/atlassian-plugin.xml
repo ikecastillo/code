@@ -1,0 +1,40 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="ruth-jira-custom-field"/>
+    <resource type="i18n" name="i18nnn" location="atlassian-plugin"/>
+    <!-- add our web resources -->
+    <web-resource key="ruth-jira-custom-field-resources" name="ruth-jira-custom-field Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="ruth-jira-custom-field.css" location="/css/ruth-jira-custom-field.css"/>
+        <resource type="download" name="ruth-jira-custom-field.js" location="/js/ruth-jira-custom-field.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>ruth-jira-custom-field</context>
+    </web-resource>
+    
+    <web-panel name="DueDateIndicator" i18n-name-key="due-date-indicator.name" key="due-date-indicator" location="atl.jira.view.issue.right.context" weight="1000">
+    <description key="due-date-indicator.description">The DueDateIndicator Plugin</description>
+    <context-provider class="com.dt.jira.plugin.duedatecustomfield.DueDateIndicator"/>
+    <resource name="view" type="velocity" location="templates/due-date-indicator.vm"/>
+    <label key="due-date-indicator.title"/>
+    </web-panel>
+    
+	<customfield-type key="admintextfield" name="Admin Editable Text Field" class="com.dt.jira.plugin.duedatecustomfield.JiraCustomField">
+		<description>A text field only editable by those with admin permissions</description>
+		<resource type="velocity" name="edit" location="templates/edit-jiraadminonlytext.vm"/>
+		<resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-basictext.vm"/>
+	</customfield-type>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    
+</atlassian-plugin>

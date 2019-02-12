@@ -1,0 +1,45 @@
+Manifest-Version: 1.0
+Atlassian-Build-Date: 2018-02-15T12:53:45+0530
+Atlassian-Plugin-Key: com.dt.jira.multilevelcascadedepth.MultiLevelCasca
+ deOptionForDepthJQL
+Bnd-LastModified: 1518679433779
+Build-Jdk: 1.8.0_102
+Built-By: JPADHIARY
+Bundle-Description: This is the com.dt.jira.multilevelcascadedepth:Multi
+ LevelCascadeOptionForDepthJQL plugin for Atlassian JIRA.
+Bundle-DocURL: http://www.dealertrack.com/
+Bundle-ManifestVersion: 2
+Bundle-Name: MultiLevelCascadeOptionForDepthJQL
+Bundle-SymbolicName: com.dt.jira.multilevelcascadedepth.MultiLevelCascad
+ eOptionForDepthJQL
+Bundle-Vendor: Dealertrack
+Bundle-Version: 1.0.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: com.dt.jira.multilevelcascadedepth.api;version="1.0.0"
+Import-Package: org.springframework.osgi.context;resolution:=optional,or
+ g.springframework.osgi.service.exporter.support;resolution:=optional,or
+ g.springframework.osgi.service.importer.support;resolution:=optional,or
+ g.eclipse.gemini.blueprint.context;resolution:=optional,org.eclipse.gem
+ ini.blueprint.service.exporter;resolution:=optional,org.eclipse.gemini.
+ blueprint.service.exporter.support;resolution:=optional,org.eclipse.gem
+ ini.blueprint.service.importer.support;resolution:=optional,com.atlassi
+ an.jira,com.atlassian.jira.bc.issue.search,com.atlassian.jira.component
+ ,com.atlassian.jira.issue,com.atlassian.jira.issue.customfields.option,
+ com.atlassian.jira.issue.fields,com.atlassian.jira.issue.search,com.atl
+ assian.jira.jql.operand,com.atlassian.jira.jql.query,com.atlassian.jira
+ .plugin.jql.function,com.atlassian.jira.security,com.atlassian.jira.use
+ r,com.atlassian.jira.util,com.atlassian.jira.web.bean,com.atlassian.plu
+ gin.osgi.factory,com.atlassian.query,com.atlassian.query.clause,com.atl
+ assian.query.operand,com.atlassian.sal.api,com.dt.jira.multilevelcascad
+ edepth.api,com.google.common.base,com.google.common.collect,javax.annot
+ ation,javax.inject,org.apache.commons.lang,org.apache.commons.logging,o
+ rg.osgi.framework,org.slf4j,org.springframework.aop.support,org.springf
+ ramework.beans,org.springframework.beans.factory,org.springframework.be
+ ans.factory.annotation,org.springframework.beans.factory.config,org.spr
+ ingframework.beans.factory.parsing,org.springframework.beans.factory.su
+ pport,org.springframework.beans.factory.xml,org.springframework.context
+ .annotation,org.springframework.core.io,org.springframework.stereotype,
+ org.springframework.util,org.w3c.dom
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Spring-Context: *
+Tool: Bnd-2.4.1.201501161923

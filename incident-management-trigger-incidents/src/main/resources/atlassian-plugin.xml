@@ -1,0 +1,51 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/dtIcon.png</param>
+        <param name="plugin-logo">images/dtLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="incident-management-trigger-incidents"/>
+    
+    <gadget key="trigger-incident-count-summary" location="gadgets/triggerincidentscountsummary.xml"/>
+    <gadget key="trigger-incident-count-barchart-view" location="gadgets/triggerincidentscountbarchartview..xml"/>
+    
+    <gadget key="trigger-incident-duration-summary" location="gadgets/triggerincidentdurationsummary.xml"/>
+    <gadget key="trigger-incident-duration-barchart-view" location="gadgets/triggerincidentdurationbarchartview.xml"/>
+     
+    
+    <!-- add our web resources -->
+    <web-resource key="incident-management-trigger-incidents-resources" name="incident-management-trigger-incidents Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>        
+        <resource type="download" name="incident-management-trigger-incidents.css" location="/css/incident-management-trigger-incidents.css"/>
+        <resource type="download" name="incident-management-trigger-incidents.js" location="/js/incident-management-trigger-incidents.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <context>incident-management-trigger-incidents</context>
+    </web-resource>
+    
+    <web-resource key="trigger-incidents-highchart-resources" name="Trigger Incidents Highchart Web Resources">
+    	<resource name="highcharts.js" type="download" location="highcharts/highcharts.js"/>
+		<resource name="exporting.js" type="download" location="highcharts/exporting.js"/>
+ 	</web-resource>
+	
+	<web-resource name="trigger-incidents-common-js" key="trigger-incidents-common-js">
+		<resource name="userpref.js" type="download" location="js/userpref.js"/>
+		<resource name="dt-common.js" type="download" location="js/dt-common.js"/>	
+	</web-resource>
+	
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="com.dt.jira.trigger.incidents.plugin.MyPluginComponentImpl" public="true">
+        <interface>com.dt.jira.trigger.incidents.plugin.MyPluginComponent</interface>
+    </component>
+    
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    
+    <!-- rest resource for ITSMDashboard  -->
+	<rest key="triggerincidentrest" path="/triggerincident" version="1.0">
+        <description>Provides the REST resource to show all trigger incident count</description>
+    </rest>
+</atlassian-plugin>

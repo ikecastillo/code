@@ -1,0 +1,323 @@
+<html>
+   <head>
+      <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+	  <meta name="decorator" content="atl.admin" />
+	  <meta name="projectKey" content="$projectKey"/>
+      <meta name="admin.active.tab" content="user-mapping-link"/>
+      <meta name="admin.active.section" content="atl.jira.proj.config"/>  
+      $webResourceManager.requireResource("com.dt.jira.incidentmap.plugin.incident-approval-mapping-plugin:incident-approval-mapping-resources")
+      $webResourceManager.requireResource("com.atlassian.auiplugin:aui-select2")
+      
+	  
+      <style type='text/css'>
+         #main_container { 
+         width: 96%; 
+         border: 0px; 
+         display: table;
+         } 
+         .basic_row { 
+         clear: both; 
+         position: relative; 
+         border: 0px;
+         } 
+         .two_col { 
+         float: left; 
+         width: 50%; 
+         } 
+         
+         .clear_float { 
+         font-size: 0px; 
+         line-height: 0px; 
+         clear: both; 
+         }
+         
+         .error{
+			color: red;
+		 }
+         
+         .box{
+        	display: none;
+         }
+         
+         .wrapper {
+		  width: 990px;		 
+		  float: left;		  
+		}
+		.column {
+		  width: 150px;	  
+		  float: left;	
+		}
+		
+		.columnlbl {
+		   width: auto;	  
+		   float: left;
+		   text-align: center;
+		   margin-left: 5px;
+		   margin-right: 3px;
+		}
+		
+		.rightcolumn {
+		  width: 150px;
+		  float: left;
+		}
+      </style>
+      
+     
+    <style type="text/css">
+        
+        .aui-page-panel-content > form {
+            min-height: 300px;
+        }
+        
+       
+		        
+    </style>
+    </head>
+   <body>
+   <div class="header">
+        <h3 class="formtitle">$i18n.getText("incident-mapping.label")</h3>       
+    </div>
+    </br></br>
+      <div id="page">            
+                  <form class="aui" id="incidentmap">
+                     <input type="hidden" id="projectKey" name="projectKey" value="$projectKey">
+                     <input type="hidden" id="baseURL" value="$baseURL"/> 	
+                     			 			
+							<div class="wrapper">
+								<div class="row one">
+								
+									<div class="columnlbl one">
+									<label for="typesGroupLbl">Clients Impacted </label>
+									</div>
+									
+									<div class="column two">
+										<select id="typesGroup" name="typesGroup">                                                             
+											<option value="None">---select---</option>
+											#foreach($types in $typesGroup)                                    
+												 #if ($selectedTypes && ($selectedTypes  == $types.optionId))
+														<option value="$types.optionId" selected="selected">$types.value</option>
+												 #else
+														<option value="$types.optionId">$types.value</option>
+												 #end  
+											#end                                
+									  </select>
+									</div>
+							
+										<div class="columnlbl three External box">
+										<label for="solutionGroupLbl">Solution Group</label>
+										</div>
+										
+										<div class="column four External box">
+										<select id="solutionGroup" name="solutionGroup">                                                             
+												<option value="None">---select---</option>                                    
+												#foreach ($option in $solutionGroup)                                    
+													 #if ($selectedSolution && ($selectedSolution  == $option.optionId))
+															<option value="$option.optionId" selected="selected">$option.value</option>
+													 #else
+															<option value="$option.optionId">$option.value</option>
+													 #end
+												 #end 
+											</select>  
+										</div>
+  							
+										<div class="columnlbl five ExternalProduct box">
+											<label for="productGroupLbl">Products</label> 
+										</div>
+										<div class="column rightcolumn ExternalProduct box">
+											<select id="productGroup" name="productGroup">                                                             
+												  <option value="None">---select---</option>  
+											</select> 
+										</div>
+							
+										<div class="columnlbl three Internal box">
+										<label for="locationGroupLbl">Location</label> 
+										</div>
+										
+										<div class="column four Internal box">                             
+										<select id="locationGroup" name="locationGroup">                                                             
+										 <option value="None">---select---</option>                                    
+											#foreach ($option in $locationGroup)                                    
+												 #if ($selectedLocation && ($selectedLocation  == $option.optionId))
+														<option value="$option.optionId" selected="selected">$option.value</option>
+												 #else
+														<option value="$option.optionId">$option.value</option>
+												 #end
+											 #end 
+										</select> 
+										</div>
+							
+										<div class="columnlbl five InternalImpacted box">
+										 <label for="impactedGroupLbl">Impacted Function</label> 
+										</div>
+										
+										<div class="column rightcolumn InternalImpacted box ">
+										<select id="impactedGroup" name="impactedGroup">                                                             
+											 <option value="None">---select---</option>                                    
+										</select> 
+										</div>
+							
+							
+										<div class="columnlbl six ExternalFourthLevel box">
+											<label for="fourthLevelLbl">Sub Product</label> 
+										</div>
+										
+										<div class="column seven ExternalFourthLevel box ">
+											<select id="fourthLevel" name="fourthLevel">                                                             
+												 <option value="None">---select---</option>                                    
+											</select> 
+										</div>
+										
+							
+							
+							
+							</div>
+							
+							</div>
+							
+							</br></br></br>
+                       
+                        <div class="basic_row">
+                           <div class="two_col">
+                              <h3><label for="Roles">Roles</label></h3>
+                           </div>
+                           <div class="two_col">
+                              <h3><label for="Assignee">Assignee</label></h3>
+                           </div>
+                        </div>
+                      
+                       <div class="basic_row"></div>
+                        </br>
+                        <div class="basic_row">
+                           <div class="two_col"><input type="hidden" id="pndappr_incident_rpts" name="pndappr_incident_rpts" value="10800" /><label for="Incident Report Assignee">Incident Report Assignee</label></div>
+                           <div class="two_col"><div id="appr_incident_error_10800" class="error"></div>	
+								<div class="ajax_autocomplete" id="pndappr_incident_10800_container">
+								        <input class="text long-field incidentuserpickerfield" id="pndappr_incident_10800" name="pndappr_incident_10800" style="" type="text" value="" autocomplete="off">
+										<div class="ajax_results" id="pndappr_incident_10800_results"></div>												
+								</div>
+                           </div>
+                           </br></br>
+                        <div class="basic_row">
+                           <div class="two_col"><input type="hidden" id="pndappr_incident_stim" name="pndappr_incident_stim" value="10801" /><label for="Solution Team Incident Manager">Solution Team Incident Manager</label></div>
+                           <div class="two_col"><div id="appr_incident_error_10801" class="error"></div>	
+								<div class="ajax_autocomplete" id="pndappr_incident_10801_container">
+								        <input class="text long-field incidentuserpickerfield" id="pndappr_incident_10801" name="pndappr_incident_10801" style="" type="text" value="" autocomplete="off">
+										<div class="ajax_results" id="pndappr_incident_10801_results"></div>												
+								</div>
+                           </div>
+                           </br></br>
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_incident_ibam" name="pndappr_incident_ibam" value="10802" /><label for="Incident Management Board Review Member">Incident Management Board Review Member</label></div>
+                              <div class="two_col"><div id="appr_incident_error_10802" class="error"></div>
+                                 <div class="ajax_autocomplete" id="pndappr_incident_10802_container">
+										<input class="text long-field incidentuserpickerfield" id="pndappr_incident_10802" name="pndappr_incident_10802" style="" type="text" value="" autocomplete="off">
+										<div class="ajax_results" id="pndappr_incident_10802_results"></div>												
+								</div>
+                           </div>
+                           </br></br>
+                           
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_incident_cl" name="pndappr_incident_cl" value="10803" /><label for="Communications Lead">Communications Lead</label></div>
+                              <div class="two_col"><div id="appr_incident_error_10803" class="error"></div>
+                                
+								<div style="min-width:300px">
+                              	<fieldset rel="pndappr_incident_10803" class="hidden user-picker-params">
+   								 <input title="formName" type="hidden" value="jiraform" />
+    							<input  title="fieldName" type="hidden" value="pndappr_incident_10803" />
+   								 <input title="multiSelect" type="hidden" value="true" />
+    							<input title="userPickerEnabled" type="hidden" value="true" /></fieldset>
+    							<div class="ajax_autocomplete" id="pndappr_incident_10803_container">
+        						 <textarea class="textarea long-field" cols="40" id="pndappr_incident_10803" name="pndappr_incident_10803" rows="2" style="width:270px;"></textarea>
+       						      <a class="popup-trigger" href="#"><span class="aui-icon icon-userpicker" title="Select a user(s)"></span></a>
+        						<div id="pndappr_incident_10803_results" class="ajax_results"></div>
+        						</div>
+								</div>
+								
+								
+						  </div>
+                           </br></br>
+                           
+                           
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_incident_tl" name="pndappr_incident_tl" value="10804" /><label for="Tech Lead">Tech Lead</label></div>
+                              <div class="two_col"><div id="appr_incident_error_10804" class="error"></div>
+                                 
+								<div style="min-width:300px">
+                              	<fieldset rel="pndappr_incident_10804" class="hidden user-picker-params">
+   								 <input title="formName" type="hidden" value="jiraform" />
+    							<input  title="fieldName" type="hidden" value="pndappr_incident_10804" />
+   								 <input title="multiSelect" type="hidden" value="true" />
+    							<input title="userPickerEnabled" type="hidden" value="true" /></fieldset>
+    							<div class="ajax_autocomplete" id="pndappr_incident_10804_container">
+        						 <textarea class="textarea long-field" cols="40" id="pndappr_incident_10804" name="pndappr_incident_10804" rows="2" style="width:270px;"></textarea>
+       						      <a class="popup-trigger" href="#"><span class="aui-icon icon-userpicker" title="Select a user(s)"></span></a>
+        						<div id="pndappr_incident_10804_results" class="ajax_results"></div>
+        						</div>
+								</div>
+
+                      
+                           </div>
+                           </br></br>
+                           
+                           
+                           <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_incident_cil" name="pndappr_incident_cil" value="10805" /><label for="Cust. Impact Lead">Cust. Impact Lead</label></div>
+                              <div class="two_col"><div id="appr_incident_error_10805" class="error"></div>
+                                 
+                                 
+                                 <div style="min-width:300px">
+                              	<fieldset rel="pndappr_incident_10805" class="hidden user-picker-params">
+   								 <input title="formName" type="hidden" value="jiraform" />
+    							<input  title="fieldName" type="hidden" value="pndappr_incident_10805" />
+   								 <input title="multiSelect" type="hidden" value="true" />
+    							<input title="userPickerEnabled" type="hidden" value="true" /></fieldset>
+    							<div class="ajax_autocomplete" id="pndappr_incident_10805_container">
+        						 <textarea class="textarea long-field" cols="40" id="pndappr_incident_10805" name="pndappr_incident_10805" rows="2" style="width:270px;"></textarea>
+       						      <a class="popup-trigger" href="#"><span class="aui-icon icon-userpicker" title="Select a user(s)"></span></a>
+        						<div id="pndappr_incident_10805_results" class="ajax_results"></div>
+        						</div>
+								</div>
+                                 
+                                 
+                                 
+                                 
+                         
+                           </div>
+                           </br></br>
+                           
+                           <div class="basic_row">
+                           
+                              <div class="two_col"><input type="hidden" id="pndappr_incident_csc" name="pndappr_incident_csc" value="10806" /><label for="Cust. Service Contact">Cust. Service Contact</label></div>
+                              <div class="two_col"><div id="appr_incident_error_10806" class="error"></div>
+                                 
+                                 
+                                 <div style="min-width:300px">
+                              	<fieldset rel="pndappr_incident_10806" class="hidden user-picker-params">
+   								 <input title="formName" type="hidden" value="jiraform" />
+    							<input  title="fieldName" type="hidden" value="pndappr_incident_10806" />
+   								 <input title="multiSelect" type="hidden" value="true" />
+    							<input title="userPickerEnabled" type="hidden" value="true" /></fieldset>
+    							<div class="ajax_autocomplete" id="pndappr_incident_10806_container">
+        						 <textarea class="textarea long-field" cols="40" id="pndappr_incident_10806" name="pndappr_incident_10806" rows="2" style="width:270px;"></textarea>
+       						      <a class="popup-trigger" href="#"><span class="aui-icon icon-userpicker" title="Select a user(s)"></span></a>
+        						<div id="pndappr_incident_10806_results" class="ajax_results"></div>
+        						</div>
+								</div>
+                                 
+                                 
+                           
+                           </div>
+                           </br></br>
+                           
+                           
+                        <div class="buttons-container form-footer">
+                           <div class="buttons">
+                              <input type="submit" name="save" id="btn_Save" value="$i18n.getText("incident.mapping.save.label")"  class="button spaced " />
+							  
+                           </div>
+                        </div>
+                       
+                  </form>
+       </div>
+           
+   </body>
+</html>

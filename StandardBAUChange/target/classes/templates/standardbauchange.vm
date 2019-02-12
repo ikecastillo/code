@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>$i18n.getText("ldap.service.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+   $webResourceManager.requireResource("com.dt.jira.plugin.standardbauchange.StandardBAUChange:StandardBAUChange-resources")
+  
+  <script type="text/javascript">
+   
+   
+   
+   
+   
+   
+</script>
+  </head>
+  <body>
+   <div class="header">
+        <h3 class="formtitle"> Configuration</h3>
+    </div>
+    <form id="reqAppr" class="aui">
+    <input type="hidden" id="baseURL" value="$baseURL"/> 
+     <div class="field-group">
+        <label for="serviceDeskUrl">Jira Service Desk Base URL</label>
+        <input type="text" id="serviceDeskUrl" name="serviceDeskUrl" class="text">
+      </div>
+	   <div class="field-group">
+        <label for="userName">Jira Service Desk User Name </label>
+        <input type="text" id="userName" name="userName" class="text">
+      </div>
+	   <div class="field-group">
+        <label for="password">Jira Service Desk Password </label>
+        <input type="password" id="password" name="password" class="password">
+      </div>
+      
+	  
+      <div class="field-group">
+        <input type="submit" value="Save" class="button" id="approverSave">
+		<input type="button" value="Cancel" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+      </div>
+    </form>
+	
+ 		
+	</body>
+</html>

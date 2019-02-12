@@ -1,0 +1,108 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/dtIcon.png</param>
+        <param name="plugin-logo">images/dtLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="create-problem-rcasubtask"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="create-problem-rcasubtask-resources" name="create-problem-rcasubtask Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>  
+		<dependency>com.atlassian.auiplugin:dialog2</dependency>	
+		<resource type="download" name="issue-field-formatter.js" location="/js/issue-field-formatter.js"/>
+		<resource type="download" name="issue-field-configure.js" location="/js/issue-field-configure.js"/>		
+        <resource type="download" name="create-problem-rcasubtask.css" location="/css/problem-management-create-problem-rcasubtask.css"/>
+        <resource type="download" name="create-problem-rcasubtask.js" location="/js/problem-management-create-problem-rcasubtask.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <context>problem-management-create-problem-rcasubtask</context>
+    </web-resource>
+        
+	 <ao key="ao-module">
+	    <description>The module configuring the Active Objects service used by this plugin</description>
+	    <entity>com.dt.jira.problem.rcasubtask.ao.RCASubtaskFieldMap</entity>
+	  </ao>
+	  
+	  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+	    <description>Component to access Active Objects functionality from the plugin</description>
+	  </component-import>
+	  
+	  <component key="tx-processor" name="Transactional Annotation Processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+	    <decription>Processes @Transactional annotations.</decription>
+	  </component>
+	    <component key="field-mapping-service" name="Field Mapping Service" class="com.dt.jira.problem.rcasubtask.service.FieldMappingServiceImpl" />
+	
+	
+	
+	 <component key="field-config-service" name="Field Config Service" class="com.dt.jira.problem.rcasubtask.config.FieldConfigServiceImpl"/>
+	 <component key="issueFieldUtils"
+               class="com.dt.jira.problem.rcasubtask.utils.IssueFieldUtils"
+               interface="com.dt.jira.problem.rcasubtask.utils.IssueFieldUtils"            
+               i18n-name-key="problem-rcasubtask-issuefield-utils">
+        <description key="problem-rcasubtask-issuefield-utils-description">Issue Field utils component.</description>
+    </component>
+    <component key="fieldCollectionsUtils"
+               class="com.dt.jira.problem.rcasubtask.utils.FieldCollectionsUtils"
+               interface="com.dt.jira.problem.rcasubtask.utils.FieldCollectionsUtils"            
+               i18n-name-key="problem-rcasubtask-fieldcollection-utils">
+        <description key="problem-rcasubtask-fieldcollection-utils-description"> Field Collection utils component.</description>
+    </component>
+	<rest key="generic-field-mapping-rest" name="generic-field-mapping-rest" i18n-name-key="generic-field-mapping-rest" path="/dt/rcasubtaskfieldsmap" version="1.0">
+		<description key="generic-field-mapping-rest-description">FieldMapping rest Modules</description>
+	</rest>
+	  <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />    
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/> 
+    <template-context-item key="applicationPropertiesContextItem" component-ref="applicationProperties" context-key="applicationProperties" name="Application Properties Context Item"/>
+ 	  
+  <web-item key="problemrca-management-field-mapping-web-item" section="admin_plugins_menu/problem-management-section" i18n-name-key="problemrca-management-field-mapping-web-item.name" name="Problem to RCA Sub-task Field Mappings" weight="1010">
+    <description key="problemrca-management-field-mapping-web-item.description">Problem Field Mappings Field Mappings</description>
+    <label key="problemrca-management-field-mapping-web-item.label"/>
+    <link linkId="problemrca-management-field-mapping-web-item-link">/secure/ProblemRCAFieldMappingAction!default.jspa?pkey=PRB</link>
+  </web-item>
+	
+	<webwork1 key="problemrca-config-map-action" name="Problem RCA Field Config Management" class="java.lang.Object">
+        <actions>  
+            <action name="com.dt.jira.problem.rcasubtask.action.ProblemRCAFieldMappingAction" alias="ProblemRCAFieldMappingAction">
+                <view name="input">/templates/problemrcasubtaskfieldsetup.vm</view>
+                <view name="success">/templates/problemrcasubtaskfieldsetup.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+	
+    
+    <web-item name="CreateAndLinkRCASubtaskWebItem" i18n-name-key="create-and-link-rcasubtask-web-item.name" key="create-and-link-rcasubtask-web-item" section="operations-subtasks" weight="1000">
+	    <description key="create-and-link-rcasubtask-web-item.description">The Create And Link Incident Report Subtask Web Item Plugin</description>
+	    <conditions type="AND">
+	      <condition class="com.atlassian.jira.plugin.webfragment.conditions.HasIssuePermissionCondition">
+	        <param name="permission" value="create"/>
+	      </condition>
+	      <condition class="com.dt.jira.problem.rcasubtask.condition.IssueTypeProblemCondition"/>
+	    </conditions>
+	    <styleClass>trigger-dialog</styleClass>
+	    <label key="create-and-link-rcasubtask-web-item.label"/>
+		<tooltip key="create-and-link-rcasubtask-web-item.tooltip"/>
+	    <link linkId="create-and-link-rcasubtask-web-item-link">/secure/CreateAndLinkRCASubtaskAction!default.jspa?id=${issueId}</link>
+	  </web-item>
+	  
+	  <webwork1 key="create-and-link-rcasubtask-web-work" name="Incident Mgmt Create RCA Subtask Web Work" i18n-name-key="create-and-link-rcasubtask-web-work.name">
+	    <description key="create-and-link-rcasubtask-web-work.description">The Incident Mgmt Incident Report Subtask Plugin</description>
+	    <actions>
+	      <action name="com.dt.jira.problem.rcasubtask.action.CreateAndLinkRCASubtaskAction" alias="CreateAndLinkRCASubtaskAction">
+	       <view name="error">/templates/createRCASubtaskError.vm</view>
+	       <view name="success">/templates/createRCASubtaskSuccess.vm</view>
+	      </action>
+	    </actions>	    
+	  </webwork1>
+	  
+	  <component key="rcaChangeEventListener" name="Issue Change Event Listener" class="com.dt.jira.problem.rcasubtask.event.RCAReportSubtaskEventListener"/>
+    
+</atlassian-plugin>

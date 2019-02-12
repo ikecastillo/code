@@ -1,0 +1,14 @@
+table {
+  border-collapse: collapse;
+  border-spacing: 0px;
+  border-collapse: 0px;
+   border-color: #D7D7D7;
+  width: 75%;
+
+}
+th.Date, th.Time {
+  width: 10%
+}
+th.Description {
+  width: 60%; /* Not necessary, since only 70% width remains */
+}

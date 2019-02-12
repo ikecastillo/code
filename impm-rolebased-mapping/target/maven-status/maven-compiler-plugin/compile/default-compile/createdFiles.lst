@@ -1,0 +1,13 @@
+com\dt\jira\impm\rolebased\mapping\MyPluginComponent.class
+com\dt\jira\impm\rolebased\mapping\rest\IMPMRoleBasedRest.class
+com\dt\jira\impm\rolebased\mapping\MyPluginComponentImpl.class
+com\dt\jira\impm\rolebased\mapping\service\IMPMRoleBasedConfigService.class
+com\dt\jira\impm\rolebased\mapping\service\IMPMRoleBasedConfigServiceImpl.class
+com\dt\jira\impm\rolebased\mapping\service\IMPMRoleBasedMappingService.class
+com\dt\jira\impm\rolebased\mapping\service\IMPMRoleBasedMappingServiceImpl.class
+com\dt\jira\impm\rolebased\mapping\action\IMPMRoleBasedConfigAction.class
+com\dt\jira\impm\rolebased\mapping\event\IMPMRoleBasedEventListener.class
+com\dt\jira\impm\rolebased\mapping\rest\IMPMRoleBasedModel.class
+com\dt\jira\impm\rolebased\mapping\ao\IMPMRoleBased.class
+com\dt\jira\impm\rolebased\mapping\rest\IMPMFieldModel.class
+com\dt\jira\impm\rolebased\mapping\utils\IMPMRoleBasedGroupUtils.class

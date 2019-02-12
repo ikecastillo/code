@@ -1,0 +1,183 @@
+<html>
+    <head>
+        <title>$i18n.getText("ownerimplementor-admin-web-item.initialsetup")</title>
+        <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+        <meta name="decorator" content="atl.admin" />
+        <meta name="projectKey" content="CSAR"/>
+        <meta name="admin.active.tab" content="user-mapping-link"/>
+        <meta name="admin.active.section" content="atl.jira.proj.config"/>
+        $webResourceManager.requireResource("com.dt.jira.plugin.sdesk.ldapintegration.ServiceDeskLDAPIntegration:AutoAssignOwnerImplementor-resources")
+    </head>
+    <body>
+    <div class="header">
+        <h3 class="formtitle">$i18n.getText("ownerimplementor.admin.mappingform.label")</h3>
+        <p/>
+        <button id="csar-mapping-button" class="aui-button">$i18n.getText("ownerimplementor.admin.mappingform.addmapping")</button>
+    </div>
+    <h3>Search Auto Assignees</h3>
+    <br/>
+    <fieldset>
+        <div class="field-group">
+            <label for="csarsolutiongroupoutside">
+                $i18n.getText("ownerimplementor.admin.mappingform.dialog.solutiongroup")
+            </label>
+            <select class="select" id="csarsolutiongroupoutside" name="csarsolutiongroupoutside" title="Select Solution Group">
+                <option>All</option>
+            </select>
+            <div class="error"></div>
+        </div>
+    </fieldset>
+
+
+    <!-- Render the dialog to add field mappings -->
+    <section role="dialog" id="csar-mapping-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+        <!-- Dialog header -->
+        <header class="aui-dialog2-header">
+            <!-- The dialog's title -->
+            <h2 class="aui-dialog2-header-main">$i18n.getText("ownerimplementor.admin.mappingform.dialog.header")</h2>
+        </header>
+        <!-- Main dialog content -->
+        <div class="aui-dialog2-content">
+            <form action="#" method="post" id="csaraddmappingform" class="aui">
+                <table>
+                    <tr>
+                        <p><font color="red">All fields are mandatory</font></p>
+                    </tr>
+                    <tr>
+                        <label for="csarsolutiongroup">
+                            $i18n.getText("ownerimplementor.admin.mappingform.dialog.solutiongroup")
+                        </label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <select class="select" id="csarsolutiongroup" name="csarsolutiongroup" title="Select Solution Group">
+                            <option>Select</option>
+                        </select>
+                        <div class="error" id="errorcsarsolutiongroup"></div>
+                    </tr>
+                    <tr>
+                        <label for="csarrequesttype">
+                            $i18n.getText("ownerimplementor.admin.mappingform.dialog.csarrequesttype")
+                        </label>
+                        <select class="select" id="csarrequesttype" name="csarrequesttype" title="Select Request Type">
+                            <option>Select</option>
+                        </select>
+                        <div class="error" id="errorcsarrequesttype"></div>
+                    </tr>
+                    <tr>
+                        <fieldset rel="csarowners" class="hidden user-picker-params">
+                            <input title="formName" type="hidden" value="jiraform" />
+                            <input  title="fieldName" type="hidden" value="csarowners" />
+                            <input title="multiSelect" type="hidden" value="true" />
+                            <input title="userPickerEnabled" type="hidden" value="true" />
+                        </fieldset>
+                        <div class="ajax_autocomplete" id="csarowners_container">
+                            <label for="csarowners">
+                                $i18n.getText("ownerimplementor.admin.mappingform.dialog.csarowners")
+                            </label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <textarea class="textarea long-field" cols="40" id="csarowners" name="csarowners" rows="3" style="width:250px;">
+                            </textarea>
+                            <div class="error" id="errorcsarowners"></div>
+                            <a class="popup-trigger" href="#"><span class="aui-icon icon-userpicker" title="Select a user(s)"></span></a>
+                            <div id="csarowners_results" class="ajax_results"></div>
+                        </div>
+                    </tr>
+                    <tr>
+                        <fieldset rel="csarimplementors" class="hidden user-picker-params">
+                            <input title="formName" type="hidden" value="jiraform" />
+                            <input  title="fieldName" type="hidden" value="csarimplementors" />
+                            <input title="multiSelect" type="hidden" value="true" />
+                            <input title="userPickerEnabled" type="hidden" value="true" />
+                        </fieldset>
+                        <div class="ajax_autocomplete" id="csarimplementors_container">
+                            <label for="csarowners">
+                                $i18n.getText("ownerimplementor.admin.mappingform.dialog.csarimplementors")
+                            </label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <textarea class="textarea long-field" cols="40" id="csarimplementors" name="csarimplementors" rows="3" style="width:250px;">
+                            </textarea>
+                            <div class="error" id="errorcsarimplementors"></div>
+                            <a class="popup-trigger" href="#"><span class="aui-icon icon-userpicker" title="Select a user(s)"></span></a>
+                            <div id="csarimplementors_results" class="ajax_results"></div>
+                        </div>
+                    </tr>
+                    </table>
+            </form>
+        </div>
+        <!-- Dialog footer -->
+        <footer class="aui-dialog2-footer">
+            <!-- Actions to render on the right of the footer -->
+            <div class="aui-dialog2-footer-actions">
+                <button id="csar-mapping-dialog-add-button" class="aui-button">
+                    $i18n.getText("ownerimplementor.admin.mappingform.dialog.addbutton")
+                </button>
+                <button id="csar-mapping-dialog-cancel-link" class="aui-button aui-button-link">
+                    $i18n.getText("ownerimplementor.admin.mappingform.dialog.cancellink")
+                </button>
+            </div>
+        </footer>
+    </section>
+    <!-- this finishes the add mapping dialog-->
+
+    <!-- Render the confirmation dialog to delete a field mapping -->
+    <section role="dialog" id="csardelete-mapping-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+        <!-- Dialog header -->
+        <header class="aui-dialog2-header">
+            <!-- The dialog's title -->
+            <h2 class="aui-dialog2-header-main">$i18n.getText("ownerimplementor.admin.deletemappingform.dialog.header")</h2>
+        </header>
+        <!-- Main dialog content -->
+        <div class="aui-dialog2-content" id="csardeleteconfirmationtext">
+            <strong>$i18n.getText("ownerimplementor.admin.deletemappingform.dialog.message.areyousure")</strong>
+            <p/>
+            <table class="aui">
+                <thead>
+                <tr>
+                    <th>Solution Group</th>
+                    <th>Request/Issue Type</th>
+                    <th>Owner</th>
+                    <th>Implementor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td id="csarsolngrpconf"></td>
+                    <td id="csarrequesttypeconf"></td>
+                    <td id="csarownersconf"></td>
+                    <td id="csarimplementorsconf"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Dialog footer -->
+        <footer class="aui-dialog2-footer">
+            <!-- Actions to render on the right of the footer -->
+            <div class="aui-dialog2-footer-actions">
+                <button id="ownerimplementor-dialog-delete-button" class="aui-button">
+                    $i18n.getText("ownerimplementor.admin.deletemappingform.dialog.deletebutton")
+                </button>
+                <button id="ownerimplementor-dialog-delete-cancel-link" class="aui-button aui-button-link">
+                    $i18n.getText("ownerimplementor.admin.deletemappingform.dialog.cancellink")
+                </button>
+            </div>
+        </footer>
+    </section>
+    <!-- this  finishes the delete mapping confirmation dialog -->
+
+
+
+
+    <table id="csarmappingstable" class="aui aui-table-sortable">
+        <thead>
+        <tr>
+            <th>Solution Group</th>
+            <th>Request/Issue Type</th>
+            <th>Owner</th>
+            <th>Implementor</th>
+            <th>Delete Mapping?</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    </body>
+</html>

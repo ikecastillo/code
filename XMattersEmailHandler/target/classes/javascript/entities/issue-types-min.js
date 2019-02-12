@@ -1,0 +1,1 @@
+define("jira/mail/entities/issue-types",["backbone"],function(a){return a.Collection.extend({model:a.Model.extend()})});

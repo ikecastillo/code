@@ -1,0 +1,1 @@
+define("jira/mail/views/option-view",["jquery","backbone","underscore"],function(b,c,a){return c.View.extend({tagName:"option",initialize:function(){a.bindAll(this,"render")},render:function(){var d=this.model.get("key")||this.model.get("id");b(this.el).attr("value",d).html(this.model.escape("name"));return this}})});

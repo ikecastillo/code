@@ -1,0 +1,10 @@
+com\dt\jira\plugin\servicedesk\standardbauchange\MyPluginComponentImpl.class
+com\dt\jira\plugin\servicedesk\standardbauchange\rest\ITSMCHGConfigResource.class
+com\dt\jira\plugin\servicedesk\standardbauchange\event\StandardBAUEventListener.class
+com\dt\jira\plugin\servicedesk\standardbauchange\service\LDAPDetails.class
+com\dt\jira\plugin\servicedesk\standardbauchange\rest\ITSMCHGConfig.class
+com\dt\jira\plugin\servicedesk\standardbauchange\MyPluginComponent.class
+com\dt\jira\plugin\servicedesk\standardbauchange\rest\ITSMCHGConfigResource$1.class
+com\dt\jira\plugin\servicedesk\standardbauchange\rest\ITSMCHGConfigResource$2.class
+com\dt\jira\plugin\servicedesk\standardbauchange\service\ServiceDeskLDAPIntegration.class
+com\dt\jira\plugin\servicedesk\standardbauchange\ui\StandardBAUServlet.class

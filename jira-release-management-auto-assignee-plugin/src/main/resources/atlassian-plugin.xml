@@ -1,0 +1,100 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="jira-release-management-auto-assignee-plugin"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="jira-release-management-auto-assignee-plugin-resources" name="jira-release-management-auto-assignee-plugin Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <resource type="download" name="jira-release-management-auto-assignee-plugin.css" location="/css/jira-release-management-auto-assignee-plugin.css"/>
+        <resource type="download" name="jira-release-management-auto-assignee-plugin.js" location="/js/jira-release-management-auto-assignee-plugin.js"/>
+        <resource type="download" name="images/" location="/images"/>
+		<context>jira-release-management-auto-assignee-plugin</context>
+    </web-resource>
+    
+    
+<!-- Project Issue REST Modules -->
+
+  <rest  key="autoAssigneerest" name="autoAssigneerest" i18n-name-key="rest"  path="/dealertrack/autoassignee" version="1.0">
+    <description key="rest.description">Issue Type rest Modules</description>
+  </rest>
+    
+    <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/> 
+   <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/> 
+   <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/> 
+   <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/> 
+   <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/> 
+ 
+   
+  
+ 
+<web-section key="my-custom-assignee-section" name="JIRA Auto Assignee section"  location="atl.jira.proj.config" i18n-name-key="JIRA Auto Assignee" weight="150" application="jira">
+   <label key="jira auto assignee">Jira Auto Assignee1</label>
+    <description key="Jira Auto Assignee2"/>
+</web-section>
+
+<web-item key="wi-auto-assignee-admin-custmenu" name="IRAS AUTO ASSIGNEE item"  section="atl.jira.proj.config/my-custom-assignee-section" weight="35" application="jira">
+    <description key="Jira Auto Assignee3"/>
+    <label>Jira Auto Assignee</label>
+     <tooltip>Jira Auto Assignee</tooltip>
+    <link linkId="wi_auto_assignee_link">/plugins/servlet/jira-auto-assignee-mapping?projectKey=$projectKeyEncoded</link>   
+</web-item>
+
+ 
+  <webwork1 key="deskSupportAutomation" name="DeskSupport Automation" class="java.lang.Object">
+		<description>JIRA Auto Assignee</description>
+		<actions>
+			<action name="com.dt.jira.plugin.action.DeskSupportAutomation" alias="DeskSupportAutomation">
+				<view name="success">/templates/serviceDeskAutomation.vm</view>
+			</action>
+		</actions>
+	</webwork1>
+	
+ 
+ <web-resource key="mapping-js" name="javascript">
+        <dependency>jira.webresources:global-static</dependency>
+        <description>JavaScript</description>
+        <resource name="mapping.js" type="download" location="js/mapping.js" />	
+        <context>atl.general</context>
+         <context>atl.admin</context>
+  </web-resource>
+ 
+ 
+  <!-- Assignee Mapping AO Modules -->
+  <ao key="ao-module">
+    <description>The module configuring the Active Objects service used by this plugin</description>
+    <entity>com.dt.jira.plugin.ao.AutoAssigneePortal</entity>    
+	</ao>
+  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+    <description>Component to access Active Objects functionality from the plugin</description>
+  </component-import>
+  <component key="tx-processor" name="Transactional Annotation Processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+    <decription>Processes @Transactional annotations.</decription>
+  </component>
+  
+  <component key="autoAssigneeService" name="autoAssigneeService" class="com.dt.jira.plugin.service.AutoAssigneeServiceImpl" />
+  
+  <servlet key="autoAssignee-servlet" class="com.dt.jira.plugin.ui.ProjectsServlet"> <url-pattern>/jira-auto-assignee-mapping</url-pattern></servlet>
+  
+ 
+ <!-- <servlet key="projects-servlet" class="com.dt.jira.plugin.ui.ProjectsServlet"> <url-pattern>/service-desk-Projects-mapping</url-pattern></servlet>
+  
+  <servlet key="ldap-servlet" class="com.dt.jira.plugin.ui.LdapAutoServlet"> 
+			<url-pattern>/ldap/automationservice</url-pattern>
+	</servlet> -->
+  
+  <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+  <component key="eventListener" class="com.dt.jira.plugin.event.AutoAssigneeEventListener">
+		<description>Class that processes the incoming JIRA issue events.</description>
+  </component> 
+   
+    
+</atlassian-plugin>

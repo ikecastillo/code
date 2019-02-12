@@ -1,0 +1,1 @@
+define("jira/mail/entities/handler-settings",["backbone"],function(a){return a.Model.extend()});

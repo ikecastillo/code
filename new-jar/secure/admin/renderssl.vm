@@ -1,0 +1,66 @@
+<html>
+<head> <title>$action.getText("jira-ssl-plugin-title")</title>
+</head>
+<body>
+
+#if (!$message.equals("error"))
+    <div class="aui-message success closeable">
+        <p class="title"><span class="aui-icon icon-success"></span>
+            <strong>New Host(s) Added</strong></p>
+        <p>$hostsAdded</p>
+    </div>
+    <div class="aui-message info closeable">
+        <p class="title"><span class="aui-icon icon-info"></span>
+            <strong>Next Steps</strong></p>
+        <p>$message</p>
+    </div>
+#end
+
+
+    #if ($action.getHasErrorMessages())
+        #foreach ($error in $action.getFlushedErrorMessages())
+            #if ($textutils.stringSet($!action.getHtmlHint(${error})))
+                <div class="aui-message error">
+                    <p class="title"><span class="aui-icon icon-error"></span>
+                        <strong>$!action.getHtmlHint(${error})</strong></p>
+                    <p>$textutils.htmlEncode(${error})</p>
+                </div>
+            #else
+                <div class="aui-message error">
+                    <p class="title"><span class="aui-icon icon-error"></span>
+                        <strong>Error</strong></p>
+                    <p>$textutils.htmlEncode(${error})</p>
+                </div>
+            #end
+        #end
+    #end
+
+
+<form name="input" action="ConfigureSsl1.jspa" method="post" class="aui">
+    #if ($xsrfTokenGenerator)
+        #form_xsrfToken()
+    #end
+    <h3 class="formtitle">$i18n.getText('jira-ssl-plugin-title')</h3>
+    <fieldset>
+        <div class="field-group">
+            <label for="rulesText">Rules</label>
+            <textarea rows="3" cols="280" class="textarea" name="rulesText" id="rulesText" placeholder="Enter the rule sets here..."></textarea>
+            <a target="_jirahelp" href="https://confluence.atlassian.com/x/z8oB"><span class="aui-icon icon-help"></span></a>
+            <div class="description">$i18n.getText('ssl-howto-message')</div>
+        </div>
+    </fieldset>
+    <div class="buttons-container">
+        <div class="buttons">
+            <input class="button submit" type="submit" value="$textutils.htmlEncode($i18n.getText('ssl.save-msg'))" id="save-configuration">
+        </div>
+    </div>
+</form>
+<form class="aui">
+    <h3 class="formtitle">$i18n.getText('jira-ssl-plugin-existing')</h3>
+    #foreach($rule in $existingRules)
+        <li><div class="description">$rule</div></li>
+    #end
+</form>
+
+</body>
+</html>

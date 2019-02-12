@@ -1,0 +1,99 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+	<plugin-info>
+		<description>${project.description}</description>
+		<version>${project.version}</version>
+		<vendor name="${project.organization.name}" url="${project.organization.url}" />
+		<param name="plugin-icon">images/pluginIcon.png</param>
+		<param name="plugin-logo">images/pluginLogo.png</param>
+		<param name="configure.url">/plugins/servlet/innotas/admin</param>
+	</plugin-info>
+	<!-- add our i18n resource -->
+	<resource type="i18n" name="i18n" location="innotas-integration"/>
+    <!-- add our web resources -->
+	<web-resource key="innotas-integration-resources" name="innotas-integration Web Resources">
+		<dependency>com.atlassian.auiplugin:ajs</dependency>       
+		<resource type="download" name="innotas-integration.css" location="/css/innotas-integration.css"/>
+		<resource type="download" name="innotas-integration.js" location="/js/innotas-integration.js"/>
+		<resource type="download" name="admin.js" location="js/admin.js"/> 
+		<resource type="download" name="images/" location="/images"/>
+		<context>innotas-integration</context>
+		<dependency>jira.webresources:autocomplete</dependency>
+		<dependency>jira.webresources:jira-fields</dependency>
+		<dependency>com.atlassian.jira.jira-project-config-plugin:project-config-global</dependency>
+		<dependency>com.atlassian.gadgets.embedded:gadget-standalone-resources</dependency>
+		<transformation extension="js">
+			<transformer key="jsI18n"/>
+		</transformation>
+		<transformation extension="soy">
+			<transformer key="jiraSoyTransformer"/>
+		</transformation>
+		<dependency>com.atlassian.jira.jira-soy-plugin:soy-deps</dependency>		
+	</web-resource>
+	<!-- import from the product container -->
+	<component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+	<template-context-item key="applicationPropertiesContextItem" component-ref="applicationProperties" context-key="applicationProperties" name="Application Properties Context Item"/>
+	<component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+		<description>Component to access Active Objects functionality from the plugin</description>
+	</component-import>
+	<component-import key="pluginScheduler">
+		<description>SAL Scheduler</description>
+		<interface>com.atlassian.sal.api.scheduling.PluginScheduler</interface>
+	</component-import>	
+	<servlet name="Innotas Link" class="com.dt.jira.plugin.innotas.ao.InnotasServlet" key="innotas">
+	  <description>A servlet to add and list innotas attributes</description>
+	  <url-pattern>/innotas/link</url-pattern>
+	</servlet>    
+	<component key="tx-processor" name="Transactional Annotation Processor"
+		class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+		<decription>Processes @Transactional annotations.</decription>
+	</component>
+	<component key="innotas-service" name="innotas-service" class="com.dt.jira.plugin.innotas.ao.InnotasServiceImpl" public="true">
+		<interface>com.dt.jira.plugin.innotas.ao.InnotasService</interface>
+	</component>
+	<component key="InnotasLink" name="InnotasLink" class="com.dt.jira.plugin.innotas.service.InnotasLinkImpl" public="true">
+		<interface>com.dt.jira.plugin.innotas.service.InnotasLink</interface>
+	</component>
+	<component key="EntityService" name="EntityService" class="com.dt.jira.plugin.innotas.service.EntityServiceImpl">
+		<interface>com.dt.jira.plugin.innotas.service.EntityService</interface>
+	</component>
+	<component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<servlet key="admin-servlet" class="com.dt.jira.plugin.adminui.AdminServlet"> <url-pattern>/innotas/admin</url-pattern></servlet>
+	<component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate" />
+	<ao key="ao-module">
+	  <description>The module configuring the Active Objects service used by this plugin</description>
+	  <entity>com.dt.jira.plugin.innotas.ao.Innotas</entity>
+	  <entity>com.dt.jira.plugin.innotas.ao.InnotasBU</entity>
+	  <entity>com.dt.jira.plugin.innotas.ao.InnotasProject</entity>
+		<entity>com.dt.jira.plugin.innotas.ao.InnotasCache</entity>
+	</ao>
+	<web-item key="innotas-tab" name="Innotas" section="atl.jira.proj.config/projectgroup4" weight="50" >  
+		<label>Innotas</label>
+		<tooltip>Innotas </tooltip>
+		<link linkId="innotas_tab_link">/secure/admin/InnotasAction!default.jspa?jiraProjectKey=$projectKeyEncoded</link> 
+	</web-item>
+	<template-context-item key="InnotasLinkServiceContextItem" component-ref="InnotasLink" context-key="InnotasLink" global="true" name="JIRA InnotasLink Context Item" />
+	<template-context-item key="InnotasServiceContextItem" component-ref="innotas-service" context-key="innotas-service" global="true" name="JIRA InnotasService Context Item" />	
+	<webwork1 key="Innotas-webwork" i18n-name-key=" " name="Innotas"
+            class="java.lang.Object">
+        <actions>
+          <description key="descriptionkeyhere">Action that populates Innotas Project data </description>
+          <action name="com.dt.jira.plugin.innotas.tab.InnotasAction" alias="InnotasAction">
+            <view name="input">/templates/innotas-linkv2.vm</view>
+            <view name="success">/templates/innotas-linkv2-success.vm</view>
+            <view name="error">/templates/innotas-linkv2.vm</view>
+          </action>
+        </actions>
+    </webwork1>
+	<rest name="innotasrest" i18n-name-key="dtrest.name" key="innotasrest" path="/dealertrack1" version="1.0">
+    <description key="dtrest.description">Dealertrack Innotas REST Modules</description>
+  </rest>
+	<!-- 	    
+	<component key="schedulerComponent" class="com.dt.jira.plugin.innotas.util.InnotasJobMonitorImpl" system="true" public="true">
+	<description>The plugin component that schedules the data syncup.</description>
+	<interface>com.atlassian.sal.api.lifecycle.LifecycleAware</interface>
+	<interface>com.dt.jira.plugin.innotas.util.InnotasJobMonitor</interface>
+	</component> 
+	-->
+</atlassian-plugin>

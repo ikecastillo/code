@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>$i18n.getText("ldap.service.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+   $webResourceManager.requireResource("com.dt.jira.plugin.servicedesk.standardbauchange.ServiceDeskStandardBAUChange:ServiceDeskStandardBAUChange-resources")
+  
+  <script type="text/javascript">
+   
+   
+   
+   
+   
+   
+</script>
+  </head>
+  <body>
+   <div class="header">
+        <h3 class="formtitle"> Configuration</h3>
+    </div>
+    <form id="reqAppr" class="aui">
+    <input type="hidden" id="baseURL" value="$baseURL"/> 
+     <div class="field-group">
+        <label for="chgUrl">Remote Change issue URL</label>
+        <input type="text" id="chgUrl" name="chgUrl" class="text">
+      </div>
+	   <div class="field-group">
+        <label for="itsmUserName">ITSM User Name </label>
+        <input type="text" id="itsmUserName" name="itsmUserName" class="text">
+      </div>
+	   <div class="field-group">
+        <label for="itsmPassword">ITSM Password </label>
+        <input type="password" id="itsmPassword" name="itsmPassword" class="password">
+      </div>
+      <div class="field-group">
+        <label for="remoteLinkUrl">Remote issue link URL</label>
+        <input type="text" id="remoteLinkUrl" name="remoteLinkUrl" class="text">
+      </div>
+      <div class="field-group">
+        <label for="applinkId">Applink Id</label>
+        <input type="text" id="applinkId" name="applinkId" class="text">
+      </div>
+      
+	  <div class="field-group">
+        <label for="templatelinkURL">Template URL </label>
+        <input type="text" id="templatelinkURL" name="templatelinkURL" class="text">
+      </div>
+      
+	  LDAP Details:
+	   <div class="field-group">
+        <label for="ldapSrvrname">$i18n.getText("ldap.service.srvrname.label")</label>
+        <input type="text" id="ldapSrvrname" name="ldapSrvrname" class="text">
+      </div>
+      <div class="field-group">
+        <label for="ldapBasedn">$i18n.getText("ldap.service.basedn.label")</label>
+        <input type="text" id="ldapBasedn" name="ldapBasedn" class="text">
+      </div>
+      <div class="field-group">
+        <label for="ldapUid">$i18n.getText("ldap.service.uid.label")</label>
+        <input type="text" id="ldapUid" name="ldapUid" class="text">
+      </div>
+      <div class="field-group">
+        <label for="ldapPwd">$i18n.getText("ldap.service.pwd.label")</label>
+        <input type="password" id="ldapPwd" name="ldapPwd" class="text">
+      </div>
+	  
+	  
+      <div class="field-group">
+        <input type="submit" value="Save" class="button" id="approverSave">
+		<input type="button" value="Cancel" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+      </div>
+    </form>
+	
+ 		
+	</body>
+</html>

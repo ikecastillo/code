@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="ITSM - Generic Table" directory_title="ITSM - Generic Table" description="Displays the matching issues for a filter as a table of count" author="DT" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">JIRA</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.filter.results,gadget.issuetable.common")
+        #supportLocales
+    </ModulePrefs><UserPref name="show_date" display_name="Show Dates?" datatype="bool" default_value="true"/><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="headertxt" datatype="hidden" default_value="ITSM Table"/><UserPref name="filterId" datatype="hidden" default_value=""/><UserPref name="xaxis" datatype="hidden" default_value=""/><UserPref name="xaxislabel" datatype="hidden" default_value=""/><UserPref name="yaxis" datatype="hidden" default_value=""/><UserPref name="yaxislabel" datatype="hidden" default_value=""/><UserPref name="legenddepth" datatype="hidden" default_value="Does Not Apply"/><UserPref name="customFields" datatype="hidden" default_value="--Default--"/><UserPref name="sigmavalues" datatype="hidden" default_value="Sum"/><Content type="html">
+        <![CDATA[
+		#requireResource("com.atlassian.jira.gadgets:common")
+		#requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:itsm-gadgets-common-js")
+		#requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:ITSMDashboard-resources")
+		#requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:itsmjqplot")
+		#requireContext("com.atlassian.jira.gadgets:autocomplete")
+		#includeResources()
+		<script type="text/javascript">
+			GROUP_BY_FIELD = "Defect Cause";
+			var viewGadget = "";
+			(function () {
+				/* (1) Construct and initialise the gadget */
+				var gadget = AJS.Gadget({
+					baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+					useOauth: "/rest/gadget/1.0/currentUser",
+					config: {
+						descriptor: function(args)
+						{
+							var gadget = this;
+							/* For XAxis dropdown in gadget edit */
+							var getCustomFieldsXAxis=function(){
+								var options=[];
+								for (var index in args.customFields) {
+									options.push({label:args.customFields[index].label,value:args.customFields[index].value});
+								}
+								return {
+									id: "xaxis",
+									userpref: "xaxis",
+									label: "X-Axis",
+									type: "select",
+									selected: gadget.getPref("xaxis"),
+									options: options,
+									description: "What field do you want on the X Axis?"
+								};
+							};
+
+							/* For YAxis dropdown in gadget edit */
+							var getCustomFieldsYAxis=function(){
+								var options=[];
+								for (var index in args.customFields) {
+									options.push({label:args.customFields[index].label,value:args.customFields[index].value});
+								}
+								return {
+									id: "yaxis",
+									userpref: "yaxis",
+									label: "Y-Axis",
+									type: "select",
+									selected: gadget.getPref("yaxis"),
+									options: options,
+									description: "What field do you want on the Y Axis?"
+								};
+							};
+
+							/* For the field Legend on gadget edit*/
+							var getCustomFields=function(){
+
+								var options=[];
+								for (var index in args.customFields) {
+									options.push({label:args.customFields[index].label,value:args.customFields[index].value});
+								}
+								return {
+									id: "customFields",
+									userpref: "customFields",
+									label: "Legend",
+									type: "select",
+									selected: gadget.getPref("customFields"),
+									options: options,
+									description: "On what field (legend) do you want the columns in the chart to be based on?"
+								};
+							};
+
+							return {
+								fields: [
+									{
+										userpref: "headertxt",
+										label: "Header",
+										type: "text",
+										value: gadget.getPref("headertxt"),
+										description: "What do you want this chart to be named as?"
+									},
+									AJS.gadget.fields.filterPicker(gadget, "filterId"),
+									getCustomFieldsXAxis(),
+									{
+										userpref: "xaxislabel",
+										label: "X-Axis Label",
+										type: "text",
+										value: gadget.getPref("xaxislabel"),
+										description: "What do you want the X Axis to be labeled as?"
+									},
+									getCustomFieldsYAxis(),
+									{
+										userpref: "yaxislabel",
+										label: "Y-Axis Label",
+										type: "text",
+										value: gadget.getPref("yaxislabel"),
+										description: "What do you want the Y Axis to be labeled as?"
+									},
+									getCustomFields(),
+									{
+										id: "legenddepth",
+										userpref: "legenddepth",
+										label: "Legend Depth",
+										type: "select",
+										selected: gadget.getPref("legenddepth"),
+										options:[
+											{
+												label:"Does Not Apply",
+												value:"Does Not Apply"
+											},
+											{
+												label:"1",
+												value:"1"
+											},
+											{
+												label:"2",
+												value:"2"
+											},
+											{
+												label:"3",
+												value:"3"
+											},
+											{
+												label:"4",
+												value:"4"
+											}
+										],
+										description: "What would be the depth of the legend? This does not apply for most fields unless its " +
+										"a cascading field."
+									},
+									{
+										id: "sigmavalues",
+										userpref: "sigmavalues",
+										label: "&Sigma; Values",
+										type: "select",
+										selected: gadget.getPref("sigmavalues"),
+										options:[
+											{
+												label:"Sum",
+												value:"Sum"
+											},
+											{
+												label:"Count",
+												value:"Count"
+											}
+										],
+										description: "Do you want to add up or count the legend values?"
+									},
+									AJS.gadget.fields.nowConfigured()
+								]
+							}
+						},
+
+						args: [
+							{
+								key: "customFields",
+								ajaxOptions: function() {
+									reportType = gadgets.util.unescapeString(this.getPref("reporttype"));
+									AJS.log("Report Type for AJAX call is " + reportType);
+									return {
+										url: "/rest/incident/1.0/enhancedincidentexecsummary/getCustomFields.json",
+										contentType: "application/json",
+										data:  {
+											reporttype : "IncidentCount"
+										}
+									};
+								}
+							}
+                    ]
+					},
+					view: {
+						/* (2) Define the view logic */
+						onResizeAdjustHeight: true,
+						enableReload: true,
+						template: function (args){
+							var gadget = this;
+							// reset view
+							gadget.getView().empty();
+							gadget.getView().addClass("g-two-d-stats");
+
+							var gadgetHeader = gadget.getPref("headertxt");
+							console.log("gadgetHeader"+gadgetHeader);
+							if(gadgetHeader!= "" && gadgetHeader!=null){
+								gadgets.window.setTitle(gadgetHeader);
+							}else{
+								gadgets.window.setTitle("ITSM Table");
+							}
+							console.log("args.getfiltername.filterName"+args.getfiltername.filterName);
+
+							gadget.projectOrFilterName = args.getfiltername.filterName;
+
+							console.log("gadget.projectOrFilterName"+gadget.projectOrFilterName);
+
+							AJS.$('br').remove();
+							AJS.$('#typeSelect').hide();
+							AJS.$('#typeSpan').hide();
+							AJS.$("#locationSpan").hide();
+							AJS.$("#locationSelect").hide();
+							AJS.$("#solutionSpan").hide();
+							AJS.$("#solutionSelect").hide();
+							var projectList = AJS.$("<table/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center");
+							AJS.$(args.incidentData).each(function() {
+								var header = this.legend;
+								//var lnk = '';
+								if(header=='Major Issues'){
+
+									var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+									var sigmaValues = gadget.getPref("sigmavalues");
+
+									sevTR.append(AJS.$("<td/>").text(sigmaValues).css("border-right","1px solid #B3B8B9").css("background-color", "#D2D2D2").css("font-weight","bold"));
+									AJS.$(this.graphCoordinates).each(function() {
+										sevTR.append(AJS.$("<td/>").text(this.xAxis).css("border-right","1px solid #B3B8B9").css("background-color", "#D2D2D2").css("font-weight","bold"));
+									});
+									projectList.append(sevTR);
+								} else {
+									var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+									if( this.legend==='Total'){
+										sevTR.append(AJS.$("<td/>").text(this.legend).css("border-right","1px solid #B3B8B9").css("font-weight","bold").css("background-color", "#D2D2D2"));
+										AJS.$(this.graphCoordinates).each(function() {
+											sevTR.append(AJS.$("<td/>").text(this.countOrSum).css("border-right","1px solid #B3B8B9").css("font-weight","bold").css("background-color", "#D2D2D2"));
+										});
+									} else {
+										var filterId = gadget.getPref("filterId");
+										filterId = filterId.substring(7);
+										var filterQuery = 'filter="' + filterId +'"';
+										console.log("FILTER QUERY USED IS " + filterQuery);
+										console.log("THIS DOT DRILLDOWN IS " + this.drillDown);
+										var drillDownQuery = this.drillDown;
+										var substrddq1 = drillDownQuery.substring(0,13);
+										var substrddq2 = drillDownQuery.substring(13);
+										drillDownQuery = substrddq1 + filterQuery + substrddq2;
+										console.log("FINAL DD QUERY FOR HEADER LEGEND IS " + drillDownQuery);
+
+										var link = '<a id="sgurl1" href="'+ gadgets.util.escapeString(drillDownQuery) + '">'+ this.legend +' </a>';
+
+										sevTR.append(AJS.$("<td/>").html(link).css("border-right","1px solid #B3B8B9"));
+										AJS.$(this.graphCoordinates).each(function() {
+											var incidentcount = this.countOrSum;
+											incidentcount = incidentcount.replace(',','');
+											if(parseInt(incidentcount)>0){
+												var lnk_monthly = '<a id="sgurl2" href="' + gadgets.util.escapeString(this.drillDown) + '">'+ this.countOrSum +' </a>';
+												sevTR.append(AJS.$("<td/>").html(lnk_monthly).css("border-right","1px solid #B3B8B9"));
+											} else {
+												sevTR.append(AJS.$("<td/>").text(this.countOrSum).css("border-right","1px solid #B3B8B9"));
+											}
+										});
+									}
+
+
+									projectList.append(sevTR);
+								}
+							});
+
+
+							gadget.getView().html(projectList);
+
+							//drawchart(gadget,args.incidentData);
+						},
+						args: [{
+							key: "incidentData",
+							ajaxOptions: function() {
+								return {
+									url: "/rest/incident/1.0/enhancedincidentexecsummary.json",
+									contentType: "application/json",
+									data:  {
+										searchFilter : gadgets.util.unescapeString(this.getPref("filterId")),
+										groupBy: gadgets.util.unescapeString(this.getPref("customFields")),
+										legenddepth: gadgets.util.unescapeString(this.getPref("legenddepth")),
+										sigmavalues: gadgets.util.unescapeString(this.getPref("sigmavalues")),
+										xaxis: gadgets.util.unescapeString(this.getPref("xaxis")),
+										yaxis: gadgets.util.unescapeString(this.getPref("yaxis"))
+									}
+								};
+							}
+						},
+						{
+								key: "getfiltername",
+								ajaxOptions: function ()
+								{
+									var gadget = this;
+									return {
+										url: "/rest/incident/1.0/enhancedincidentexecsummary/getFilterName.json",
+										contentType: "application/json",
+										data:  {
+											filterId : gadgets.util.unescapeString(this.getPref("filterId"))
+										}
+									};
+								}
+						}
+					 ]
+					}
+				});
+			})();
+		</script>
+		<div id="IncidentCountBarChartView"> </div>
+		]]>
+    </Content></Module>

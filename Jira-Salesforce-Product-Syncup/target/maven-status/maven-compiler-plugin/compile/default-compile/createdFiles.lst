@@ -1,0 +1,3 @@
+com\dt\jira\plugin\CascadeSelect\MyPluginComponentImpl.class
+com\dt\jira\plugin\CascadeSelect\CascadeSelectEvent.class
+com\dt\jira\plugin\CascadeSelect\MyPluginComponent.class

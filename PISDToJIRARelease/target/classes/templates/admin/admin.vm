@@ -1,0 +1,89 @@
+<html>
+<head>
+    <title>$i18n.getText("pisdtoreltktadmin.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jira.plugin.pisdtojirarelease.PISDToJIRARelease:PISDToJIRARelease-admin-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+</head>
+    <body>
+        <div class="header">
+            <h3 class="pisdtoreladminformtitle">$i18n.getText("pisdtoreltktadmin.admin.label")</h3>
+        </div>
+        <form id="pisdtorelticketadmin2" class="aui">
+            <div class="field-group">
+                <label for="pisdToRelticketApplicationName">$i18n.getText("pisdticket.admin.pisdToRelticketApplicationName.label")</label>
+                <select class="select" id="pisdToRelticketApplicationName" name="pisdToRelticketApplicationName">
+                </select>
+            </div>
+            <div class="field-group">
+                <label for="pisdtorelticketuid">$i18n.getText("pisdticket.admin.pisdtorelticketuid.label")</label>
+                <input type="text" id="pisdtorelticketuid" name="pisdtorelticketuid" class="text">
+            </div>
+            <div class="field-group">
+                <label for="pisdtorelticketpwd">$i18n.getText("pisdticket.admin.pisdtorelticketpwd.label")</label>
+                <input type="password" id="pisdtorelticketpwd" name="pisdtorelticketpwd" class="text">
+            </div>
+            <div class="field-group">
+                <input type="submit" value="$i18n.getText("pisdtorelticket.admin.save.label")" class="button">
+                <input type="button" value="$i18n.getText("pisdtorelticket.admin.cancel.label")" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+            </div>
+        </form>
+        
+        <script type="text/javascript">
+            var baseUrl = "$applicationProperties.getBaseUrl()";
+        
+            function populatePISDtoRelForm() {
+                jQuery.ajax({
+                    url: "/rest/createjiraticket/1.0/pisdtoreladminconfig",
+                    dataType: "json",
+                    success: function(config) {
+        
+                        AJS.$("#pisdtorelticketuid").attr("value", config.pisdtorelticketuid);
+                        AJS.$("#pisdtorelticketpwd").attr("value", config.pisdtorelticketpwd);
+        
+                        AJS.$("#pisdToRelticketApplicationName").attr("value", config.pisdToRelticketApplicationName);
+						 console.log( config.pisdToRelticketApplicationName );
+                    }
+                });
+            }
+            AJS.$(function() {
+                jQuery.ajax({
+                    url: AJS.params.baseURL + "/rest/applinks/1.0/applicationlink",
+                    type: 'GET',
+                    contentType: "application/json" ,
+                    async:false,
+                    success: function(data) {
+                        console.log("AJAX call to get application links");
+                        var  applicationNameSelectfield = AJS.$("#pisdToRelticketApplicationName");
+                        console.log("Data returned is ");
+                        console.log(data);
+        
+                        var applicationLinkNames = [];
+                        var applicationLinkdisplayUrls = [];
+        
+                        AJS.$('applicationLinks', data).each(function () {
+                            AJS.$('applicationLinks', this).each(function () {
+                                var applnName = AJS.$('name', this).text();
+                                var applnDisplayUrl = AJS.$('displayUrl', this).text();
+                                applicationLinkNames.push(applnName);
+                                applicationLinkdisplayUrls.push(applnDisplayUrl);
+                            });
+                        });
+        
+                        console.log( applicationLinkNames );
+        
+                        for(var i=0;i<applicationLinkNames.length;i++){
+                            var value = applicationLinkNames[i];
+                            var displayUrl = applicationLinkdisplayUrls[i];
+                            console.log("Application link name " + value);
+        
+                            var applicationNameOption = AJS.$("<option/>").attr({"value":value,"displayUrl" : displayUrl}).text(value);
+                            applicationNameSelectfield.append(applicationNameOption);
+                        }
+                        populatePISDtoRelForm();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

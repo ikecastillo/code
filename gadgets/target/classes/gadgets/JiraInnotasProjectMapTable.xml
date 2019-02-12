@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?><Module><ModulePrefs title="Jira and Innotas Project Mapping (Table-view)" directory_title="Jira and Innotas Project Mapping(Table-view)" description="Mapping between Jira Projects and Innotas Project " author="Ness" thumbnail="http://goo.gl/LDofI"><Require feature="dynamic-height"/><Require feature="oauthpopup"/><Require feature="setprefs"/><Require feature="settitle"/><Require feature="views"/><Optional feature="atlassian.util"/><Optional feature="gadget-directory"><Param name="categories">JIRA</Param></Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs><UserPref name="refresh" datatype="hidden" default_value="false"/><UserPref name="isConfigured" datatype="hidden" default_value="false"/><UserPref name="firstTime" datatype="hidden" default_value="true"/><UserPref name="projectId" datatype="hidden"/><UserPref name="version" datatype="hidden" default_value="All"/><UserPref name="sprint" datatype="hidden" default_value="All"/><UserPref name="groupbyField" datatype="hidden"/><Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugins.DealertrackAgilePlugins:dt-gadgets-common-js")
+	#includeResources()
+	<style type="text/css">
+		p {font-size:1.875em;} 
+	</style>
+		<script type="text/javascript">
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			//var GROUP_BY_FIELD = "Defect Cause";
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+                   view: {
+							template: function(args) {
+								var gadget = this;
+								var url = '/secure/admin/InnotasAction!default.jspa?jiraProjectKey=';
+								var link;
+								
+								var projectList = AJS.$("<table/>").css("width","100%").css("border","1px solid #B3B8B9");
+								var headerTR =  AJS.$("<tr/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center").css("font-size","1.25em").css("font-weight","bold");
+								headerTR.append(AJS.$("<td/>").css("width","30%").text(' Jira ').css("border-right","1px solid #B3B8B9").css("background-color", "#DF7401"))
+								headerTR.append("<td colspan=2> Innotas </td>").css("background-color", "#4B8A08")
+								projectList.append(headerTR);
+								var sevTR =  AJS.$("<tr/>").css("color", "white").css("backgroundColor", "#0489B1").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center");
+								sevTR.append(AJS.$("<td/>").css("width","30%").text('Jira Project Name').css("border-right","1px solid #B3B8B9"))
+								sevTR.append(AJS.$("<td/>").text('Business Unit').css("border-right","1px solid #B3B8B9"))
+							
+								sevTR.append(AJS.$("<td/>").text('Project'))
+								projectList.append(sevTR);
+								AJS.$(args.projectData).each(function() {	
+									var dataTR =  AJS.$("<tr/>").css("text-align","left");
+									var k = this.innotasProjectId;
+										if(k=='Mapped'){		
+									
+									link = '<a id="fieldname" href="' + gadgets.util.escapeString(url) + this.key +'">'+ this.projectName +' </a>'
+									dataTR.append(AJS.$("<td/>").html(link).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9").append("").css("border-bottom","1px solid #B3B8B9") )	
+									dataTR.append( AJS.$("<td/>").text(this.businessUnit).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9") )
+							
+									dataTR.append( AJS.$("<td/>").text(this.innotasProjectName).css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9") )
+									projectList.append(dataTR);
+									}
+								});
+								var notMapTR =  AJS.$("<tr/>").css("color", "white").css("backgroundColor", "#0489B1").css("width","100%").css("border","1px solid #B3B8B9");
+								notMapTR.append("<td colspan=3> Jira Projects Not Mapped to a Innotas Project </td>")
+								projectList.append(notMapTR);	
+								
+								AJS.$(args.projectData).each(function() {	
+									var dataTR =  AJS.$("<tr/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","left");
+									var k = this.innotasProjectId;
+										if(k=='NotMapped'){	
+										
+									link = '<td colspan=3> <a id="fieldname" href="' + gadgets.util.escapeString(url) + this.key +'">'+ this.projectName +' </a> <td/>';
+									
+									
+									
+									dataTR.append(link).css("border-left","1px solid #B3B8B9").append("").css("border-bottom","1px solid #B3B8B9")	
+									//dataTR.append( AJS.$("<td/>").text(this.businessUnit).css("border-left","1px solid #B3B8B9").css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9") )
+									
+									//dataTR.append("<td colspan=3>").append(link).append(" &nbsp;</td>").css("border-right","1px solid #B3B8B9").css("border-bottom","1px solid #B3B8B9")
+									projectList.append(dataTR);
+									}
+								});
+								gadget.getView().html(projectList);
+							},
+							args: [{
+								key: "projectData",
+								ajaxOptions: function() {
+									return {
+										url: "/rest/dealertrack1/1.0/innotasmappingtable.json",								
+										contentType: "application/json",
+										data:  { 
+										}
+									};
+								}
+							}]
+						}
+			});
+		})();
+			
+ </script>
+  ]]>
+  </Content></Module>

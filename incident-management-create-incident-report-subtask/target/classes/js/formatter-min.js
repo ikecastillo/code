@@ -1,0 +1,1 @@
+var TableRowAppender={showTableRows:function(a){AJS.$.each(a,function(b,d){var c=AJS.$("<tr></tr>");AJS.$.each(d,function(f,e){AJS.$("<td>"+e+"</td>").appendTo(c)});AJS.$('<td><a href="#" class="deleteMapping" title="Remove this row"> Delete </a></td>').appendTo(c);c.appendTo("#mappingstable tbody")})},};

@@ -1,0 +1,15 @@
+com\dt\jira\plugin\uptime\IncidentDowntimeSummaryModel.class
+com\dt\jira\plugin\uptime\MyPluginComponentImpl.class
+com\dt\jira\plugin\uptime\IncidentUptimeReportSummary.class
+com\dt\jira\plugin\uptime\dtrest.class
+com\dt\jira\plugin\uptime\SoluttionGroups.class
+com\dt\jira\plugin\uptime\TypeModel.class
+com\dt\jira\plugin\uptime\MyPluginComponent.class
+com\dt\jira\plugin\uptime\IncidentUptimeReportModel.class
+com\dt\jira\plugin\uptime\Type.class
+com\dt\jira\plugin\uptime\SoluttionGroupsModel.class
+com\dt\jira\plugin\uptime\IncidentMonthSummaryModel.class
+com\dt\jira\plugin\uptime\LocationsModel.class
+com\dt\jira\plugin\uptime\IncidentProductMonthlyModel.class
+com\dt\jira\plugin\uptime\dtrestModel.class
+com\dt\jira\plugin\uptime\Locations.class

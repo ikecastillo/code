@@ -1,0 +1,151 @@
+<html>
+   <head>
+      <meta name="decorator" content="atl.admin" />
+      <meta name="projectKey" content="$projectKey"/>
+      <meta name="application-base-url" content="$applicationProperties.getBaseUrl()"> 
+      <meta name="admin.active.section" content="atl.jira.proj.config"/>       
+      $webResourceManager.requireResource("com.dt.jira.plugin.jira-release-management-auto-assignee-plugin:jira-release-management-auto-assignee-plugin-resources") 
+      $webResourceManager.requireResource("com.atlassian.auiplugin:aui-select2") 
+     <title>Jira Auto Assignee</title>
+     
+     <style  type="text/css">
+ 
+ 	.toptblcss {
+     background-color:#ECECEC;
+     border:3px solid;
+     border-color:#D8D8D8;
+     }
+     
+     .btmtblcss {
+     border:3px solid;
+     border-color:#D8D8D8;
+     border-top:0px;
+     border-bottom-left-radius: 10px 10px;
+     border-bottom-right-radius: 10px 10px;
+     }
+     
+     .toptdcss{
+     float:right;
+     padding:5px 0px 0px 0px;
+     font-weight:bold;
+     color:black
+     }
+     
+    .tablethcss tr{
+     border:1px solid #D8D8D8;
+     }
+     
+     .tablethcss td{
+     border:1px solid #D8D8D8;
+      }
+     
+    
+    
+    </style>
+    
+    
+<script type="text/javascript" >
+  
+</script>
+    		
+</head>
+<body>
+<div class="header" style="bold;">
+        <h3 class="formtitle" style="font-weight:bold;border-bottom:0px;">Jira Auto Assignee</h3> 
+    </div>
+     <div style="border-bottom: 1px solid #DDD;"><label  style="color:black;margin-top:2px;">   Ability to adding Assignee for Issuetypes and Status </label></div>
+<div class="content-container">
+<form  class="aui" >
+					 <input type="hidden" id="projectKey" name="projectKey" value="$projectKey">
+                     <input type="hidden" id="baseURL" value="$baseURL"/> 
+                       <div  class="toptblcss">
+                        <table style="background-color:#ECECEC;width:98%;margin:4px">
+                        <tr>
+                        <td><label for="issueType" style="color:black">Issue Type:</label></td>
+                        <td><label for="status" style="color:black">Status:</label></td>
+                        <td><label for="assignee" style="color:black">Assignee:</label></td>
+                        </tr>
+  						<tr>
+  						   <td>
+                           <div class="subTask_col2" >
+                           <select id="issue" name="issue">                                                             
+                                    <option value="None">---select---</option>                                    
+                                    #foreach ($option in $issueList)                                    
+	                                     #if ($selectedissue && ($selectedissue  == $option.getvalue()))
+	                   							<option value="$option.getvalue()" selected="selected">$option.getvalue()</option>
+	              						 #else
+	                  							<option value="$option.getvalue()">$option.getvalue()</option>
+	            						 #end
+                                     #end 
+                                </select>                                                             
+                             </div>
+                             </td>
+                            
+                             <td>
+                             <div class="subTask_col3" >
+                             
+                             <select id="status" name="status">                                                             
+                                    <option value="None">---select---</option>                                    
+                                    #foreach ($option in $statusList)                                    
+	                                     #if ($selectedStatus && ($selectedStatus  == $option.getName()))
+	                   							<option value="$option.getName()" selected="selected">$option.getName()</option>
+	              						 #else
+	                  							<option value="$option.getName()">$option.getName()</option>
+	            						 #end
+                                     #end 
+                                </select>
+                                </div>
+							</td>
+							
+							 <td>
+							 
+							 <div class="basic_row">
+                              <div class="two_col"><input type="hidden" id="pndappr_sch1" name="pndappr_sch1" value="10803"/></div>
+                              <div class="two_col"><div id="pndapprerror_auto_10803" class="error"></div>
+                                 <div class="ajax_autocomplete" id="pndappr_auto_10803_container">
+									<input class="text long-field customuserpickerfield1" id="user_picker" name="user_picker" style="" type="text" value="" autocomplete="off"/>
+									<div class="ajax_results" id="pndappr_auto_10803_results">
+									</div>
+								</div>
+                              </div>
+                           </div>
+							
+                            </td>
+							
+							<td style="width:70px;vertical-align:bottom;">
+                             <input type="button" name="save" id="btnp_Save" value="Save" class="button spaced"  />
+                            </td>
+                            
+                           </tr>
+                           </table>
+                          </div>
+                          
+                          
+                           <div>
+                   			
+                  <table  id="deatils_table" style="width:100%;margin-top:10px;" class="tablethcss">
+                  <thead>
+                  <tr style="background-color:#ECECEC;border:1px solid black">
+                    <th><label>Issue Type</label></th> 
+                    <th><label>Status</label></th> 
+                    <th><label>Assignee</label></th>
+                    <th><label>Option</label></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td colspan="6" style="text-align:center">
+                    No records to display
+                    </td>
+                    </tr>
+                    </tbody>
+                     
+                    </table>
+                    
+                    
+     </form> 
+      
+</div>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/dtIcon.png</param>
+    <param name="plugin-logo">images/dtLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="service-request-management-portal"/>
+  <!-- add our web resources -->
+  <web-resource key="service-request-management-portal-resources" name="service-request-management-portal Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="service-request-management-portal.css" location="/css/service-request-management-portal.css"/>
+    <resource type="download" name="service-request-management-portal.js" location="/js/service-request-management-portal.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>service-request-management-portal</context>
+  </web-resource>
+  <!-- publish our component -->
+  <component key="myPluginComponent" class="com.dt.service.request.management.portal.plugin.MyPluginComponentImpl" public="true">
+    <interface>com.dt.service.request.management.portal.plugin.MyPluginComponent</interface>
+  </component>
+  
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/> 
+       
+   
+  <web-section key="service-desk-admin" name="menu-admin:ServiceDesk" location="system.admin.top.navigation.bar" weight="210">
+    <label key="service.desc.admin.section.name"/>
+    <description key="service.desc.admin.section.description"/>
+  </web-section>
+  <web-section key="service-desk-admin-main" name="menu-admin:ServiceDesk|Main Section" location="service-desk-admin" weight="100">
+    <label key="service.desc.admin.section.main.label"/>
+    <tooltip key="service.desc.admin.section.main.header"/>
+  </web-section>
+  
+   <web-item key="wi-service-desk-admin-custmenu" name="menu-admin:ServiceDesk|Configuration" section="service-desk-admin/service-desk-admin-main" weight="20">
+    <description key="service.desc.admin.configuration.custmenu.description"/>
+    <label key="service.desc.admin.configuration.custmenu.name"/>
+    <tooltip key="service.desc.admin.configuration.custmenu.description"/>
+    <link linkId="wi-service-desk-admin-custmenu-link">/secure/ViewCustomerPortalAction.jspa</link>
+  </web-item>
+    
+  <webwork1 key="customerportalaction" name="Cutomer Portal action" class="java.lang.Object">
+		<description>Cutomer Portal Action</description>
+		<actions>
+			<action name="com.dt.service.request.management.portal.plugin.action.ViewCustomerPortalAction" alias="ViewCustomerPortalAction">
+				<view name="success">/templates/viewPortalConfig.vm</view>
+			</action>
+			<action name="com.dt.service.request.management.portal.plugin.action.EditCustomerPortalAction" alias="EditCustomerPortalAction">
+				<view name="input">/templates/editPortalConfig.vm</view>
+			</action>
+			<action name="com.dt.service.request.management.portal.plugin.action.AddCustomerPortalAction" alias="AddCustomerPortalAction">
+				<view name="input">/templates/addPortalConfig.vm</view>
+			</action>
+			<action name="com.dt.service.request.management.portal.plugin.action.DeleteCustomerPortalAction" alias="DeleteCustomerPortalAction">
+				<view name="input">/templates/viewPortalConfig.vm</view>
+			</action>
+		</actions>
+	</webwork1>
+    
+   <!-- Assignee Mapping AO Modules -->
+  <ao key="ao-module">
+    <description>The module configuring the Active Objects service used by this plugin</description>
+    <entity>com.dt.service.request.management.portal.plugin.ao.CustomerPortal</entity>    
+	<entity>com.dt.service.request.management.portal.plugin.ao.Comment</entity>
+	<!--<entity>com.dt.service.request.management.portal.plugin.ao.CustomerPortalSubMenu</entity>-->
+  </ao>
+  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+    <description>Component to access Active Objects functionality from the plugin</description>
+  </component-import>
+  <component key="tx-processor" name="Transactional Annotation Processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+    <decription>Processes @Transactional annotations.</decription>
+  </component>
+  
+   <component key="customer-service" name="Customer Service" class="com.dt.service.request.management.portal.plugin.service.CustomerPortalServiceImpl" />
+  
+    <servlet key="customer-portal-servlet" class="com.dt.service.request.management.portal.plugin.ui.CustomerPortalServlet"> <url-pattern>/dtservicedesk</url-pattern></servlet>
+ 
+</atlassian-plugin>

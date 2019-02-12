@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>$i18n.getText("xmatters.admin.label")</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("com.dt.jira.xmatters.intgt.plugin.xMatters-integration-plugin:xMatters-integration-plugin-resources")
+    <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+  </head>
+  <body>
+		<div class="header">
+        <h3 class="formtitle">$i18n.getText("xmatters.admin.label")</h3>
+    </div>
+    <form id="admin" class="aui">
+      <div class="field-group">
+        <label for="xmattersouturl">$i18n.getText("xmatters.admin.xmattersouturl.label")</label>
+        <input type="text" id="xmattersouturl" name="xmattersouturl" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="xmattersnonouturl">$i18n.getText("xmatters.admin.xmattersnonouturl.label")</label>
+        <input type="text" id="xmattersnonouturl" name="xmattersnonouturl" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="xmattersexternalresponse1">$i18n.getText("xmatters.admin.xmattersexternalresponse1.label")</label>
+        <input type="text" id="xmattersexternalresponse1" name="xmattersexternalresponse1" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="xmattersexternalresponse2">$i18n.getText("xmatters.admin.xmattersexternalresponse2.label")</label>
+        <input type="text" id="xmattersexternalresponse2" name="xmattersexternalresponse2" class="text">
+      </div>
+      <div class="field-group">
+        <label for="xmattersinternalouturl">$i18n.getText("xmatters.admin.xmattersinternalouturl.label")</label>
+        <input type="text" id="xmattersinternalouturl" name="xmattersinternalouturl" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="xmattersinternalnonouturl">$i18n.getText("xmatters.admin.xmattersinternalnonouturl.label")</label>
+        <input type="text" id="xmattersinternalnonouturl" name="xmattersinternalnonouturl" class="text">
+      </div>
+	   <div class="field-group">
+        <label for="xmattersinternalresponse1">$i18n.getText("xmatters.admin.xmattersinternalresponse1.label")</label>
+        <input type="text" id="xmattersinternalresponse1" name="xmattersinternalresponse1" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="xmattersinternalresponse2">$i18n.getText("xmatters.admin.xmattersinternalresponse2.label")</label>
+        <input type="text" id="xmattersinternalresponse2" name="xmattersinternalresponse2" class="text">
+      </div> 
+      <div class="field-group">
+        <label for="xmattersuid">$i18n.getText("xmatters.admin.xmattersuid.label")</label>
+        <input type="text" id="xmattersuid" name="xmattersuid" class="text">
+      </div>
+      <div class="field-group">
+        <label for="xmatterspwd">$i18n.getText("xmatters.admin.xmatterspwd.label")</label>
+        <input type="password" id="xmatterspwd" name="xmatterspwd" class="text">
+      </div>  
+	 <div class="field-group">
+        <label for="xmattersexternalserviceurl">$i18n.getText("xmatters.admin.xmattersexternalserviceurl.label")</label>
+        <input type="text" id="xmattersexternalserviceurl" name="xmattersexternalserviceurl" class="text">
+      </div>
+	 <div class="field-group">
+        <label for="xmattersinternalserviceurl">$i18n.getText("xmatters.admin.xmattersinternalserviceurl.label")</label>
+        <input type="text" id="xmattersinternalserviceurl" name="xmattersinternalserviceurl" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="xmattersinterval">$i18n.getText("xmatters.admin.xmattersinterval.label")</label>
+        <input type="text" id="xmattersinterval" name="xmattersinterval" class="text">
+      </div>
+	  <div class="field-group">
+        <label for="xmattersjiraemailid">$i18n.getText("xmatters.admin.xmattersjiraemailid.label")</label>
+        <input type="text" id="xmattersjiraemailid" name="xmattersjiraemailid" class="text">
+      </div>
+      <div class="field-group">
+        <input type="submit" value="$i18n.getText("xmatters.admin.save.label")" class="button">
+        <!--input type="button" value="$i18n.getText("xmatters.admin.test.label")" class="button" onclick="alert('Test not implemented yet');return false;"-->
+				<input type="button" value="$i18n.getText("xmatters.admin.cancel.label")" class="button" onclick="location.href='/plugins/servlet/upm#manage'">
+      </div>
+    </form>
+
+		<script type="text/javascript">
+      var baseUrl = "$applicationProperties.getBaseUrl()";
+    </script>
+	</body>
+</html>

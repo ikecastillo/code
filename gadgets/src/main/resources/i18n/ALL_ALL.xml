@@ -1,0 +1,16 @@
+<messagebundle>
+    <msg name="gadget.days.left.title">KPI Chart</msg>
+    <msg name="gadget.description">Velocity Chart for a release.</msg>
+    <msg name="gadget.days.left.subtitle"></msg>
+
+    <msg name="gadget.days.left.description">xxxxxxxx</msg>
+    <msg name="gadget.days.left.daysAgo">Days Ago</msg>
+    <msg name="gadget.days.left.today">Today!</msg>
+    <msg name="gadget.days.left.daysRemaining">Days Remaining</msg>
+    <msg name="gadget.days.left.autoOption">Next Release Due (auto)</msg>
+    <msg name="gadget.days.left.noReleaseDate">None</msg>
+    <msg name="gadget.days.left.noVersionWarning">Selected project has no unreleased versions</msg>
+    <msg name="gadget.days.left.noReleaseDatesWarning">Selected project has no versions with future release dates.</msg>
+    <msg name="gadget.days.left.configTitle">Config</msg>
+    <msg name="gadget.days.left.releaseDate"></msg>
+</messagebundle>

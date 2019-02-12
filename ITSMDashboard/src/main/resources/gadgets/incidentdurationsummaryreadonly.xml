@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title=" Incident Management : Incident Duration"
+                 directory_title=" Incident Management : Incident Duration"
+                 description=" Incident Management : Incident Duration Tabular Format Report  Read Only View with no drilldown" 
+				 author="Ness"
+				 thumbnail="http://goo.gl/LDofI">
+        <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup"/>
+        <Require feature="setprefs"/>
+        <Require feature="settitle"/>
+        <Require feature="views"/>
+        <Optional feature="atlassian.util"/>
+        <Optional feature="gadget-directory">
+            <Param name="categories">JIRA</Param>
+        </Optional>
+        #oauth
+        #supportedLocales("gadget.common,gadget.days.left")
+        #supportLocales
+    </ModulePrefs>
+	<UserPref name="refresh" datatype="hidden" default_value="false" />
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="firstTime" datatype="hidden" default_value="true"/>
+    <UserPref name="startDate" datatype="hidden"/>
+    <UserPref name="endDate" datatype="hidden" default_value="All"/>
+	<UserPref name="severity" datatype="hidden" default_value="High"/>
+	<UserPref name="solutionGroup" datatype="hidden" default_value="All"/>
+	<UserPref name="projectId" datatype="hidden" default_value="ITIM"/>
+	<UserPref name="issueTypes" datatype="hidden" default_value="Incident"/>
+	<UserPref name="status" datatype="hidden" default_value="All"/>
+	 <UserPref name="location" datatype="hidden" default_value="All"/>
+	<UserPref name="typs" datatype="hidden" default_value="Internal"/>
+	<UserPref name="cause" datatype="hidden" default_value=""/>
+	<UserPref name="headertxt" datatype="hidden" default_value="Incident Management : Incident Duration"/>
+    <Content type="html">
+    <![CDATA[
+    #requireResource("com.atlassian.jira.gadgets:common")
+	#requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:itsm-gadgets-common-js")
+	#requireResource("com.dt.jira.plugin.dashboard.ITSMDashboard:ITSMDashboard-resources")
+	
+	#includeResources()
+	<span id="typeSpan" style = "padding-left: 54;color:#707070;font-size: 15px;">Clients Impacted &nbsp;&nbsp;&nbsp;</span><select id="typeSelect"></select>
+
+	 <span id="solutionSpan"  style="display : none;padding-left: 60;color:#707070;font-size: 15px;">Solution Group &nbsp;&nbsp;&nbsp;&nbsp;</span><select id="solutionSelect"  style="display : none" multiple="multiple"></select>
+	 <span id="locationSpan" style = "padding-left: 80;color:#707070;font-size: 15px;">Impacted  &nbsp;&nbsp;&nbsp;&nbsp;</span><select id="locationSelect" multiple="multiple"></select>
+	
+		<script type="text/javascript">
+		(function () {
+			/* (1) Construct and initialise the gadget */
+			var GROUP_BY_FIELD = "DT-Environment";
+			AJS.$('#typeSelect').hide();
+         AJS.$('#typeSpan').hide();
+         AJS.$("#locationSpan").hide();
+         AJS.$("#locationSelect").hide();
+         AJS.$("#solutionSpan").hide();
+         AJS.$("#solutionSelect").hide();
+			var gadget = AJS.Gadget({
+				baseUrl: "__ATLASSIAN_BASE_URL__", /* (3) Used to make base url available to gadget */
+				useOauth: "/rest/gadget/1.0/currentUser",
+				 config: {
+                    descriptor: function(args)
+                    {
+                                  var desc = DTGADGET.ITSMUptimeReportdescriptorSumary(this, args, "__ATLASSIAN_BASE_URL__");	
+                      	 AJS.$('br').remove();
+						 
+						  
+						 desc.fields.push ({
+					    		    userpref: "headertxt",
+					    		    label: "Header",
+					    		    type: "text",
+					    		    value: gadget.getPref("headertxt")
+					    		    });
+
+
+						/*desc.fields.push ({
+						 id: "cause",
+						 userpref: "cause",
+						 label: "Cause",
+						 type: "multiselect",
+						 selected: gadget.getPref("cause"),
+						 options:[
+						 {
+						 label:"Internal",
+						 value:"Internal"
+						 },
+						 {
+						 label:"External",
+						 value:"External"
+						 },
+						 {
+						 label:"Internal Change Control",
+						 value:"Internal Change Control"
+						 },
+						 {
+						 label:"None",
+						 value:"None"
+						 }
+						 ]
+						 });*/
+
+						/* Causes are now got dynamically*/
+						var getCauses=function() {
+							var options=[];
+							for (var index in args.causes) {
+								options.push({label:args.causes[index].label,value:args.causes[index].value});
+							}
+							return {
+								id: "cause",
+								userpref: "cause",
+								label: "Cause",
+								type: "multiselect",
+								selected: gadget.getPref("cause"),
+								options:options
+							};
+
+						};
+						desc.fields.push(getCauses());
+                          AJS.$("#typeSelect").empty();
+                         AJS.$('#typeSelect').show();
+                         AJS.$('#typeSelect').after('<br><br>');
+                    	 AJS.$('#typeSpan').show();
+                        AJS.$(args.types).each(function(){
+					    var typeOption = AJS.$("<option/>").attr("value", this.value).text(this.value);						
+						
+						AJS.$("#typeSelect").append(typeOption);
+						
+						var projectUserPrefTypeValue = gadget.getPref("typs");
+						var pType = projectUserPrefTypeValue.split("|");
+							if(AJS.$.inArray(this.value,pType)>-1)
+							{
+								typeOption.attr({selected: "selected"});
+						    } 
+						});
+						
+						AJS.$("#typeSelect").change(function(event)
+            		    {	
+            		 		var typeValues = AJS.$('#typeSelect').val()
+             	  		 	 if(typeValues == "External"){
+             	  		 	 AJS.$("#solutionSpan").show();
+             	  				AJS.$("#solutionSelect").show();
+             	  		 	 	AJS.$("#locationSpan").hide();
+             	  				AJS.$("#locationSelect").hide();
+             	  				
+             	  		 	 }
+             	  		 	 else{
+             	  		 	 	AJS.$("#locationSpan").show();
+             	  				AJS.$("#locationSelect").show();
+             	  		 	 	AJS.$("#solutionSpan").hide();
+             	  				AJS.$("#solutionSelect").hide();
+             	  				 
+             	  		 	 }
+            		    	gadget.savePref("typs",typeValues);
+            		    });		
+            		    var typeValue1 = AJS.$('#typeSelect').val();
+             	  		 	 if(typeValue1 == "External"){
+             	  		 	 AJS.$("#solutionSpan").show();
+             	  				AJS.$("#solutionSelect").show();
+             	  		 	 	AJS.$("#locationSpan").hide();
+             	  				AJS.$("#locationSelect").hide();
+             	  				
+             	  		 	 }
+             	  		 	 else{
+             	  		 	 	AJS.$("#locationSpan").show();
+             	  				AJS.$("#locationSelect").show();
+             	  		 	 	AJS.$("#solutionSpan").hide();
+             	  				AJS.$("#solutionSelect").hide();
+             	  				 
+             	  		 	 }
+            		     AJS.$(args.solutionGroups).each(function(){
+             	  				 	 var solutionOption = AJS.$("<option/>").attr("value", this.value).text(this.value);						
+						
+									AJS.$("#solutionSelect").append(solutionOption);
+						
+									var projectUserPrefTypeValue = gadget.getPref("solutionGroup");
+			           				var pType = projectUserPrefTypeValue.split("|");
+										if(AJS.$.inArray(this.value,pType)>-1)
+										{
+											solutionOption.attr({selected: "selected"});
+						    			} 
+             	  				 	});
+             	  				 	
+            		    AJS.$(args.typeValues).each(function(){
+             	  				 	 var locationOption = AJS.$("<option/>").attr("value", this.value).text(this.value);						
+						
+									AJS.$("#locationSelect").append(locationOption);
+						
+									var projectUserPrefTypeValue = gadget.getPref("location");
+			           				var pType = projectUserPrefTypeValue.split("|");
+										if(AJS.$.inArray(this.value,pType)>-1)
+										{
+											locationOption.attr({selected: "selected"});
+						    			} 
+             	  				 	});			
+             	  		AJS.$("#locationSelect").change(function(event)
+            		    {
+            		    	var locationValues = AJS.$("#locationSelect").val();	
+            		    	
+            		    	gadget.savePref("location",locationValues);
+            		    });		
+            		    AJS.$("#solutionSelect").change(function(event)
+            		    {
+            		    	var solutionValues = AJS.$("#solutionSelect").val();	
+            		    	
+            		    	gadget.savePref("solutionGroup",solutionValues);
+            		    });												
+						desc.fields.push ({
+							id: "start-date-picker",
+							userpref: "startDate",
+							label: "Start Date",
+							type: "date",
+							value: gadget.getPref("startDate")							
+							}
+						);
+						desc.fields.push ({						
+							id: "end-date-picker",
+							userpref: "endDate",
+							label: "End Date",
+							type: "date",
+							value: gadget.getPref("endDate")		
+							}
+						);						
+						desc.fields.push ({
+							id: "severity",
+							userpref: "severity",
+							label: "Severity",
+							type: "multiselect",
+							selected: gadget.getPref("severity"),
+							options:[
+								{  
+									label:"Critical",
+									value:"Critical"
+								},
+								{  
+									label:"High",
+									value:"High"
+								},
+								{  
+									label:"Medium",
+									value:"Medium"
+								},
+								{  
+									label:"Low",
+									value:"Low"
+								},
+								{  
+									label:"None",
+									value:"None"
+								}								
+							] 		
+							}
+						);
+						desc.fields.push (DTGADGET.ITSMstatusPicker_incident(gadget, "ITIM","null","status"));
+						return desc;
+                    },
+                   args: DTGADGET.descriptorArgsSummary("__ATLASSIAN_BASE_URL__")
+                },
+			 
+				      view: {
+							onResizeAdjustHeight: true,
+							enableReload: true,
+							template: function(args) {
+								var gadget = this;
+								
+								
+								var gadgetHeader = gadget.getPref("headertxt");
+								console.log("gadgetHeader"+gadgetHeader)
+						
+								if(gadgetHeader!= "" && gadgetHeader!=null){
+								gadgets.window.setTitle(gadgetHeader);
+								}else{
+									gadgets.window.setTitle("Incident Management : Incident Duration");
+								}
+								
+								AJS.$('br').remove();
+								 AJS.$('#typeSelect').hide();
+                    			 AJS.$('#typeSpan').hide();
+                    			AJS.$("#locationSpan").hide();
+             	  				AJS.$("#locationSelect").hide();
+             	  		 	 	AJS.$("#solutionSpan").hide();
+             	  				AJS.$("#solutionSelect").hide();
+								var projectList = AJS.$("<table/>").css("width","100%").css("border","1px solid #B3B8B9").css("text-align","center");
+								 AJS.$(args.incidentData).each(function() {	
+									var header = this.solutionGroup;
+									//var lnk = '';
+									if(header=='Major Incidents'){
+										
+										var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+										sevTR.append(AJS.$("<td/>").text("Incidents (minutes of client impact):").css("border-right","1px solid #B3B8B9").css("background-color", "#D2D2D2").css("font-weight","bold"))
+											AJS.$(this.monthly).each(function() {	
+												sevTR.append(AJS.$("<td/>").text(this.month).css("border-right","1px solid #B3B8B9").css("background-color", "#D2D2D2").css("font-weight","bold"))
+											});
+									projectList.append(sevTR);
+									} else {
+									var sevTR =  AJS.$("<tr/>").css( "backgroundColor", "#EEF7FF" ).css("width","100%").css("border","1px solid #B3B8B9");
+									     if( (this.solutionGroup=='Total') || (this.solutionGroup=='3 Month Average')){										
+										sevTR.append(AJS.$("<td/>").text(this.solutionGroup).css("border-right","1px solid #B3B8B9").css("font-weight","bold").css("background-color", "#D2D2D2"))
+										AJS.$(this.monthly).each(function() {	
+												sevTR.append(AJS.$("<td/>").text(this.incidentcount).css("border-right","1px solid #B3B8B9").css("font-weight","bold").css("background-color", "#D2D2D2"))
+											});
+										} else {
+										//var link = '<a id="sgurl1" href="' + gadgets.util.escapeString(this.drillDown) + '">'+ this.solutionGroup +' </a>';
+										var link = this.solutionGroup;								
+										sevTR.append(AJS.$("<td/>").html(link).css("border-right","1px solid #B3B8B9"))
+										  AJS.$(this.monthly).each(function() {	
+										  if(this.incidentcount>0){
+												//var lnk_monthly = '<a id="sgurl2" href="' + gadgets.util.escapeString(this.drillDown) + '">'+ this.incidentcount +' </a>';		sevTR.append(AJS.$("<td/>").html(lnk_monthly).css("border-right","1px solid #B3B8B9"))
+												var lnk_monthly = this.incidentcount ;		sevTR.append(AJS.$("<td/>").html(lnk_monthly).css("border-right","1px solid #B3B8B9"))
+												} else {
+												sevTR.append(AJS.$("<td/>").text(this.incidentcount).css("border-right","1px solid #B3B8B9"))
+												}
+											});
+										}
+										
+											
+									projectList.append(sevTR);
+									}
+								});
+								
+								
+								gadget.getView().html(projectList);
+							},
+							args: [{
+								key: "incidentData",
+								ajaxOptions: function() {
+								 AJS.$('#typeSelect').hide();
+                    			 AJS.$('#typeSpan').hide();
+                    			AJS.$("#locationSpan").hide();
+             	  				AJS.$("#locationSelect").hide();
+             	  		 	 	AJS.$("#solutionSpan").hide();
+             	  				AJS.$("#solutionSelect").hide();
+									return {
+										url: "/rest/incident/1.0/incidentexecsummary.json",
+										contentType: "application/json",
+										data:  { 
+											solutionGroup : gadgets.util.unescapeString(this.getPref("solutionGroup")),
+											severity : gadgets.util.unescapeString(this.getPref("severity")),
+											startDate : gadgets.util.unescapeString(this.getPref("startDate")),
+											endDate : gadgets.util.unescapeString(this.getPref("endDate")),
+											status : gadgets.util.unescapeString(this.getPref("status")),
+											reporttype : "IncidentDuration",
+											location : gadgets.util.unescapeString(this.getPref("location")),
+											typs :  gadgets.util.unescapeString(this.getPref("typs")),
+											cause :  gadgets.util.unescapeString(this.getPref("cause"))
+										}
+									};
+								}
+							}]
+						}
+			});
+		})();
+	
+ </script>
+  ]]>
+  </Content>
+</Module>

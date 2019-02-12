@@ -1,0 +1,86 @@
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPException;
+
+import org.wso2.www.php.QMetryWS;
+import org.wso2.www.php.QMetryWSLocator;
+import org.wso2.www.php.QMetryWSPortType;
+
+public class QMetryWSDLClient {
+
+	private final static URL QMETRY_WSDL_LOCATION;
+
+	private final static String QMETRY_USERNAME;
+
+	private final static String QMETRY_PASSWORD;
+
+	private final static String QMETRY_PROJECT;
+
+	private final static String QMETRY_RELEASE;
+
+	private final static String QMETRY_BUILD;
+
+	static {
+
+		URL url = null;
+		try {
+			url = new URL(
+					"http://10.134.8.17/qmetry/WEB-INF/ws/service.php?wsdl");
+
+		}
+		catch (MalformedURLException e)	{
+			e.printStackTrace();
+		}
+
+		QMETRY_WSDL_LOCATION = url;
+
+		QMETRY_USERNAME = "kiran.muthoju"; // QMetry Username
+
+		QMETRY_PASSWORD = "Dec_2013"; // QMetry Password
+
+		QMETRY_PROJECT = "Tproject"; // QMetry Project Name
+
+		QMETRY_RELEASE = "Release-1"; // QMetry Release Name
+
+		QMETRY_BUILD = "Cycle-1"; // QMetry Build Name
+
+	}
+
+	public static void main(String[] args){
+
+			  QMetryWS qmetryService  = new QMetryWSLocator();
+    	 //QMetryWS qmetryService = new QMetryWS(QMETRY_WSDL_LOCATION,new QName("http://www.wso2.org/php", "QMetryWS"));
+         QMetryWSPortType qmetryPort = qmetryService.getQMetryWSSOAPPort_Http(); 
+         String AuthToken = null;
+         long totDefects = 0;
+         long totTestCases = 0;
+         long totPassed = 0;
+         long totFailed = 0;
+         long totNotRun = 0;
+         long totNA = 0;
+         long totBlocked = 0;
+         
+         try   {
+        	 	System.out.println("UID: " + QMETRY_USERNAME + " PWD: " + QMETRY_PASSWORD);
+                 AuthToken = qmetryPort.login (QMETRY_USERNAME, QMETRY_PASSWORD);
+                 System.out.println ("Logged into QMetry with Token: " + AuthToken);
+                final String message = qmetryPort.setScope
+                		 (AuthToken,
+                		 QMETRY_PROJECT,
+                		 QMETRY_RELEASE,
+                		 QMETRY_BUILD
+                		 );
+                System.out.println (message);
+               System.out.println ("Logout msg: " + qmetryPort.logout(AuthToken));
+         }catch(Exception e){
+					System.out.println ("********************Error Logging in to QMetry Service********************");
+        	 e.printStackTrace();
+         }
+             
+
+	}
+}
