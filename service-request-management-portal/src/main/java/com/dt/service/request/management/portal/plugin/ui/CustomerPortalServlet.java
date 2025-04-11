@@ -52,7 +52,8 @@ public class CustomerPortalServlet extends HttpServlet{
 			   try {
 				   List<CustomerPortal> CustomerPortalModelList =  customerPortalService.findAllChild(Integer.valueOf(parentId));
 						if(CustomerPortalModelList !=null && CustomerPortalModelList.size()>0 ){												
-							ctx.put("CustomerPortalModelList", CustomerPortalModelList);					
+							ctx.put("CustomerPortalModelList", CustomerPortalModelList);
+							ctx.put("parentId", parentId);		
 				        }
 						
 				} catch (Exception e) {
@@ -62,7 +63,8 @@ public class CustomerPortalServlet extends HttpServlet{
 	        ctx.put("baseURL", applicationProperties.getBaseUrl());			
 						
 			response.setContentType("text/html;charset=utf-8");
-			renderer.render("templates/customerPortalMain.vm", ctx, response.getWriter());
+			// Use the Auzi-branded template
+			renderer.render("templates/auzi-customer-portal.vm", ctx, response.getWriter());
 	}
 	
 }

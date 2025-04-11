@@ -1,0 +1,93 @@
+<html>
+   <head>   
+      <meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      $webResourceManager.requireResource("com.dt.service.request.management.portal.plugin.service-request-management-portal:service-request-management-portal-resources")
+   </head>
+   <body class="auzi-theme">
+      <!-- Auzi Header -->
+      <header class="auzi-header">
+         <div style="display: flex; align-items: center;">
+            <img src="$baseURL/download/resources/com.dt.service.request.management.portal.plugin.service-request-management-portal:service-request-management-portal-resources/images/auzi-logo.svg" alt="Auzi" class="auzi-logo">
+            <h1 class="auzi-header-title">Auzi Service Portal</h1>
+         </div>
+      </header>
+      
+      <!-- Navigation -->
+      <nav class="auzi-nav">
+         #foreach($customerPortal in $customerPortals)
+            <a href="$baseURL/dtservicedesk?parentId=$customerPortal.getID()" class="auzi-nav-item #if($parentId == $customerPortal.getID()) active #end">
+               $customerPortal.getName()
+            </a>
+         #end
+      </nav>
+      
+      <!-- Main Content -->
+      <div id="main_container" class="auzi-container">
+         #if($CustomerPortalModelList)
+            <div class="auzi-card">
+               <h2 class="auzi-card-title">Service Categories</h2>
+               <div class="auzi-service-grid">
+                  #foreach($customerPortalModel in $CustomerPortalModelList)
+                     <div class="auzi-service-item">
+                        <h3>$customerPortalModel.getName()</h3>
+                        <p>$customerPortalModel.getDescription()</p>
+                        <a href="$customerPortalModel.getUrl()" class="auzi-button">Access Service</a>
+                     </div>
+                  #end
+               </div>
+            </div>
+         #else
+            <div class="auzi-card">
+               <h2 class="auzi-card-title">Welcome to Auzi Service Portal</h2>
+               <p>Please select a service category from the navigation above to get started.</p>
+            </div>
+         #end
+      </div>
+      
+      <!-- Footer -->
+      <footer class="auzi-footer">
+         <p>&copy; 2023 Auzi. All rights reserved.</p>
+      </footer>
+
+      <!-- Custom CSS for the service grid -->
+      <style>
+         .auzi-service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+         }
+         
+         .auzi-service-item {
+            background: white;
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+         }
+         
+         .auzi-service-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+         }
+         
+         .auzi-service-item h3 {
+            color: var(--auzi-primary);
+            margin-top: 0;
+         }
+         
+         .auzi-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+         }
+         
+         .auzi-theme {
+            background-color: var(--auzi-light);
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: var(--auzi-dark);
+         }
+      </style>
+   </body>
+</html> 
